@@ -4,11 +4,13 @@ import java.util.List;
 
 public interface BaseService<Req, Res> {
 
-    List<Req> getAll();
+    List<Res> getAll();
 
-    Req getById(Long id);
+    Res getById(Long id);
 
-    Req update(Long id, Res dto);
+    Res save(Req dto);
+
+    Res update(Long id, Req dto);
 
     void delete(Long id);
 
