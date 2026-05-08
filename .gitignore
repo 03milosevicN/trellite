@@ -1,33 +1,76 @@
-HELP.md
+### Maven / Java build output
 target/
-.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+/dist
+/tmp
+/out-tsc
+/bazel-out
 
-### STS ###
+### Maven wrapper
+.mvn/wrapper/maven-wrapper.jar
+
+### Spring / STS (Spring Tool Suite)
 .apt_generated
-.classpath
 .factorypath
-.project
-.settings
 .springBeans
 .sts4-cache
 
-### IntelliJ IDEA ###
-.idea
+### IntelliJ IDEA
+.idea/
 *.iws
 *.iml
 *.ipr
 
-### NetBeans ###
+### Eclipse / STS
+.project
+.classpath
+.settings/
+
+### NetBeans
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
-### VS Code ###
+### VS Code
 .vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/mcp.json
+
+### Angular
+.angular/cache/
+
+### Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+### Logs / testing / coverage
+/coverage
+testem.log
+/connect.lock
+/libpeerconnection.log
+__screenshots__/
+
+### Misc IDE / editors
+.c9/
+*.launch
+*.sublime-workspace
+
+### System files
+.DS_Store
+Thumbs.db
+
+### Misc generated
+HELP.md
+/typings
+.sass-cache/
+.history/
