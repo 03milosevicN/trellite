@@ -1,95 +1,123 @@
 {
-
-  "users" : [
+  "users": [
     {
-      "id": 1,
+      "id": "1",
       "firstName": "John",
       "lastName": "Doe",
+      "username": "johndoe123",
       "email": "johndoe@mail.net",
       "password": "123"
     },
     {
-      "id": 2,
+      "id": "2",
       "firstName": "Shadow",
       "lastName": "Pulisic",
+      "username": "shadowp58",
       "email": "spullar1@mail.com",
       "password": "123"
     },
     {
-      "id": 3,
+      "id": "3",
       "firstName": "Zacharia",
       "lastName": "Bellow",
+      "username": "zachbell23",
       "email": "zbellow6@domainmarket.com",
+      "password": "123"
+    },
+    {
+      "id": "1tOIz3xJ_4k",
+      "firstName": "REST",
+      "lastName": "API",
+      "username": "restapi",
+      "email": "restapi@mail.net",
       "password": "123"
     }
   ],
   "organizations": [
     {
-      "id": 1,
+      "id": "1",
       "name": "Mocked Organization 1",
       "createdAt": "2026-04-10T09:15:00Z",
       "ownedBy": 2
     }
   ],
-  "org_members": [
+  "org-members": [
     {
-      "id": 1,
+      "id": "1",
       "user": 1,
       "organization": 1,
       "role": "ADMIN"
     },
     {
-      "id": 2,
+      "id": "2",
       "user": 2,
       "organization": 1,
       "role": "OWNER"
     },
     {
-      "id": 3,
+      "id": "3",
       "user": 3,
       "organization": 1,
       "role": "MEMBER"
     }
   ],
-
   "boards": [
     {
-      "id": 1,
+      "id": "1",
       "org_id": 1,
       "title": "Mocked board 1",
       "created_at": "2026-05-10T16:00:00Z",
-      "archived": false,
-      "board_lists": [
-        {
-          "id": 1,
-          "title": "Mocked list 1",
-          "created_at": "2026-05-10T16:00:00Z",
-          "cards": [
-            {
-              "id": 1,
-              "title": "Mocked card 1",
-              "desc": "Mocked card 1 description",
-              "assignees": [1, 2, 3],
-              "labels": [],
-              "due_date": "2026-05-15T16:00:00Z",
-              "checklists": [
-                {
-                  "id": 1,
-                  "title": "Mocked checklist 1",
-                  "is_completed": false,
-                  "items": [
-                    {
-                      "id": 1,
-                      "task": "Mocked item 1"
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
+      "archived": false
     }
-  ]
-
+  ],
+  "board-lists": [
+    {
+      "id": "1",
+      "board_id": 1,
+      "title": "Mocked list 1",
+      "created_at": "2026-05-10T16:00:00Z"
+    },
+    {
+      "org_id": 1,
+      "title": "New Board",
+      "created_at": "$2026-05-11T11:44:08.669Z",
+      "archived": false,
+      "id": "eD3EDJqaOWA"
+    }
+  ],
+  "cards": [
+    {
+      "id": "1",
+      "board_list_id": 1,
+      "title": "Mocked card 1",
+      "desc": "Mocked card 1 description",
+      "assignees": [
+        1,
+        2,
+        3
+      ],
+      "labels": [],
+      "due_date": "2026-05-15T16:00:00Z"
+    }
+  ],
+  "checklists": [
+    {
+      "id": "1",
+      "card_id": 1,
+      "title": "Mocked checklist 1",
+      "is_completed": false
+    },
+    {
+      "title": "Updated New Checklist",
+      "id": "oZQvrtp4XAU"
+    }
+  ],
+  "items": [
+    {
+      "id": "1",
+      "checklist_id": 1,
+      "task": "Mocked item 1"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
