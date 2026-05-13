@@ -1,1 +1,19 @@
-<p>user works!</p>
+
+    <div class="row">
+        <div class="col-md-4 col-xl-2">
+            <h6>Personal settings</h6>
+            <p><svg lucideCog/>Settings</p>
+
+            <h5>Organization-related settings</h5>
+            <p><svg lucideUsers/>Organizations</p>
+            <p><svg lucideCreditCard/>Boards</p>
+            <p><svg lucideWalletCards/>Cards</p>
+            <p><svg lucideCalendarClock/>Activity</p>
+        </div>
+
+        <div class="border-start col-md-8 col-xl-10 min-vh-100">
+            @if (userSignal()) {
+                <p class="text-primary">Greetings, {{userSignal()?.username}} !</p>
+            }
+        </div>
+    </div>

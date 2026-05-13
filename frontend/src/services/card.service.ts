@@ -13,11 +13,11 @@ export class CardService {
     private http: HttpClient = inject(HttpClient);
 
 
-    public getById(id: number): Observable<Card> {
+    public getById(id: string): Observable<Card> {
         return this.http.get<Card>(`${this.MOCK_API_URL}/${id}`);
     }
 
-    public getAllByBoardListId(id: number): Observable<Card[]> {
+    public getAllByBoardListId(id: string): Observable<Card[]> {
         return this.http.get<Card[]>(`${this.MOCK_API_URL}?board_list_id=${id}`);
     }
 
@@ -25,11 +25,11 @@ export class CardService {
         return this.http.post<Card>(`${this.MOCK_API_URL}`, data);
     }
 
-    public update(id: number, data: Card): Observable<Card> {
+    public update(id: string, data: Card): Observable<Card> {
         return this.http.put<Card>(`${this.MOCK_API_URL}/${id}`, data);
     }
 
-    public delete(id: number): Observable<void> {
+    public delete(id: string): Observable<void> {
         return this.http.delete<void>(`${this.MOCK_API_URL}/${id}`);
     }
 

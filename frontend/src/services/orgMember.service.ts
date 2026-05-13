@@ -13,7 +13,7 @@ export class OrgMemberService {
     private http: HttpClient = inject(HttpClient);
 
 
-    public getById(id: number): Observable<OrgMember> {
+    public getById(id: string): Observable<OrgMember> {
         return this.http.get<OrgMember>(`${this.MOCK_API_URL}/${id}`);
     }
 

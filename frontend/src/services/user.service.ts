@@ -8,12 +8,12 @@ import {Observable} from "rxjs";
 })
 export class UserService {
 
-    MOCK_API_URL: string = 'http://localhost:3000/api/users';
+    MOCK_API_URL: string = 'http://localhost:3000/users';
 
     private http: HttpClient = inject(HttpClient);
 
 
-    public getById(id: number): Observable<User> {
+    public getById(id: string): Observable<User> {
         return this.http.get<User>(`${this.MOCK_API_URL}/${id}`);
     }
 

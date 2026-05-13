@@ -13,11 +13,11 @@ export class BoardService {
     private http: HttpClient = inject(HttpClient);
 
 
-    public getById(id: number): Observable<Board> {
+    public getById(id: string): Observable<Board> {
         return this.http.get<Board>(`${this.MOCK_API_URL}/${id}`);
     }
 
-    public getAllByOrgId(id: number): Observable<Board[]> {
+    public getAllByOrgId(id: string): Observable<Board[]> {
         return this.http.get<Board[]>(`${this.MOCK_API_URL}?org_id=${id}`);
     }
 
@@ -25,11 +25,11 @@ export class BoardService {
         return this.http.post<Board>(`${this.MOCK_API_URL}`, data);
     }
 
-    public update(id: number, data: Board): Observable<Board> {
+    public update(id: string, data: Board): Observable<Board> {
         return this.http.put<Board>(`${this.MOCK_API_URL}/${id}`, data);
     }
 
-    public delete(id: number): Observable<void> {
+    public delete(id: string): Observable<void> {
         return this.http.delete<void>(`${this.MOCK_API_URL}/${id}`);
     }
 

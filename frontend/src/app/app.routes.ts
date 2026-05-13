@@ -6,7 +6,7 @@ import {User} from "./user/user";
 
 export const routes: Routes = [
     {
-        path: 'u/:username', component: User
+        path: 'u/:userId', component: User
     },
     {
         path: 'orgs/:orgId', component: Org
