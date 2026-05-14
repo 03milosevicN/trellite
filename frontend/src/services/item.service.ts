@@ -13,11 +13,11 @@ export class ItemService {
     private http: HttpClient = inject(HttpClient);
 
 
-    public getById(id: number): Observable<Item> {
+    public getById(id: string): Observable<Item> {
         return this.http.get<Item>(`${this.MOCK_API_URL}/${id}`);
     }
 
-    public getAllByChecklistId(id: number): Observable<Item[]> {
+    public getAllByChecklistId(id: string): Observable<Item[]> {
         return this.http.get<Item[]>(`${this.MOCK_API_URL}?checklist_id=${id}`);
     }
 
@@ -25,11 +25,11 @@ export class ItemService {
         return this.http.post<Item>(`${this.MOCK_API_URL}`, data);
     }
 
-    public update(id: number, data: Item): Observable<Item> {
+    public update(id: string, data: Item): Observable<Item> {
         return this.http.put<Item>(`${this.MOCK_API_URL}/${id}`, data);
     }
 
-    public delete(id: number): Observable<void> {
+    public delete(id: string): Observable<void> {
         return this.http.delete<void>(`${this.MOCK_API_URL}/${id}`);
     }
 

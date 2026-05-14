@@ -4,7 +4,10 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": []
+    "types": [],
+    "lib": [
+      "es5", "es6", "dom", "dom.iterable"
+    ]
   },
   "include": [
     "src/**/*.ts"

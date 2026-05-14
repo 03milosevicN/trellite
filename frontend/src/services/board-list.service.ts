@@ -13,11 +13,11 @@ export class BoardListService {
     private http: HttpClient = inject(HttpClient);
 
 
-    public getById(id: number): Observable<BoardList> {
+    public getById(id: string): Observable<BoardList> {
         return this.http.get<BoardList>(`${this.MOCK_API_URL}/${id}`);
     }
 
-    public getAllByBoardId(id: number): Observable<BoardList[]> {
+    public getAllByBoardId(id: string): Observable<BoardList[]> {
         return this.http.get<BoardList[]>(`${this.MOCK_API_URL}?board_id=${id}`);
     }
 
@@ -25,7 +25,7 @@ export class BoardListService {
         return this.http.post<BoardList>(`${this.MOCK_API_URL}`, data);
     }
 
-    public update(id: number, data: BoardList): Observable<BoardList> {
+    public update(id: string, data: BoardList): Observable<BoardList> {
         return this.http.put<BoardList>(`${this.MOCK_API_URL}/${id}`, data);
     }
 

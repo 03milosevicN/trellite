@@ -12,11 +12,11 @@ export class OrganizationService {
 
     private http: HttpClient = inject(HttpClient);
 
-    public getById(id: number): Observable<Organization> {
+    public getById(id: string): Observable<Organization> {
         return this.http.get<Organization>(`${this.MOCK_API_URL}/${id}`);
     }
 
-    public getByOwner(id: number): Observable<Organization[]> {
+    public getByOwner(id: string): Observable<Organization[]> {
         return this.http.get<Organization[]>(`${this.MOCK_API_URL}?ownedBy=${id}`);
     }
 
@@ -24,7 +24,7 @@ export class OrganizationService {
         return this.http.post<Organization>(`${this.MOCK_API_URL}`, data);
     }
 
-    public delete(id: number): Observable<void> {
+    public delete(id: string): Observable<void> {
         return this.http.delete<void>(`${this.MOCK_API_URL}/${id}`);
     }
 

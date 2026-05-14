@@ -1,34 +1,58 @@
 {
-  "hash": "7a158a6b",
-  "configHash": "b9849cdf",
-  "lockfileHash": "e6c96b34",
-  "browserHash": "494ff351",
+  "hash": "bb533e44",
+  "configHash": "6a1ca248",
+  "lockfileHash": "e058257b",
+  "browserHash": "baf93ec6",
   "optimized": {
     "@angular/core": {
       "src": "../../../../../../node_modules/@angular/core/fesm2022/core.mjs",
       "file": "@angular_core.js",
-      "fileHash": "7871324a",
+      "fileHash": "f5150d90",
       "needsInterop": false
     },
     "@angular/platform-browser": {
       "src": "../../../../../../node_modules/@angular/platform-browser/fesm2022/platform-browser.mjs",
       "file": "@angular_platform-browser.js",
-      "fileHash": "5080ecf4",
+      "fileHash": "8537a783",
       "needsInterop": false
     },
     "@angular/router": {
       "src": "../../../../../../node_modules/@angular/router/fesm2022/router.mjs",
       "file": "@angular_router.js",
-      "fileHash": "223128d5",
+      "fileHash": "0dc3476f",
+      "needsInterop": false
+    },
+    "@angular/common/http": {
+      "src": "../../../../../../node_modules/@angular/common/fesm2022/http.mjs",
+      "file": "@angular_common_http.js",
+      "fileHash": "867d20e9",
+      "needsInterop": false
+    },
+    "@lucide/angular": {
+      "src": "../../../../../../node_modules/@lucide/angular/fesm2022/lucide-angular.mjs",
+      "file": "@lucide_angular.js",
+      "fileHash": "156b9d96",
+      "needsInterop": false
+    },
+    "rxjs": {
+      "src": "../../../../../../node_modules/rxjs/dist/esm5/index.js",
+      "file": "rxjs.js",
+      "fileHash": "342879e9",
       "needsInterop": false
     }
   },
   "chunks": {
-    "chunk-B4LLT3TW": {
-      "file": "chunk-B4LLT3TW.js"
+    "chunk-6NWOIZWV": {
+      "file": "chunk-6NWOIZWV.js"
     },
-    "chunk-ZKFPT5YZ": {
-      "file": "chunk-ZKFPT5YZ.js"
+    "chunk-BRBPXG42": {
+      "file": "chunk-BRBPXG42.js"
+    },
+    "chunk-7AH5S3WC": {
+      "file": "chunk-7AH5S3WC.js"
+    },
+    "chunk-PJVWDKLX": {
+      "file": "chunk-PJVWDKLX.js"
     }
   }
 }
