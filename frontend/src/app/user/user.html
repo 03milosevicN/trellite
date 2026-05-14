@@ -1,19 +1,63 @@
+<div class="row g-0">
 
-    <div class="row">
-        <div class="col-md-4 col-xl-2">
-            <h6>Personal settings</h6>
-            <p><svg lucideCog/>Settings</p>
-
-            <h5>Organization-related settings</h5>
-            <p><svg lucideUsers/>Organizations</p>
-            <p><svg lucideCreditCard/>Boards</p>
-            <p><svg lucideWalletCards/>Cards</p>
-            <p><svg lucideCalendarClock/>Activity</p>
+    <aside class="col-md-4 col-xl-2 bg-body-tertiary border-end min-vh-100 p-3 shadow-sm">
+        <div class="mb-4">
+            <h6 class="text-uppercase text-muted fw-semibold small mb-3">
+                Personal settings
+            </h6>
+            <nav class="nav flex-column gap-1">
+                <a routerLink="settings"
+                   class="nav-link d-flex align-items-center gap-2 rounded px-3 py-2 text-dark hover-bg"
+                   routerLinkActive="active sidebar-green-primary-app text-white"
+                >
+                    <svg lucideCog class="icon-sm"></svg>
+                    <span>Settings</span>
+                </a>
+            </nav>
         </div>
 
-        <div class="border-start col-md-8 col-xl-10 min-vh-100">
-            @if (userSignal()) {
-                <p class="text-primary">Greetings, {{userSignal()?.username}} !</p>
-            }
+        <div>
+            <h6 class="text-uppercase text-muted fw-semibold small mb-3">
+                Organization
+            </h6>
+
+            <div class="d-flex align-items-center gap-2 px-3 mb-2 text-secondary small fw-semibold">
+                <svg lucideUsers class="icon-sm"></svg>
+                <span>Organizations</span>
+            </div>
+
+            <nav class="nav flex-column gap-1">
+
+                <a routerLink="boards"
+                   class="nav-link d-flex align-items-center gap-2 rounded px-3 py-2 text-dark hover-bg"
+                   routerLinkActive="active sidebar-green-primary-app text-white"
+                >
+                    <svg lucideCreditCard class="icon-sm"></svg>
+                    <span>Boards</span>
+                </a>
+
+                <a routerLink="cards"
+                   class="nav-link d-flex align-items-center gap-2 rounded px-3 py-2 text-dark hover-bg"
+                   routerLinkActive="active sidebar-green-primary-app text-white"
+                >
+                    <svg lucideWalletCards class="icon-sm"></svg>
+                    <span>Cards</span>
+                </a>
+
+                <a routerLink="activity"
+                   class="nav-link d-flex align-items-center gap-2 rounded px-3 py-2 text-dark hover-bg"
+                   routerLinkActive="active sidebar-green-primary-app text-white"
+                >
+                    <svg lucideCalendarClock class="icon-sm"></svg>
+                    <span>Activity</span>
+                </a>
+
+            </nav>
         </div>
-    </div>
+    </aside>
+
+    <main class="col-md-8 col-xl-10 min-vh-100 bg-light p-4">
+        <router-outlet />
+    </main>
+
+</div>

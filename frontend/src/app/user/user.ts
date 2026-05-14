@@ -1,6 +1,6 @@
 import {Component, inject, OnInit, signal, WritableSignal} from "@angular/core";
 import {UserService} from "../../services/user.service";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
 import {User as UserModel} from "../../models/user.model";
 import {LucideCalendarClock, LucideCog, LucideCreditCard, LucideUsers, LucideWalletCards} from "@lucide/angular";
 
@@ -11,7 +11,10 @@ import {LucideCalendarClock, LucideCog, LucideCreditCard, LucideUsers, LucideWal
     LucideCreditCard,
     LucideWalletCards,
     LucideCalendarClock,
-    LucideUsers
+    LucideUsers,
+    RouterLink,
+    RouterOutlet,
+    RouterLinkActive
   ],
   templateUrl: "./user.html",
   styleUrl: "./user.css",
