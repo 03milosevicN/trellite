@@ -60,6 +60,8 @@ testem.log
 /libpeerconnection.log
 __screenshots__/
 
+backend/logs
+
 ### Misc IDE / editors
 .c9/
 *.launch

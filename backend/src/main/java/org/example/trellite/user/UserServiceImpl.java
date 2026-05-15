@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImpl implements BaseService<UserRequest, UserResponse> {
+public class UserServiceImpl implements BaseService<UserRequest, UserResponse, Long> {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -36,7 +36,7 @@ public class UserServiceImpl implements BaseService<UserRequest, UserResponse> {
         return userRepository
                 .findByUserId(id)
                 .map(userMapper::toResponse)
-                .orElseThrow( () -> new ResourceNotFoundException("User with id of" + id + " not found."));
+                .orElseThrow( () -> new ResourceNotFoundException("User with id of " + id + " not found."));
     }
 
     @Override
@@ -55,6 +55,15 @@ public class UserServiceImpl implements BaseService<UserRequest, UserResponse> {
         existing.setLastName(dto.getLastName());
         existing.setEmail(dto.getEmail());
         existing.setPassword(dto.getPassword());
+        return userMapper.toResponse(userRepository.save(existing));
+    }
+
+    @Override
+    public UserResponse patch(Long id, UserRequest dto) {
+        var existing = userRepository.findByUserId(id).orElseThrow(() -> new ResourceNotFoundException("User with id of " + id + " not found."));
+            if (dto.getFirstName() != null) existing.setFirstName(dto.getFirstName());
+            if (dto.getLastName() != null) existing.setLastName(dto.getLastName());
+            if (dto.getEmail() != null) existing.setPassword(dto.getPassword());
         return userMapper.toResponse(userRepository.save(existing));
     }
 

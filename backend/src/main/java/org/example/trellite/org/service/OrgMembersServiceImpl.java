@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class OrgMembersServiceImpl implements BaseService<OrgMembersRequest, OrgMembersResponse> {
+public class OrgMembersServiceImpl implements BaseService<OrgMembersRequest, OrgMembersResponse, Long> {
 
     private final OrgMembersRepository orgMembersRepository;
     private final UserRepository userRepository;
@@ -73,6 +73,13 @@ public class OrgMembersServiceImpl implements BaseService<OrgMembersRequest, Org
         existing.setUser(user);
         existing.setOrganization(org);
         existing.setRole(dto.getRole());
+        return orgMembersMapper.toResponse(orgMembersRepository.save(existing));
+    }
+
+    @Override
+    public OrgMembersResponse patch(Long id, OrgMembersRequest dto) {
+        var existing = orgMembersRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Organization member with id of " + id + " not found."));
+        if (dto.getRole() != null) dto.setRole(dto.getRole());
         return orgMembersMapper.toResponse(orgMembersRepository.save(existing));
     }
 

@@ -44,6 +44,14 @@ public class OrganizationController {
         return ResponseEntity.ok(organizationService.update(orgId, req));
     }
 
+    @PatchMapping("/{orgId}")
+    public ResponseEntity<OrganizationResponse> patch(
+            @PathVariable Long orgId,
+            @RequestBody OrganizationRequest req
+    ) {
+        return ResponseEntity.ok(organizationService.patch(orgId, req));
+    }
+
     @DeleteMapping("/{orgId}")
     public ResponseEntity<Void> delete(@PathVariable Long orgId) {
         organizationService.delete(orgId);

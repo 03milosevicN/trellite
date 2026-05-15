@@ -1,21 +1,26 @@
 package org.example.trellite.card;
 
+import jakarta.persistence.Id;
 import lombok.Data;
 import org.example.trellite.checklist.Checklist;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.time.Instant;
 import java.util.List;
 
-@Document(collection = "boards")
+@Document(collection = "cards")
 @Data
 public class Card {
 
-    @Field
-    @Indexed(unique = true)
+    @Id
+    @Field(targetType = FieldType.OBJECT_ID)
     private String id;
+
+    @Field(name = "board_list_id")
+    private String boardListId;
 
     @Field(name = "title")
     private String title;
@@ -24,15 +29,12 @@ public class Card {
     private String desc;
 
     @Field(name = "assignees")
-    private List<Integer> assignees;
+    private List<Long> assignees;
 
     @Field(name = "labels")
     private List<String> labels;
 
     @Field(name = "due_date")
     private Instant dueDate;
-
-    @Field(name = "checklists")
-    private List<Checklist> checklists;
 
 }

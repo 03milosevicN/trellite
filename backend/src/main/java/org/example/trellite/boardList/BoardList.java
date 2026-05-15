@@ -1,28 +1,31 @@
 package org.example.trellite.boardList;
 
+import jakarta.persistence.Id;
 import lombok.Data;
 import org.example.trellite.card.Card;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
+
 import java.time.Instant;
 import java.util.List;
 
-@Document(collection = "boards")
+@Document(collection = "board_lists")
 @Data
 public class BoardList {
 
-    @Field
-    @Indexed(unique = true)
+    @Id
+    @Field(targetType = FieldType.OBJECT_ID)
     private String id;
+
+    @Field(name = "board_id")
+    private String boardId;
 
     @Field(name = "title")
     private String title;
 
     @Field(name = "created_at")
     private Instant createdAt;
-
-    @Field(name = "cards")
-    private List<Card> cards;
 
 }

@@ -2,6 +2,8 @@ package org.example.trellite.org.service;
 
 import org.example.trellite.common.BaseService;
 import org.example.trellite.common.ResourceNotFoundException;
+import org.example.trellite.org.dto.OrgMembersRequest;
+import org.example.trellite.org.dto.OrgMembersResponse;
 import org.example.trellite.org.dto.OrganizationRequest;
 import org.example.trellite.org.dto.OrganizationResponse;
 import org.example.trellite.org.mapper.OrganizationMapper;
@@ -15,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class OrganizationServiceImpl implements BaseService<OrganizationRequest, OrganizationResponse> {
+public class OrganizationServiceImpl implements BaseService<OrganizationRequest, OrganizationResponse, Long> {
 
     private final OrganizationRepository organizationRepository;
     private final UserRepository userRepository;
@@ -64,6 +66,16 @@ public class OrganizationServiceImpl implements BaseService<OrganizationRequest,
         existing.setName(dto.getName());
         existing.setCreatedAt(Instant.now());
         existing.setOwnedBy(user);
+        return organizationMapper.toResponse(organizationRepository.save(existing));
+    }
+
+    @Override
+    public OrganizationResponse patch(Long id, OrganizationRequest dto) {
+        var existing = organizationRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Organization with id of " + id + " not found."));
+        var user = userRepository.findByUserId(dto.getOwnedBy()).orElseThrow(() -> new ResourceNotFoundException("User with id " + dto.getOwnedBy() + " not found."));
+        if (dto.getName() != null) existing.setName(dto.getName());
+        if (dto.getCreatedAt() != null) existing.setCreatedAt(Instant.now());
+        if (dto.getOwnedBy() != null) existing.setOwnedBy(user);
         return organizationMapper.toResponse(organizationRepository.save(existing));
     }
 
