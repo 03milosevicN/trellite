@@ -1,4 +1,4 @@
 package org.example.trellite.item;
 
-public class itemController {
+public class ItemController {
 }

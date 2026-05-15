@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class OrganizationServiceImpl implements BaseService<OrganizationRequest, OrganizationResponse> {
+public class OrganizationServiceImpl implements BaseService<OrganizationRequest, OrganizationResponse, Long> {
 
     private final OrganizationRepository organizationRepository;
     private final UserRepository userRepository;

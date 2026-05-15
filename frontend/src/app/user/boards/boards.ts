@@ -4,6 +4,7 @@ import {OrgMemberService} from "../../../services/orgMember.service";
 import {Router} from "@angular/router";
 import {BoardService} from "../../../services/board.service";
 import {forkJoin, switchMap} from "rxjs";
+import {BoardListService} from "../../../services/board-list.service";
 
 @Component({
   selector: "app-boards",
@@ -17,6 +18,7 @@ export class Boards {
 
   private orgMemberService: OrgMemberService = inject(OrgMemberService);
   private boardService: BoardService = inject(BoardService);
+  private boardListService: BoardListService = inject(BoardListService);
 
   private router: Router = inject(Router);
 

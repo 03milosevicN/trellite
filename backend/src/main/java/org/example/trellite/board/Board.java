@@ -32,7 +32,4 @@ public class Board {
     @Field(name = "archived")
     private Boolean archived;
 
-    @Field(name = "board_lists")
-    private List<BoardList> lists;
-
 }

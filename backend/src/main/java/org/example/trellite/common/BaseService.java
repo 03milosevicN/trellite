@@ -2,16 +2,16 @@ package org.example.trellite.common;
 
 import java.util.List;
 
-public interface BaseService<Req, Res> {
+public interface BaseService<Req, Res, ID> {
 
     List<Res> getAll();
 
-    Res getById(Long id);
+    Res getById(ID id);
 
     Res save(Req dto);
 
-    Res update(Long id, Req dto);
+    Res update(ID id, Req dto);
 
-    void delete(Long id);
+    void delete(ID id);
 
 }

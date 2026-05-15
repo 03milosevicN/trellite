@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class OrgMembersServiceImpl implements BaseService<OrgMembersRequest, OrgMembersResponse> {
+public class OrgMembersServiceImpl implements BaseService<OrgMembersRequest, OrgMembersResponse, Long> {
 
     private final OrgMembersRepository orgMembersRepository;
     private final UserRepository userRepository;
