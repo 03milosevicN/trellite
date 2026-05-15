@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
 import java.time.Instant;
 import java.util.List;
 
-@Document(collection = "boards")
+@Document(collection = "cards")
 @Data
 public class Card {
 
@@ -29,7 +29,7 @@ public class Card {
     private String desc;
 
     @Field(name = "assignees")
-    private List<Integer> assignees;
+    private List<Long> assignees;
 
     @Field(name = "labels")
     private List<String> labels;

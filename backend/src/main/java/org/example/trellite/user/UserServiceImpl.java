@@ -59,6 +59,15 @@ public class UserServiceImpl implements BaseService<UserRequest, UserResponse, L
     }
 
     @Override
+    public UserResponse patch(Long id, UserRequest dto) {
+        var existing = userRepository.findByUserId(id).orElseThrow(() -> new ResourceNotFoundException("User with id of " + id + " not found."));
+            if (dto.getFirstName() != null) existing.setFirstName(dto.getFirstName());
+            if (dto.getLastName() != null) existing.setLastName(dto.getLastName());
+            if (dto.getEmail() != null) existing.setPassword(dto.getPassword());
+        return userMapper.toResponse(userRepository.save(existing));
+    }
+
+    @Override
     public void delete(Long id) {
         userRepository.delete(
                 userRepository

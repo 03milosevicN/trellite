@@ -44,6 +44,14 @@ public class OrgMembersController {
         return ResponseEntity.ok(orgMembersService.update(orgMembersId, req));
     }
 
+    @PatchMapping("/{orgMembersId}")
+    public ResponseEntity<OrgMembersResponse> patch(
+            @PathVariable Long orgMembersId,
+            @RequestBody OrgMembersRequest req
+    ) {
+        return ResponseEntity.ok(orgMembersService.patch(orgMembersId, req));
+    }
+    
     @DeleteMapping("/{orgMembersId}")
     public ResponseEntity<Void> delete(@PathVariable Long orgMembersId) {
         orgMembersService.delete(orgMembersId);

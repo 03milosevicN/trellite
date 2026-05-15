@@ -58,6 +58,16 @@ public class BoardServiceImpl implements BaseService<BoardRequest, BoardResponse
     }
 
     @Override
+    public BoardResponse patch(String id, BoardRequest dto) {
+        var existing = boardRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Board with id of " + id + " not found."));
+        if ( dto.getOrgId() != null ) existing.setOrgId( dto.getOrgId() );
+        if ( dto.getTitle() != null ) existing.setTitle( dto.getTitle() );
+        if ( dto.getCreatedAt() != null ) existing.setCreatedAt( Instant.now() );
+        if ( dto.getArchived() != null ) existing.setArchived( dto.getArchived() );
+        return boardMapper.toResponse( boardRepository.save(existing));
+    }
+
+    @Override
     public void delete(String id) {
         boardListService.deleteByBoardId(id);
         boardRepository.deleteById(id);

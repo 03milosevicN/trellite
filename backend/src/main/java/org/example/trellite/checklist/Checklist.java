@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.util.List;
 
-@Document(collection = "boards")
+@Document(collection = "checklists")
 @Data
 public class Checklist {
 

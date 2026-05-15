@@ -4,6 +4,7 @@ import jakarta.persistence.Id;
 import lombok.Data;
 import org.example.trellite.boardList.BoardList;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import java.time.Instant;
@@ -18,7 +19,7 @@ public class Board {
     private String id;
 
     @Field(name = "org_id")
-    private Integer orgId;
+    private Long orgId;
 
     @Field(name = "title")
     private String title;

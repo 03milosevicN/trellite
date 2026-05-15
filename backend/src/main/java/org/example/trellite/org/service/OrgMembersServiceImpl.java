@@ -77,6 +77,13 @@ public class OrgMembersServiceImpl implements BaseService<OrgMembersRequest, Org
     }
 
     @Override
+    public OrgMembersResponse patch(Long id, OrgMembersRequest dto) {
+        var existing = orgMembersRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Organization member with id of " + id + " not found."));
+        if (dto.getRole() != null) dto.setRole(dto.getRole());
+        return orgMembersMapper.toResponse(orgMembersRepository.save(existing));
+    }
+
+    @Override
     public void delete(Long id) {
         orgMembersRepository.delete(
                 orgMembersRepository

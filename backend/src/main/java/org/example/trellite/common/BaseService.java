@@ -12,6 +12,8 @@ public interface BaseService<Req, Res, ID> {
 
     Res update(ID id, Req dto);
 
+    Res patch(ID id, Req dto);
+
     void delete(ID id);
 
 }
