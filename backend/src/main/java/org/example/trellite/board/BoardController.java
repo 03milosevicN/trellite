@@ -1,8 +1,8 @@
 package org.example.trellite.board;
 
-import lombok.RequiredArgsConstructor;
 import org.example.trellite.board.dto.BoardRequest;
 import org.example.trellite.board.dto.BoardResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,10 +11,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/boards")
-@RequiredArgsConstructor
 public class BoardController {
 
     private final BoardServiceImpl boardService;
+
+    @Autowired
+    public BoardController(BoardServiceImpl boardService) {
+        this.boardService = boardService;
+    }
 
 
     @GetMapping("/{id}")

@@ -1,11 +1,11 @@
 package org.example.trellite.board;
 
-import lombok.RequiredArgsConstructor;
 import org.example.trellite.board.dto.BoardRequest;
 import org.example.trellite.board.dto.BoardResponse;
 import org.example.trellite.boardList.BoardListServiceImpl;
 import org.example.trellite.common.BaseService;
 import org.example.trellite.common.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
@@ -14,12 +14,18 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-@RequiredArgsConstructor
 public class BoardServiceImpl implements BaseService<BoardRequest, BoardResponse, String> {
 
     private final BoardRepository boardRepository;
     private final BoardMapper boardMapper;
     private final BoardListServiceImpl boardListService;
+
+    @Autowired
+    public BoardServiceImpl(BoardRepository boardRepository, BoardMapper boardMapper, BoardListServiceImpl boardListService) {
+        this.boardRepository = boardRepository;
+        this.boardMapper = boardMapper;
+        this.boardListService = boardListService;
+    }
 
 
     @Override

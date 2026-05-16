@@ -69,7 +69,7 @@ public class BoardListServiceImpl implements BaseService<BoardListRequest, Board
 
     @Override
     public void delete(String id) {
-        cardService.deleteByBoardListId(id);
+       cardService.deleteByBoardListId(id);
         boardListRepository.deleteById(id);
     }
 

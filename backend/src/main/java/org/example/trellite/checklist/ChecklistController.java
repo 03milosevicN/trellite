@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/checklists")
+@RequestMapping("/api/cards/{cardId}/checklists")
 @RequiredArgsConstructor
 public class ChecklistController {
 
@@ -17,39 +17,49 @@ public class ChecklistController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<ChecklistResponse> getById(@PathVariable String id) {
-        return ResponseEntity.ok(checklistService.getById(id));
+    public ResponseEntity<ChecklistResponse> getById(
+            @PathVariable String cardId,
+            @PathVariable String id
+    ) {
+        return ResponseEntity.ok(checklistService.getById(cardId, id));
     }
 
     @GetMapping
-    public ResponseEntity<List<ChecklistResponse>> getAll() {
-        return ResponseEntity.ok(checklistService.getAll());
+    public ResponseEntity<List<ChecklistResponse>> getAll(@PathVariable String cardId) {
+        return ResponseEntity.ok(checklistService.getAll(cardId));
     }
 
     @PostMapping
-    public ResponseEntity<ChecklistResponse> create(@RequestBody ChecklistRequest req) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(checklistService.save(req));
+    public ResponseEntity<ChecklistResponse> create(
+            @PathVariable String cardId,
+            @RequestBody ChecklistRequest req) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(checklistService.save(cardId, req));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ChecklistResponse> update(
+            @PathVariable String cardId,
             @PathVariable String id,
             @RequestBody ChecklistRequest req
     ) {
-        return ResponseEntity.ok(checklistService.update(id, req));
+        return ResponseEntity.ok(checklistService.update(cardId, id, req));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<ChecklistResponse> patch(
+            @PathVariable String cardId,
             @PathVariable String id,
             @RequestBody ChecklistRequest req
     ) {
-        return ResponseEntity.ok(checklistService.patch(id, req));
+        return ResponseEntity.ok(checklistService.patch(cardId, id, req));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable String id) {
-        checklistService.delete(id);
+    public ResponseEntity<Void> delete(
+            @PathVariable String cardId,
+            @PathVariable String id
+    ) {
+        checklistService.delete(cardId, id);
         return ResponseEntity.noContent().build();
     }
 

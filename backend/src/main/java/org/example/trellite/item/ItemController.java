@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/items")
+@RequestMapping("/api/cards/{cardId}/checklists/{checklistId}/items")
 @RequiredArgsConstructor
 public class ItemController {
 
@@ -17,39 +17,58 @@ public class ItemController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<ItemResponse> getById(@PathVariable String id) {
-        return ResponseEntity.ok(itemService.getById(id));
+    public ResponseEntity<ItemResponse> getById(
+            @PathVariable String cardId,
+            @PathVariable String checklistId,
+            @PathVariable String id
+    ) {
+        return ResponseEntity.ok(itemService.getById(cardId, checklistId, id));
     }
 
     @GetMapping
-    public ResponseEntity<List<ItemResponse>> getAll() {
-        return ResponseEntity.ok(itemService.getAll());
+    public ResponseEntity<List<ItemResponse>> getAll(
+            @PathVariable String cardId,
+            @PathVariable String checklistId
+    ) {
+        return ResponseEntity.ok(itemService.getAll(cardId, checklistId));
     }
 
     @PostMapping
-    public ResponseEntity<ItemResponse> create(@RequestBody ItemRequest req) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(itemService.save(req));
+    public ResponseEntity<ItemResponse> create(
+            @PathVariable String cardId,
+            @PathVariable String checklistId,
+            @RequestBody ItemRequest req
+    ) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(itemService.save(cardId, checklistId, req));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ItemResponse> update(
+            @PathVariable String cardId,
+            @PathVariable String checklistId,
             @PathVariable String id,
             @RequestBody ItemRequest req
     ) {
-        return ResponseEntity.ok(itemService.update(id, req));
+        return ResponseEntity.ok(itemService.update(cardId, checklistId, id, req));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<ItemResponse> patch(
+            @PathVariable String cardId,
+            @PathVariable String checklistId,
             @PathVariable String id,
             @RequestBody ItemRequest req
     ) {
-        return ResponseEntity.ok(itemService.patch(id, req));
+        return ResponseEntity.ok(itemService.patch(cardId, checklistId, id, req));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable String id) {
-        itemService.delete(id);
+    public ResponseEntity<Void> delete(
+            @PathVariable String cardId,
+            @PathVariable String checklistId,
+            @PathVariable String id
+    ) {
+        itemService.delete(cardId, checklistId, id);
         return ResponseEntity.noContent().build();
     }
 
