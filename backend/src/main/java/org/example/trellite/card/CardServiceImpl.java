@@ -32,7 +32,10 @@ public class CardServiceImpl implements BaseService<CardRequest, CardResponse, S
 
     @Override
     public CardResponse getById(String id) {
-        return cardRepository.findById(id).map(cardMapper::toResponse).orElseThrow(() -> new ResourceNotFoundException("Card with id of" + id + " not found."));
+        return cardRepository
+                .findById(id)
+                .map(cardMapper::toResponse)
+                .orElseThrow(() -> new ResourceNotFoundException("Card with id of" + id + " not found."));
     }
 
     @Override

@@ -3,11 +3,10 @@ package org.example.trellite.boardList;
 import jakarta.persistence.Id;
 import lombok.Data;
 import org.example.trellite.card.Card;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
-
 import java.time.Instant;
 import java.util.List;
 
@@ -27,5 +26,9 @@ public class BoardList {
 
     @Field(name = "created_at")
     private Instant createdAt;
+
+
+    @DocumentReference(lookup = " 'boardListId' : ?#{#self._id} ")
+    private List<Card> cards;
 
 }

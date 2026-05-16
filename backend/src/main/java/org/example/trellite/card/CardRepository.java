@@ -9,4 +9,7 @@ import java.util.List;
 public interface CardRepository extends MongoRepository<Card, String> {
 
     List<Card> findByBoardListId(String boardListId);
+
+
+
 }

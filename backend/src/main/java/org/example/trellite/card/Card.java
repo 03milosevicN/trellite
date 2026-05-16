@@ -37,4 +37,7 @@ public class Card {
     @Field(name = "due_date")
     private Instant dueDate;
 
+    @Field(name = "checklists")
+    private List<Checklist> checklists;
+
 }

@@ -25,12 +25,16 @@ public class Board {
     private String title;
 
     @Field(name = "members")
-    private List<Integer> members;
+    private List<Long> members;
 
     @Field(name = "created_at")
     private Instant createdAt;
 
     @Field(name = "archived")
     private Boolean archived;
+
+
+    @DocumentReference(lookup = "{ 'boardId' : ?#{#self._id} }")
+    private List<BoardList> boardLists;
 
 }
