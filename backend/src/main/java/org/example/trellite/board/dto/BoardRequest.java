@@ -4,6 +4,7 @@ import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import java.time.Instant;
+import java.util.List;
 
 @Data
 public class BoardRequest {
@@ -14,4 +15,5 @@ public class BoardRequest {
     @FutureOrPresent(message = "Creation date cannot be in the past.")
     private Instant createdAt;
     private Boolean archived;
+    private List<Long> members;
 }

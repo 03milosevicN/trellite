@@ -1,8 +1,7 @@
 package org.example.trellite.card.dto;
 
 import lombok.Data;
-import org.example.trellite.checklist.Checklist;
-
+import org.example.trellite.checklist.dto.ChecklistResponse;
 import java.time.Instant;
 import java.util.List;
 
@@ -15,5 +14,5 @@ public class CardResponse {
     private List<Long> assignees;
     private List<String> labels;
     private Instant dueDate;
-    private List<Checklist> checklists;
+    private List<ChecklistResponse> checklists;
 }

@@ -1,9 +1,8 @@
 package org.example.trellite.user;
 
 import jakarta.validation.Valid;
-import org.example.trellite.user.dto.UserRequest;
-import org.example.trellite.user.dto.UserResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.example.trellite.user.dto.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,14 +10,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserServiceImpl userService;
 
-    @Autowired
-    public UserController(UserServiceImpl userService) {
-        this.userService = userService;
-    }
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserResponse> getById(@PathVariable Long userId) {
@@ -29,6 +25,7 @@ public class UserController {
     public ResponseEntity<List<UserResponse>> getAll() {
         return ResponseEntity.ok(userService.getAll());
     }
+
 
     @PostMapping
     public ResponseEntity<UserResponse> create(@Valid @RequestBody UserRequest req) {
@@ -44,11 +41,11 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    public ResponseEntity<UserResponse> patch(
+    public ResponseEntity<UserResponse> patchPassword(
             @PathVariable Long userId,
-            @Valid @RequestBody UserRequest req
+            @Valid @RequestBody PasswordUpdateRequest req
     ) {
-        return ResponseEntity.ok(userService.patch(userId, req));
+        return ResponseEntity.ok(userService.patchPassword(userId, req));
     }
 
     @DeleteMapping("/{userId}")

@@ -1,7 +1,9 @@
 package org.example.trellite.user;
 
+import lombok.RequiredArgsConstructor;
 import org.example.trellite.common.BaseService;
 import org.example.trellite.common.ResourceNotFoundException;
+import org.example.trellite.user.dto.PasswordUpdateRequest;
 import org.example.trellite.user.dto.UserRequest;
 import org.example.trellite.user.dto.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,16 +12,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements BaseService<UserRequest, UserResponse, Long> {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
-        this.userRepository = userRepository;
-        this.userMapper = userMapper;
-    }
 
 
     @Override
@@ -58,13 +55,10 @@ public class UserServiceImpl implements BaseService<UserRequest, UserResponse, L
         return userMapper.toResponse(userRepository.save(existing));
     }
 
-    @Override
-    public UserResponse patch(Long id, UserRequest dto) {
-        var existing = userRepository.findByUserId(id).orElseThrow(() -> new ResourceNotFoundException("User with id of " + id + " not found."));
-            if (dto.getFirstName() != null) existing.setFirstName(dto.getFirstName());
-            if (dto.getLastName() != null) existing.setLastName(dto.getLastName());
-            if (dto.getEmail() != null) existing.setPassword(dto.getPassword());
-        return userMapper.toResponse(userRepository.save(existing));
+    public UserResponse patchPassword(Long id, PasswordUpdateRequest dto) {
+        var updated = userRepository.findByUserId(id).orElseThrow(() -> new ResourceNotFoundException("User with id of " + id + " not found."));
+        if (dto.getPassword() != null) updated.setPassword(dto.getPassword());
+        return userMapper.toResponse(userRepository.save(updated));
     }
 
     @Override

@@ -3,6 +3,7 @@ package org.example.trellite.card.dto;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import org.example.trellite.checklist.dto.ChecklistRequest;
 import java.time.Instant;
 import java.util.List;
 
@@ -17,4 +18,5 @@ public class CardRequest {
     private List<String> labels;
     @FutureOrPresent
     private Instant dueDate;
+    private List<ChecklistRequest> checklists;
 }

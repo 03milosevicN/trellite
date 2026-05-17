@@ -1,7 +1,7 @@
 package org.example.trellite.org.controller;
 
-import org.example.trellite.org.dto.OrgMembersRequest;
-import org.example.trellite.org.dto.OrgMembersResponse;
+import lombok.RequiredArgsConstructor;
+import org.example.trellite.org.dto.*;
 import org.example.trellite.org.service.OrgMembersServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,14 +11,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/org-members")
+@RequiredArgsConstructor
 public class OrgMembersController {
 
     private final OrgMembersServiceImpl orgMembersService;
-
-    @Autowired
-    public OrgMembersController(OrgMembersServiceImpl orgMembersService) {
-        this.orgMembersService = orgMembersService;
-    }
 
 
     @GetMapping("/{orgMembersId}")
@@ -44,14 +40,30 @@ public class OrgMembersController {
         return ResponseEntity.ok(orgMembersService.update(orgMembersId, req));
     }
 
-    @PatchMapping("/{orgMembersId}")
-    public ResponseEntity<OrgMembersResponse> patch(
+    @PatchMapping("/{orgMembersId}/user")
+    public ResponseEntity<OrgMembersResponse> updateUser(
             @PathVariable Long orgMembersId,
-            @RequestBody OrgMembersRequest req
+            @RequestBody UserTransferRequest req
     ) {
-        return ResponseEntity.ok(orgMembersService.patch(orgMembersId, req));
+        return ResponseEntity.ok(orgMembersService.updateUser(orgMembersId, req));
     }
-    
+
+    @PatchMapping("/{orgMembersId}/org")
+    public ResponseEntity<OrgMembersResponse> updateOrg(
+            @PathVariable Long orgMembersId,
+            @RequestBody OrganizationTransferRequest req
+            ) {
+        return ResponseEntity.ok(orgMembersService.updateOrg(orgMembersId, req));
+    }
+
+    @PatchMapping("/{orgMembersId}")
+    public ResponseEntity<OrgMembersResponse> updateRole(
+            @PathVariable Long orgMembersId,
+            @RequestBody RoleUpdateRequest req
+    ) {
+        return ResponseEntity.ok(orgMembersService.updateRole(orgMembersId, req));
+    }
+
     @DeleteMapping("/{orgMembersId}")
     public ResponseEntity<Void> delete(@PathVariable Long orgMembersId) {
         orgMembersService.delete(orgMembersId);

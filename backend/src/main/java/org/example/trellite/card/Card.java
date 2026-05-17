@@ -2,6 +2,7 @@ package org.example.trellite.card;
 
 import jakarta.persistence.Id;
 import lombok.Data;
+import org.bson.types.ObjectId;
 import org.example.trellite.checklist.Checklist;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -16,11 +17,10 @@ import java.util.List;
 public class Card {
 
     @Id
-    @Field(targetType = FieldType.OBJECT_ID)
-    private String id;
+    private ObjectId id;
 
     @Field(name = "board_list_id")
-    private String boardListId;
+    private ObjectId boardListId;
 
     @Field(name = "title")
     private String title;

@@ -1,34 +1,26 @@
 package org.example.trellite.org.service;
 
+import lombok.RequiredArgsConstructor;
 import org.example.trellite.common.BaseService;
 import org.example.trellite.common.ResourceNotFoundException;
-import org.example.trellite.org.dto.OrgMembersRequest;
-import org.example.trellite.org.dto.OrgMembersResponse;
+import org.example.trellite.org.dto.NameUpdateRequest;
 import org.example.trellite.org.dto.OrganizationRequest;
 import org.example.trellite.org.dto.OrganizationResponse;
 import org.example.trellite.org.mapper.OrganizationMapper;
 import org.example.trellite.org.repository.OrganizationRepository;
 import org.example.trellite.user.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class OrganizationServiceImpl implements BaseService<OrganizationRequest, OrganizationResponse, Long> {
 
     private final OrganizationRepository organizationRepository;
     private final UserRepository userRepository;
     private final OrganizationMapper organizationMapper;
-
-    @Autowired
-    public OrganizationServiceImpl(OrganizationRepository organizationRepository, OrganizationMapper organizationMapper, UserRepository userRepository) {
-        this.organizationRepository = organizationRepository;
-        this.userRepository = userRepository;
-        this.organizationMapper = organizationMapper;
-    }
 
 
     @Override
@@ -51,6 +43,8 @@ public class OrganizationServiceImpl implements BaseService<OrganizationRequest,
     @Override
     public OrganizationResponse save(OrganizationRequest dto) {
         var model = organizationMapper.toModel(dto);
+        var user = userRepository.getReferenceById(dto.getOwnedBy());
+        model.setOwnedBy(user);
         var saved = organizationRepository.save(model);
         return organizationMapper.toResponse(saved);
     }
@@ -69,13 +63,9 @@ public class OrganizationServiceImpl implements BaseService<OrganizationRequest,
         return organizationMapper.toResponse(organizationRepository.save(existing));
     }
 
-    @Override
-    public OrganizationResponse patch(Long id, OrganizationRequest dto) {
-        var existing = organizationRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Organization with id of " + id + " not found."));
-        var user = userRepository.findByUserId(dto.getOwnedBy()).orElseThrow(() -> new ResourceNotFoundException("User with id " + dto.getOwnedBy() + " not found."));
-        if (dto.getName() != null) existing.setName(dto.getName());
-        if (dto.getCreatedAt() != null) existing.setCreatedAt(Instant.now());
-        if (dto.getOwnedBy() != null) existing.setOwnedBy(user);
+    public OrganizationResponse patchName(Long orgId, NameUpdateRequest req) {
+        var existing = organizationRepository.findByOrgId(orgId).orElseThrow(() -> new ResourceNotFoundException("Organization with id of " + orgId + " not found."));
+        if (req.getName() != null) existing.setName(req.getName());
         return organizationMapper.toResponse(organizationRepository.save(existing));
     }
 
@@ -87,5 +77,6 @@ public class OrganizationServiceImpl implements BaseService<OrganizationRequest,
                         .orElseThrow( () -> new ResourceNotFoundException("Organization with id of " + id + " not found."))
         );
     }
+
 
 }

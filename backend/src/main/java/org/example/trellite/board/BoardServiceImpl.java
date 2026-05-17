@@ -2,8 +2,10 @@ package org.example.trellite.board;
 
 import org.example.trellite.board.dto.BoardRequest;
 import org.example.trellite.board.dto.BoardResponse;
+import org.example.trellite.boardList.BoardListRepository;
 import org.example.trellite.boardList.BoardListServiceImpl;
 import org.example.trellite.common.BaseService;
+import org.example.trellite.common.ObjectIdMapper;
 import org.example.trellite.common.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,12 +21,15 @@ public class BoardServiceImpl implements BaseService<BoardRequest, BoardResponse
     private final BoardRepository boardRepository;
     private final BoardMapper boardMapper;
     private final BoardListServiceImpl boardListService;
+    private final ObjectIdMapper objectIdMapper;
+
 
     @Autowired
-    public BoardServiceImpl(BoardRepository boardRepository, BoardMapper boardMapper, BoardListServiceImpl boardListService) {
+    public BoardServiceImpl(BoardRepository boardRepository, BoardMapper boardMapper, BoardListServiceImpl boardListService, ObjectIdMapper objectIdMapper) {
         this.boardRepository = boardRepository;
         this.boardMapper = boardMapper;
         this.boardListService = boardListService;
+        this.objectIdMapper = objectIdMapper;
     }
 
 
@@ -63,7 +68,6 @@ public class BoardServiceImpl implements BaseService<BoardRequest, BoardResponse
         return boardMapper.toResponse(boardRepository.save(existing));
     }
 
-    @Override
     public BoardResponse patch(String id, BoardRequest dto) {
         var existing = boardRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Board with id of " + id + " not found."));
         if ( dto.getOrgId() != null ) existing.setOrgId( dto.getOrgId() );
@@ -75,7 +79,14 @@ public class BoardServiceImpl implements BaseService<BoardRequest, BoardResponse
 
     @Override
     public void delete(String id) {
-        boardListService.deleteByBoardId(id);
+        var board = boardRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Board with id of " + id + " not found."));
+
+        if (board.getBoardLists() != null) {
+            for (var list : board.getBoardLists()) {
+                boardListService.delete(objectIdMapper.objectIdToString(list.getId()));
+            }
+        }
+
         boardRepository.deleteById(id);
     }
 

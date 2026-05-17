@@ -2,8 +2,9 @@ package org.example.trellite.item;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.example.trellite.card.CardRepository;
-import org.example.trellite.checklist.ChecklistRepository;
+import org.example.trellite.common.ObjectIdMapper;
 import org.example.trellite.common.ResourceNotFoundException;
 import org.example.trellite.item.dto.ItemRequest;
 import org.example.trellite.item.dto.ItemResponse;
@@ -19,9 +20,8 @@ import java.util.stream.Collectors;
 public class ItemServiceImpl {
 
     private final CardRepository cardRepository;
-    private final ChecklistRepository checklistRepository;
-    private final ItemRepository itemRepository;
     private final ItemMapper itemMapper;
+    private final ObjectIdMapper objectIdMapper;
 
 
     public List<ItemResponse> getAll(String cardId, String checklistId) {
@@ -31,7 +31,7 @@ public class ItemServiceImpl {
         var checklist = card
                 .getChecklists()
                 .stream()
-                .filter(c -> c.getId().equals(checklistId))
+                .filter(c -> c.getId().equals(objectIdMapper.stringToObjectId(checklistId)))
                 .findFirst()
                 .orElseThrow(() -> new ResourceNotFoundException("Checklist with id of " + checklistId + "not found"));
         return checklist
@@ -48,14 +48,14 @@ public class ItemServiceImpl {
         var checklist = card
                 .getChecklists()
                 .stream()
-                .filter(c -> c.getId().equals(checklistId))
+                .filter(c -> c.getId().equals(objectIdMapper.stringToObjectId(checklistId)))
                 .findFirst()
                 .orElseThrow(() -> new ResourceNotFoundException("Checklist with id of " + checklistId + "not found"));
         return checklist
                 .getItems()
                 .stream()
+                .filter(i -> i.getId().equals(objectIdMapper.stringToObjectId(id)))
                 .map(itemMapper::toResponse)
-                .filter(i -> i.getId().equals(id))
                 .findFirst()
                 .orElseThrow(() -> new ResourceNotFoundException("Item with id of " + id + "not found"));
     }
@@ -67,10 +67,11 @@ public class ItemServiceImpl {
         var checklist = card
                 .getChecklists()
                 .stream()
-                .filter(c -> c.getId().equals(checklistId))
+                .filter(c -> c.getId().equals(objectIdMapper.stringToObjectId(checklistId)))
                 .findFirst()
                 .orElseThrow(() -> new ResourceNotFoundException("Checklist with id of " + checklistId + "not found"));
         var model = itemMapper.toModel(req);
+        model.setId(new ObjectId());
         checklist.getItems().add(model);
         cardRepository.save(card);
         return itemMapper.toResponse(model);
@@ -83,13 +84,13 @@ public class ItemServiceImpl {
         var checklist = card
                 .getChecklists()
                 .stream()
-                .filter(c -> c.getId().equals(checklistId))
+                .filter(c -> c.getId().equals(objectIdMapper.stringToObjectId(checklistId)))
                 .findFirst()
                 .orElseThrow(() -> new ResourceNotFoundException("Checklist with id of " + checklistId + "not found"));
         var item = checklist
                 .getItems()
                 .stream()
-                .filter(i -> i.getId().equals(id))
+                .filter(i -> i.getId().equals(objectIdMapper.stringToObjectId(id)))
                 .findFirst()
                 .orElseThrow(() -> new ResourceNotFoundException("Item with id of " + id + "not found"));
         if ( req.getTask() != null ) item.setTask(req.getTask());
@@ -104,21 +105,12 @@ public class ItemServiceImpl {
         var checklist = card
                 .getChecklists()
                 .stream()
-                .filter(c -> c.getId().equals(checklistId))
+                .filter(c -> c.getId().equals(objectIdMapper.stringToObjectId(checklistId)))
                 .findFirst()
                 .orElseThrow(() -> new ResourceNotFoundException("Checklist with id of " + checklistId + "not found"));
-        var removed = checklist
-                .getItems()
-                .removeIf(i -> i.getId().equals(id));
-        log.info("Checking if item was removed based on item id match: {}", removed);
+        checklist.getItems().removeIf(i -> i.getId().equals(objectIdMapper.stringToObjectId(id)));
+        log.info("Item deleted. Current checklist object with id of {} : {}", checklist.getId(), checklist.getItems());
         cardRepository.save(card);
-    }
-
-
-    public void deleteByChecklistId(String checklistId) {
-        List<Item> items = itemRepository
-                .findByChecklistId(checklistId);
-        items.forEach(item -> itemRepository.deleteItemByChecklistId(item.getId()) );
     }
 
 }

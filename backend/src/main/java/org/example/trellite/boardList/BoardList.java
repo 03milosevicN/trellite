@@ -1,7 +1,9 @@
 package org.example.trellite.boardList;
 
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 import lombok.Data;
+import org.bson.types.ObjectId;
 import org.example.trellite.card.Card;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
@@ -15,11 +17,10 @@ import java.util.List;
 public class BoardList {
 
     @Id
-    @Field(targetType = FieldType.OBJECT_ID)
-    private String id;
+    private ObjectId id;
 
     @Field(name = "board_id")
-    private String boardId;
+    private ObjectId boardId;
 
     @Field(name = "title")
     private String title;
@@ -28,7 +29,8 @@ public class BoardList {
     private Instant createdAt;
 
 
-    @DocumentReference(lookup = " 'boardListId' : ?#{#self._id} ")
+//    @DocumentReference(lookup = " 'board_list_id' : ?#{#self._id} ")
+    @Transient
     private List<Card> cards;
 
 }

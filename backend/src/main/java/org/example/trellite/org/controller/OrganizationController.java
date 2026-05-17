@@ -1,5 +1,8 @@
 package org.example.trellite.org.controller;
 
+import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
+import org.example.trellite.org.dto.NameUpdateRequest;
 import org.example.trellite.org.dto.OrganizationRequest;
 import org.example.trellite.org.dto.OrganizationResponse;
 import org.example.trellite.org.service.OrganizationServiceImpl;
@@ -11,14 +14,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/orgs")
+@RequiredArgsConstructor
 public class OrganizationController {
 
     private final OrganizationServiceImpl organizationService;
-
-    @Autowired
-    public OrganizationController(OrganizationServiceImpl organizationService) {
-        this.organizationService = organizationService;
-    }
 
 
     @GetMapping("/{orgId}")
@@ -45,11 +44,11 @@ public class OrganizationController {
     }
 
     @PatchMapping("/{orgId}")
-    public ResponseEntity<OrganizationResponse> patch(
+    public ResponseEntity<OrganizationResponse> patchName(
             @PathVariable Long orgId,
-            @RequestBody OrganizationRequest req
+            @RequestBody NameUpdateRequest req
     ) {
-        return ResponseEntity.ok(organizationService.patch(orgId, req));
+        return ResponseEntity.ok(organizationService.patchName(orgId, req));
     }
 
     @DeleteMapping("/{orgId}")
