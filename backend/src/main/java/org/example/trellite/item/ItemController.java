@@ -1,6 +1,7 @@
 package org.example.trellite.item;
 
 import lombok.RequiredArgsConstructor;
+import org.example.trellite.checklist.ChecklistServiceImpl;
 import org.example.trellite.item.dto.ItemRequest;
 import org.example.trellite.item.dto.ItemResponse;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ItemController {
 
+    private final ChecklistServiceImpl checklistService;
     private final ItemServiceImpl itemService;
 
 
@@ -40,16 +42,6 @@ public class ItemController {
             @RequestBody ItemRequest req
     ) {
         return ResponseEntity.status(HttpStatus.CREATED).body(itemService.save(cardId, checklistId, req));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<ItemResponse> update(
-            @PathVariable String cardId,
-            @PathVariable String checklistId,
-            @PathVariable String id,
-            @RequestBody ItemRequest req
-    ) {
-        return ResponseEntity.ok(itemService.update(cardId, checklistId, id, req));
     }
 
     @PatchMapping("/{id}")

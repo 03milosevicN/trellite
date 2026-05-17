@@ -2,7 +2,6 @@ package org.example.trellite.checklist;
 
 import lombok.Data;
 import org.example.trellite.item.Item;
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import java.util.List;
 

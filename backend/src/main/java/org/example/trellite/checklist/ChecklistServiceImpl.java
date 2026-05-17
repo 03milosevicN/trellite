@@ -6,6 +6,7 @@ import org.example.trellite.checklist.dto.ChecklistRequest;
 import org.example.trellite.checklist.dto.ChecklistResponse;
 import org.example.trellite.common.ResourceNotFoundException;
 import org.example.trellite.item.ItemServiceImpl;
+import org.example.trellite.item.dto.ItemResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -32,6 +33,7 @@ public class ChecklistServiceImpl {
                 .map(checklistMapper::toResponse)
                 .collect(Collectors.toList());
     }
+
 
     public ChecklistResponse getById(String cardId, String id) {
         var card = cardRepository

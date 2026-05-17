@@ -1,5 +1,6 @@
 package org.example.trellite.user;
 
+import jakarta.validation.Valid;
 import org.example.trellite.user.dto.UserRequest;
 import org.example.trellite.user.dto.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +31,14 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserResponse> create(@RequestBody UserRequest req) {
+    public ResponseEntity<UserResponse> create(@Valid @RequestBody UserRequest req) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(req));
     }
 
     @PutMapping("/{userId}")
     public ResponseEntity<UserResponse> update(
             @PathVariable Long userId,
-            @RequestBody UserRequest req
+            @Valid @RequestBody UserRequest req
     ) {
         return ResponseEntity.ok(userService.update(userId, req));
     }
@@ -45,7 +46,7 @@ public class UserController {
     @PatchMapping("/{userId}")
     public ResponseEntity<UserResponse> patch(
             @PathVariable Long userId,
-            @RequestBody UserRequest req
+            @Valid @RequestBody UserRequest req
     ) {
         return ResponseEntity.ok(userService.patch(userId, req));
     }
