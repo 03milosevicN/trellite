@@ -1,10 +1,11 @@
 package org.example.trellite.org.service;
 
+import lombok.RequiredArgsConstructor;
 import org.example.trellite.common.BaseService;
 import org.example.trellite.common.ResourceNotFoundException;
-import org.example.trellite.org.dto.OrgMembersRequest;
-import org.example.trellite.org.dto.OrgMembersResponse;
+import org.example.trellite.org.dto.*;
 import org.example.trellite.org.mapper.OrgMembersMapper;
+import org.example.trellite.org.model.OrgMembers;
 import org.example.trellite.org.repository.OrgMembersRepository;
 import org.example.trellite.org.repository.OrganizationRepository;
 import org.example.trellite.user.UserRepository;
@@ -14,25 +15,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class OrgMembersServiceImpl implements BaseService<OrgMembersRequest, OrgMembersResponse, Long> {
 
     private final OrgMembersRepository orgMembersRepository;
     private final UserRepository userRepository;
     private final OrganizationRepository organizationRepository;
     private final OrgMembersMapper orgMembersMapper;
-
-    @Autowired
-    public OrgMembersServiceImpl(
-            OrgMembersRepository orgMembersRepository,
-            UserRepository userRepository,
-            OrganizationRepository organizationRepository,
-            OrgMembersMapper orgMembersMapper
-    ) {
-        this.orgMembersRepository = orgMembersRepository;
-        this.userRepository = userRepository;
-        this.organizationRepository = organizationRepository;
-        this.orgMembersMapper = orgMembersMapper;
-    }
 
 
     @Override
@@ -76,10 +65,33 @@ public class OrgMembersServiceImpl implements BaseService<OrgMembersRequest, Org
         return orgMembersMapper.toResponse(orgMembersRepository.save(existing));
     }
 
-    @Override
-    public OrgMembersResponse patch(Long id, OrgMembersRequest dto) {
-        var existing = orgMembersRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Organization member with id of " + id + " not found."));
-        if (dto.getRole() != null) dto.setRole(dto.getRole());
+    public OrgMembersResponse updateUser(Long orgMembersId, UserTransferRequest req) {
+        var existing = orgMembersRepository
+                .findByOrgMembersId(orgMembersId)
+                .orElseThrow( () -> new ResourceNotFoundException("Organization member entry with id of " + orgMembersId + " not found."));
+        var user = userRepository
+                .findByUserId(req.getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("User with id of " + req.getUserId() + " not found."));
+        if (req.getUserId() != null) existing.setUser(user);
+        return orgMembersMapper.toResponse(orgMembersRepository.save(existing));
+    }
+
+    public OrgMembersResponse updateOrg(Long orgMembersId, OrganizationTransferRequest req) {
+        var existing = orgMembersRepository
+                .findByOrgMembersId(orgMembersId)
+                .orElseThrow( () -> new ResourceNotFoundException("Organization member entry with id of " + orgMembersId + " not found."));
+        var org = organizationRepository
+                .findByOrgId(req.getOrgId())
+                .orElseThrow( () -> new ResourceNotFoundException("Organization with id of " + req.getOrgId() + " not found."));
+        if (req.getOrgId() != null) existing.setOrganization(org);
+        return orgMembersMapper.toResponse(orgMembersRepository.save(existing));
+    }
+
+    public OrgMembersResponse updateRole(Long orgMembersId, RoleUpdateRequest req) {
+        var existing = orgMembersRepository
+                .findByOrgMembersId(orgMembersId)
+                .orElseThrow( () -> new ResourceNotFoundException("Organization member entry with id of " + orgMembersId + " not found."));
+        if (req.getRole() != null) existing.setRole(req.getRole());
         return orgMembersMapper.toResponse(orgMembersRepository.save(existing));
     }
 
@@ -91,5 +103,6 @@ public class OrgMembersServiceImpl implements BaseService<OrgMembersRequest, Org
                         .orElseThrow( () -> new ResourceNotFoundException("Organization member entry with id of " + id + " not found.") )
         );
     }
+
 
 }

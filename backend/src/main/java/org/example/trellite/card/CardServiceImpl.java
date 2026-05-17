@@ -1,10 +1,13 @@
 package org.example.trellite.card;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
 import org.example.trellite.card.dto.CardRequest;
 import org.example.trellite.card.dto.CardResponse;
 import org.example.trellite.checklist.ChecklistServiceImpl;
 import org.example.trellite.common.BaseService;
+import org.example.trellite.common.ObjectIdMapper;
 import org.example.trellite.common.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,13 +15,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @Transactional
 @RequiredArgsConstructor
 public class CardServiceImpl implements BaseService<CardRequest, CardResponse, String> {
 
     private final CardRepository cardRepository;
     private final CardMapper cardMapper;
-    private final ChecklistServiceImpl checklistService;
+    private final ObjectIdMapper objectIdMapper;
 
 
     @Override
@@ -41,6 +45,18 @@ public class CardServiceImpl implements BaseService<CardRequest, CardResponse, S
     @Override
     public CardResponse save(CardRequest dto) {
         var model = cardMapper.toModel(dto);
+
+        if (model.getChecklists() != null) {
+            model.getChecklists().forEach(checklist -> {
+                if (checklist.getId() == null) checklist.setId(new ObjectId());
+                if (checklist.getItems() != null ) {
+                    checklist.getItems().forEach(item -> {
+                        if (item.getId() == null) item.setId(new ObjectId());
+                    });
+                }
+            });
+        }
+
         var saved = cardRepository.save(model);
         return cardMapper.toResponse(saved);
     }
@@ -50,17 +66,20 @@ public class CardServiceImpl implements BaseService<CardRequest, CardResponse, S
         var existing = cardRepository
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Card with id of" + id + " not found."));
-        existing.setBoardListId(dto.getBoardListId());
+        existing.setBoardListId(objectIdMapper.stringToObjectId(dto.getBoardListId()));
         existing.setTitle(dto.getTitle());
         existing.setDesc(dto.getDesc());
         existing.setAssignees(dto.getAssignees());
+        existing.setLabels(dto.getLabels());
+        existing.setDueDate(dto.getDueDate());
         return cardMapper.toResponse(cardRepository.save(existing));
     }
 
-    @Override
     public CardResponse patch(String id, CardRequest dto) {
-        var existing = cardRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Card with id of " + id + " not found."));
-        if (dto.getBoardListId() != null) existing.setBoardListId(dto.getBoardListId());
+        var existing = cardRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Card with id of " + id + " not found."));
+        if (dto.getBoardListId() != null) existing.setBoardListId(objectIdMapper.stringToObjectId(dto.getBoardListId()));
         if (dto.getTitle() != null) existing.setTitle(dto.getTitle());
         if (dto.getDesc() != null) existing.setDesc(dto.getDesc());
         if (dto.getAssignees() != null) existing.setAssignees(dto.getAssignees());
@@ -71,14 +90,11 @@ public class CardServiceImpl implements BaseService<CardRequest, CardResponse, S
 
     @Override
     public void delete(String id) {
-        checklistService.deleteByCardId(id);
         cardRepository.deleteById(id);
     }
 
     public void deleteByBoardListId(String boardListId) {
-        List<Card> cards = cardRepository.findByBoardListId(boardListId);
-        cards.forEach(card ->
-                checklistService.deleteByCardId(card.getId()));
+        cardRepository.deleteAllByBoardListId(objectIdMapper.stringToObjectId(boardListId));
     }
 
 }

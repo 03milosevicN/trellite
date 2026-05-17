@@ -2,6 +2,7 @@ package org.example.trellite.board;
 
 import jakarta.persistence.Id;
 import lombok.Data;
+import org.bson.types.ObjectId;
 import org.example.trellite.boardList.BoardList;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
@@ -15,8 +16,7 @@ import java.util.List;
 public class Board {
 
     @Id
-    @Field(targetType = FieldType.OBJECT_ID)
-    private String id;
+    private ObjectId id;
 
     @Field(name = "org_id")
     private Long orgId;
@@ -34,7 +34,7 @@ public class Board {
     private Boolean archived;
 
 
-    @DocumentReference(lookup = "{ 'boardId' : ?#{#self._id} }")
+    @DocumentReference(lookup = "{ 'board_id' : ?#{#self._id} }")
     private List<BoardList> boardLists;
 
 }

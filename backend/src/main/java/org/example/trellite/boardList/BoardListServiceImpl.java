@@ -5,8 +5,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.trellite.boardList.dto.BoardListRequest;
 import org.example.trellite.boardList.dto.BoardListResponse;
+import org.example.trellite.card.CardRepository;
 import org.example.trellite.card.CardServiceImpl;
 import org.example.trellite.common.BaseService;
+import org.example.trellite.common.ObjectIdMapper;
 import org.example.trellite.common.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,7 @@ public class BoardListServiceImpl implements BaseService<BoardListRequest, Board
 
     private final BoardListRepository boardListRepository;
     private final BoardListMapper boardListMapper;
+    private final ObjectIdMapper objectIdMapper;
     private final CardServiceImpl cardService;
 
 
@@ -52,16 +55,15 @@ public class BoardListServiceImpl implements BaseService<BoardListRequest, Board
         var existing = boardListRepository
                 .findById(id)
                 .orElseThrow( () -> new ResourceNotFoundException("BoardList with id of " + id + " not found."));
-        existing.setBoardId( dto.getBoardId() );
+        existing.setBoardId( objectIdMapper.stringToObjectId(dto.getBoardId()) );
         existing.setTitle( dto.getTitle() );
         existing.setCreatedAt(Instant.now());
         return boardListMapper.toResponse(boardListRepository.save(existing));
     }
 
-    @Override
     public BoardListResponse patch(String id, BoardListRequest dto) {
         var existing = boardListRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("BoardList with id of " + id + " not found."));
-        if ( dto.getBoardId() != null ) existing.setBoardId(dto.getBoardId());
+        if ( dto.getBoardId() != null ) existing.setBoardId(objectIdMapper.stringToObjectId(dto.getBoardId()));
         if ( dto.getTitle() != null ) existing.setTitle(dto.getTitle());
         if (dto.getCreatedAt() != null) existing.setCreatedAt(Instant.now());
         return boardListMapper.toResponse(boardListRepository.save(existing));
@@ -69,14 +71,8 @@ public class BoardListServiceImpl implements BaseService<BoardListRequest, Board
 
     @Override
     public void delete(String id) {
-       cardService.deleteByBoardListId(id);
+        cardService.deleteByBoardListId(id);
         boardListRepository.deleteById(id);
-    }
-
-    public void deleteByBoardId(String boardId) {
-        List<BoardList> lists = boardListRepository
-                .findByBoardId(boardId);
-        lists.forEach( list -> cardService.deleteByBoardListId(list.getId()));
     }
 
 }

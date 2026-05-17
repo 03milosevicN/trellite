@@ -1,8 +1,8 @@
 package org.example.trellite.checklist;
 
 import lombok.Data;
+import org.bson.types.ObjectId;
 import org.example.trellite.item.Item;
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import java.util.List;
 
@@ -10,9 +10,9 @@ import java.util.List;
 public class Checklist {
 
     @Field(name = "_id")
-    private String id;
+    private ObjectId id;
     
-    private String cardId;
+    private ObjectId cardId;
 
     @Field(name = "title")
     private String title;
