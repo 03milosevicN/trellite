@@ -23,6 +23,22 @@ export class OrgMemberService {
         return this.http.get<CardModel[]>(`${this.API_URL}/${userId}/cards`);
     }
 
+    /**
+     * Just like fetching cards in getAllCardsByUserIdViaBoards(), fetch higher-level components.
+     */
+    public getAllBoardsByUserId(userId: string) {
+        // todo: Implement method stub.
+        // return this.http.get<BoardModel[]>(`{this.API_URL/${userId}/boards}`);
+    }
+    
+    /**
+     * Just like fetching cards in getAllCardsByUserIdViaBoards(), fetch higher-level components.
+     */
+    public getAllBoardListsByUserId(userId: string) {
+        // todo: Implement method stub.
+        // return this.http.get<BoardModel[]>(`{this.API_URL/${userId}/board-lists}`);
+    }
+
     public create(data: OrgMemberModel): Observable<OrgMemberModel> {
         return this.http.post<OrgMemberModel>(`${this.API_URL}`, data);
     }

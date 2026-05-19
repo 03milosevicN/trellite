@@ -33,6 +33,12 @@ public class OrgMembersController {
         return ResponseEntity.ok(orgMembersService.getAllCardsByUserIdViaBoards(userId));
     }
 
+    // @GetMapping("/{userId}/board-lists")
+
+
+    // @GetMapping("/{userId}/boards")
+
+
     @PostMapping
     public ResponseEntity<OrgMembersResponse> create(@RequestBody OrgMembersRequest req) {
         return ResponseEntity.status(HttpStatus.CREATED).body(orgMembersService.save(req));

@@ -3,6 +3,8 @@ import {Router} from "@angular/router";
 import {CardModel} from "../../../models/card.model";
 import {OrgMemberService} from "../../../services/orgMember.service";
 import {DatePipe} from "@angular/common";
+import {BoardModel} from "../../../models/board.model";
+import {BoardListModel} from "../../../models/boardList.model";
 
 @Component({
   selector: "app-cards-info",
@@ -15,6 +17,8 @@ import {DatePipe} from "@angular/common";
 export class CardsInfo {
 
   protected cards: WritableSignal<CardModel[] | null> = signal<CardModel[] | null>(null);
+  protected boards: WritableSignal<BoardModel[] | null> = signal<BoardModel[] | null>(null);
+  protected lists: WritableSignal<BoardListModel[] | null> = signal<BoardListModel[] | null>(null);
 
   private orgMemberService: OrgMemberService = inject(OrgMemberService);
 

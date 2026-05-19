@@ -5,10 +5,13 @@ import {Router} from "@angular/router";
 import {BoardService} from "../../../services/board.service";
 import {forkJoin, switchMap} from "rxjs";
 import {BoardListService} from "../../../services/board-list.service";
+import {DatePipe} from "@angular/common";
 
 @Component({
   selector: "app-boards",
-  imports: [],
+  imports: [
+    DatePipe
+  ],
   templateUrl: "./boards.html",
   styleUrl: "./boards.css",
 })
