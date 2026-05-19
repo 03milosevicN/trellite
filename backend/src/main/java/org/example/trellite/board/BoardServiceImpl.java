@@ -2,8 +2,8 @@ package org.example.trellite.board;
 
 import org.example.trellite.board.dto.BoardRequest;
 import org.example.trellite.board.dto.BoardResponse;
-import org.example.trellite.boardList.BoardListRepository;
 import org.example.trellite.boardList.BoardListServiceImpl;
+import org.example.trellite.card.dto.CardResponse;
 import org.example.trellite.common.BaseService;
 import org.example.trellite.common.ObjectIdMapper;
 import org.example.trellite.common.ResourceNotFoundException;
@@ -50,6 +50,11 @@ public class BoardServiceImpl implements BaseService<BoardRequest, BoardResponse
                 .orElseThrow( () -> new ResourceNotFoundException("Board with id of " + id + " not found."));
     }
 
+    public List<BoardResponse> getByOrgId(Long orgId) {
+        var boards = boardRepository.findBoardByOrgId(orgId).orElseThrow(() -> new ResourceNotFoundException("Boards fetched thru org. id of " + orgId + " not found."));
+        return boards.stream().map(boardMapper::toResponse).toList();
+    }
+
     @Override
     public BoardResponse save(BoardRequest dto) {
         var model = boardMapper.toModel(dto);
@@ -88,6 +93,21 @@ public class BoardServiceImpl implements BaseService<BoardRequest, BoardResponse
         }
 
         boardRepository.deleteById(id);
+    }
+
+
+    /**
+     * Returns flat map of cards from boardList streams associated with a board.
+     * @param boardId id of board
+     * @return list of {@link CardResponse} objects.
+     */
+    public List<CardResponse> getCardsByBoardId(String boardId) {
+        return boardListService.findBoardListsByBoardId(boardId)
+                .stream()
+                .flatMap(boardList ->
+                        boardListService.getCardsByBoardList(boardList.getId()).stream()
+                )
+                .toList();
     }
 
 }
