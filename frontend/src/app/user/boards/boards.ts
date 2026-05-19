@@ -1,14 +1,17 @@
 import {Component, inject, signal, WritableSignal} from "@angular/core";
-import {Board as BoardModel} from "../../../models/board.model";
+import {BoardModel} from "../../../models/board.model";
 import {OrgMemberService} from "../../../services/orgMember.service";
 import {Router} from "@angular/router";
 import {BoardService} from "../../../services/board.service";
 import {forkJoin, switchMap} from "rxjs";
 import {BoardListService} from "../../../services/board-list.service";
+import {DatePipe} from "@angular/common";
 
 @Component({
   selector: "app-boards",
-  imports: [],
+  imports: [
+    DatePipe
+  ],
   templateUrl: "./boards.html",
   styleUrl: "./boards.css",
 })
@@ -29,12 +32,11 @@ export class Boards {
     this.loadData();
   }
 
-
   //! Might be too intense for the frontend.
   loadData(): void {
     this.orgMemberService.getByUserId(this.routeUserId!).pipe(
         switchMap(orgMember => {
-          const orgId = orgMember?.organization.toString();
+          const orgId = orgMember?.orgId.toString();
           return forkJoin({
             boards: this.boardService.getAllByOrgId(orgId!)
           });

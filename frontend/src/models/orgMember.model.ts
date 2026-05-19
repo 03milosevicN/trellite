@@ -1,6 +1,6 @@
-export interface OrgMember {
-    id: number;
-    user: number;
-    organization: number;
+export interface OrgMemberModel {
+    orgMembersId: number;
+    userId: number;
+    orgId: number;
     role: 'OWNER' | 'MEMBER' | 'ADMIN';
 }

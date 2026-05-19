@@ -1,6 +1,7 @@
 package org.example.trellite.org.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.trellite.card.dto.CardResponse;
 import org.example.trellite.org.dto.*;
 import org.example.trellite.org.service.OrgMembersServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,17 @@ public class OrgMembersController {
     public ResponseEntity<List<OrgMembersResponse>> getAll() {
         return ResponseEntity.ok(orgMembersService.getAll());
     }
+
+    @GetMapping("/{userId}/cards")
+    public ResponseEntity<List<CardResponse>> getAllCardsByUserIdViaBoards(@PathVariable Long userId) {
+        return ResponseEntity.ok(orgMembersService.getAllCardsByUserIdViaBoards(userId));
+    }
+
+    // @GetMapping("/{userId}/board-lists")
+
+
+    // @GetMapping("/{userId}/boards")
+
 
     @PostMapping
     public ResponseEntity<OrgMembersResponse> create(@RequestBody OrgMembersRequest req) {

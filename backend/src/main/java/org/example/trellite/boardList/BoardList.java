@@ -29,7 +29,6 @@ public class BoardList {
     private Instant createdAt;
 
 
-//    @DocumentReference(lookup = " 'board_list_id' : ?#{#self._id} ")
     @Transient
     private List<Card> cards;
 

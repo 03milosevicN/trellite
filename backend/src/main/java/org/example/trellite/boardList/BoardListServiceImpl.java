@@ -5,16 +5,22 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.trellite.boardList.dto.BoardListRequest;
 import org.example.trellite.boardList.dto.BoardListResponse;
-import org.example.trellite.card.CardRepository;
 import org.example.trellite.card.CardServiceImpl;
+import org.example.trellite.card.dto.CardResponse;
 import org.example.trellite.common.BaseService;
 import org.example.trellite.common.ObjectIdMapper;
 import org.example.trellite.common.ResourceNotFoundException;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
 @Service
 @Slf4j
@@ -26,7 +32,7 @@ public class BoardListServiceImpl implements BaseService<BoardListRequest, Board
     private final BoardListMapper boardListMapper;
     private final ObjectIdMapper objectIdMapper;
     private final CardServiceImpl cardService;
-
+    private final MongoTemplate mongoTemplate;
 
     @Override
     public List<BoardListResponse> getAll() {
@@ -73,6 +79,36 @@ public class BoardListServiceImpl implements BaseService<BoardListRequest, Board
     public void delete(String id) {
         cardService.deleteByBoardListId(id);
         boardListRepository.deleteById(id);
+    }
+
+    /**
+     * Given a board's id, retrieve all boardLists associated with it.
+     * @param boardId id of board.
+     * @return list of {@link BoardListResponse} objects belonging to board.
+     */
+    public List<BoardListResponse>findBoardListsByBoardId(String boardId) {
+        var mappedBoardId = objectIdMapper.stringToObjectId(boardId);
+        return boardListRepository
+                .findByBoardId(mappedBoardId)
+                .stream()
+                .map(boardListMapper::toResponse)
+                .toList();
+    }
+
+    /**
+     * Given a boardList's id, retrieve all cards associated with it.
+     * @param boardListId id of board list
+     * @return list of {@link CardResponse} objects belonging to boardList.
+     */
+    public List<CardResponse> getCardsByBoardList(String boardListId) {
+        var mappedListId = objectIdMapper.stringToObjectId(boardListId);
+        Aggregation aggregation = newAggregation(
+                match(Criteria.where("board_list_id").is(mappedListId))
+        );
+        log.info("INFO: Logging received aggregation: {}", aggregation);
+        AggregationResults<CardResponse> results = mongoTemplate.aggregate(aggregation, "cards", CardResponse.class);
+        log.info("INFO: Logging aggregation results: {}", results);
+        return results.getMappedResults();
     }
 
 }

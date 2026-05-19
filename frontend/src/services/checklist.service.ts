@@ -1,6 +1,6 @@
 import {inject, Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {Checklist} from "../models/board.model";
+import {ChecklistModel} from "../models/card.model";
 import {Observable} from "rxjs";
 
 @Injectable({
@@ -9,24 +9,23 @@ import {Observable} from "rxjs";
 export class ChecklistService {
 
     MOCK_API_URL: string = 'http://localhost:3000/checklists';
-
     private http: HttpClient = inject(HttpClient);
 
 
-    public getById(id: string): Observable<Checklist> {
-        return this.http.get<Checklist>(`${this.MOCK_API_URL}/${id}`);
+    public getById(id: string): Observable<ChecklistModel> {
+        return this.http.get<ChecklistModel>(`${this.MOCK_API_URL}/${id}`);
     }
 
-    public getAllByCardId(id: string): Observable<Checklist[]> {
-        return this.http.get<Checklist[]>(`${this.MOCK_API_URL}?card_id=${id}`);
+    public getAllByCardId(id: string): Observable<ChecklistModel[]> {
+        return this.http.get<ChecklistModel[]>(`${this.MOCK_API_URL}?card_id=${id}`);
     }
 
-    public create(data: Checklist): Observable<Checklist> {
-        return this.http.post<Checklist>(`${this.MOCK_API_URL}`, data);
+    public create(data: ChecklistModel): Observable<ChecklistModel> {
+        return this.http.post<ChecklistModel>(`${this.MOCK_API_URL}`, data);
     }
 
-    public update(id: string, data: Checklist): Observable<Checklist> {
-        return this.http.put<Checklist>(`${this.MOCK_API_URL}/${id}`, data);
+    public update(id: string, data: ChecklistModel): Observable<ChecklistModel> {
+        return this.http.put<ChecklistModel>(`${this.MOCK_API_URL}/${id}`, data);
     }
 
     public delete(id: string): Observable<void> {

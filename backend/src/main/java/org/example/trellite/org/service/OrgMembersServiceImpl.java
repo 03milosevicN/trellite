@@ -1,20 +1,22 @@
 package org.example.trellite.org.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.example.trellite.board.BoardServiceImpl;
+import org.example.trellite.card.dto.CardResponse;
 import org.example.trellite.common.BaseService;
 import org.example.trellite.common.ResourceNotFoundException;
 import org.example.trellite.org.dto.*;
 import org.example.trellite.org.mapper.OrgMembersMapper;
-import org.example.trellite.org.model.OrgMembers;
 import org.example.trellite.org.repository.OrgMembersRepository;
 import org.example.trellite.org.repository.OrganizationRepository;
 import org.example.trellite.user.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class OrgMembersServiceImpl implements BaseService<OrgMembersRequest, OrgMembersResponse, Long> {
 
@@ -23,6 +25,7 @@ public class OrgMembersServiceImpl implements BaseService<OrgMembersRequest, Org
     private final OrganizationRepository organizationRepository;
     private final OrgMembersMapper orgMembersMapper;
 
+    private final BoardServiceImpl boardService;
 
     @Override
     public List<OrgMembersResponse> getAll() {
@@ -104,5 +107,21 @@ public class OrgMembersServiceImpl implements BaseService<OrgMembersRequest, Org
         );
     }
 
+
+    /**
+     * Given an org. member's (user) id, fetch all associated cards.
+     * @param userId org. member's (user) id.
+     * @return list of associated {@link CardResponse} objects.
+     */
+    public List<CardResponse> getAllCardsByUserIdViaBoards(Long userId) {
+        var org = orgMembersRepository
+                .findOrgByUserId(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Organization member based on their user id " + userId + " not found."));
+        var boards = boardService
+                .getByOrgId(org.getOrgId())
+                .stream();
+
+        return boards.flatMap(board -> boardService.getCardsByBoardId(board.getId()).stream()).toList();
+    }
 
 }

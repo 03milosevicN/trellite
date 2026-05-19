@@ -1,1 +1,14 @@
 <h1>Cards</h1>
+
+@if (cards()?.length === 0) {
+    <p>Loading...</p>
+} @else {
+    @for (card of cards(); track card.id) {
+        <p>Card: {{card.title}}</p>
+
+        <p>List: </p>
+        <p>Board: </p>
+        <p>Labels: {{card.labels}}</p>
+        <p>Due: {{card.dueDate | date}}</p>
+    }
+}
