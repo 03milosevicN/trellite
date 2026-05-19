@@ -1,5 +1,5 @@
 import {Component, inject, signal, WritableSignal} from "@angular/core";
-import {Board as BoardModel} from "../../../models/board.model";
+import {BoardModel} from "../../../models/board.model";
 import {OrgMemberService} from "../../../services/orgMember.service";
 import {Router} from "@angular/router";
 import {BoardService} from "../../../services/board.service";
@@ -29,12 +29,11 @@ export class Boards {
     this.loadData();
   }
 
-
   //! Might be too intense for the frontend.
   loadData(): void {
     this.orgMemberService.getByUserId(this.routeUserId!).pipe(
         switchMap(orgMember => {
-          const orgId = orgMember?.organization.toString();
+          const orgId = orgMember?.orgId.toString();
           return forkJoin({
             boards: this.boardService.getAllByOrgId(orgId!)
           });

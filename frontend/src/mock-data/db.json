@@ -1,7 +1,7 @@
 {
   "users": [
     {
-      "id": "1",
+      "id": 1,
       "firstName": "John",
       "lastName": "Doe",
       "username": "johndoe123",
@@ -9,7 +9,7 @@
       "password": "123"
     },
     {
-      "id": "2",
+      "id": 2,
       "firstName": "Shadow",
       "lastName": "Pulisic",
       "username": "shadowp58",
@@ -17,7 +17,7 @@
       "password": "123"
     },
     {
-      "id": "3",
+      "id": 3,
       "firstName": "Zacharia",
       "lastName": "Bellow",
       "username": "zachbell23",
@@ -25,7 +25,7 @@
       "password": "123"
     },
     {
-      "id": "1tOIz3xJ_4k",
+      "id": 4,
       "firstName": "REST",
       "lastName": "API",
       "username": "restapi",
@@ -35,7 +35,7 @@
   ],
   "organizations": [
     {
-      "id": "1",
+      "id": 1,
       "name": "Mocked Organization 1",
       "createdAt": "2026-04-10T09:15:00Z",
       "ownedBy": 2
@@ -43,19 +43,19 @@
   ],
   "org-members": [
     {
-      "id": "1",
+      "id": 1,
       "user": 1,
       "organization": 1,
       "role": "ADMIN"
     },
     {
-      "id": "2",
+      "id": 2,
       "user": 2,
       "organization": 1,
       "role": "OWNER"
     },
     {
-      "id": "3",
+      "id": 3,
       "user": 3,
       "organization": 1,
       "role": "MEMBER"
@@ -63,53 +63,120 @@
   ],
   "boards": [
     {
-      "id": "1",
+      "id": 1,
       "org_id": 1,
       "title": "Mocked board 1",
       "created_at": "2026-05-10T16:00:00Z",
+      "archived": false
+    },
+    {
+      "id": 2,
+      "org_id": 1,
+      "title": "Mocked board 2",
+      "created_at": "2020-03-10T16:00:00Z",
       "archived": false
     }
   ],
   "board-lists": [
     {
-      "id": "1",
+      "id": 1,
       "board_id": 1,
-      "title": "Mocked list 1",
+      "title": "To-do",
       "created_at": "2026-05-10T16:00:00Z"
+    },
+    {
+      "id": 2,
+      "board_id": 1,
+      "title": "Doing",
+      "created_at": "2026-05-10T17:30:00Z"
+    },
+    {
+      "id": 3,
+      "board_id": 1,
+      "title": "Done",
+      "created_at": "2026-05-10T18:30:00Z"
     }
   ],
   "cards": [
     {
-      "id": "1",
+      "id": 1,
       "board_list_id": 1,
-      "title": "Mocked card 1",
-      "desc": "Mocked card 1 description",
-      "assignees": [
-        1,
-        2,
-        3
-      ],
-      "labels": [],
-      "due_date": "2026-05-15T16:00:00Z"
-    }
-  ],
-  "checklists": [
-    {
-      "id": "1",
-      "card_id": 1,
-      "title": "Mocked checklist 1",
-      "is_completed": false
+      "title": "Design landing page",
+      "due_date": "2026-05-25T10:00:00Z",
+      "checklists": [
+        {
+          "id": 1,
+          "title": "Wireframe",
+          "is_completed": true,
+          "items": [
+            { "id": "1", "task": "Sketch homepage layout" },
+            { "id": "2", "task": "Define navigation structure" }
+          ]
+        },
+        {
+          "id": 2,
+          "title": "UI Design",
+          "is_completed": false,
+          "items": [
+            { "id": 1, "task": "Choose color palette" },
+            { "id": 2, "task": "Design hero section" },
+            { "id": 3, "task": "Create button styles" }
+          ]
+        }
+      ]
     },
     {
-      "title": "Updated New Checklist",
-      "id": "oZQvrtp4XAU"
-    }
-  ],
-  "items": [
+      "id": 2,
+      "board_list_id": 1,
+      "title": "Develop authentication module",
+      "due_date": "2026-05-30T18:00:00Z",
+      "checklists": [
+        {
+          "id": 1,
+          "title": "Backend setup",
+          "is_completed": false,
+          "items": [
+            { "id": 1, "task": "Set up database schema" },
+            { "id": 2, "task": "Create user model" }
+          ]
+        },
+        {
+          "id": 2,
+          "title": "Frontend integration",
+          "is_completed": false,
+          "items": [
+            { "id": 1, "task": "Build login form" },
+            { "id": 2, "task": "Connect API endpoints" }
+          ]
+        }
+      ]
+    },
     {
-      "id": "1",
-      "checklist_id": 1,
-      "task": "Mocked item 1"
+      "id": 3,
+      "board_list_id": 1,
+      "title": "Write project documentation",
+      "due_date": "2026-06-02T12:00:00Z",
+      "checklists": [
+        {
+          "id": 1,
+          "title": "Initial draft",
+          "is_completed": true,
+          "items": [
+            { "id": 1, "task": "Outline sections" },
+            { "id": 2, "task": "Write introduction" }
+          ]
+        },
+        {
+          "id": 2,
+          "title": "Final review",
+          "is_completed": false,
+          "items": [
+            { "id": 1, "task": "Proofread content" },
+            { "id": 2, "task": "Add diagrams" },
+            { "id": 3, "task": "Fix formatting issues" }
+          ]
+        }
+      ]
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

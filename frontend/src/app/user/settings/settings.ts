@@ -1,7 +1,7 @@
 import {Component, inject, signal, WritableSignal} from "@angular/core";
 import {Router} from "@angular/router";
 import {UserService} from "../../../services/user.service";
-import {User as UserModel} from "../../../models/user.model"
+import {UserModel} from "../../../models/user.model"
 
 @Component({
   selector: "app-settings",

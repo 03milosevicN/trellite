@@ -1,6 +1,6 @@
 import {inject, Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {Organization} from "../models/organization.model";
+import {OrganizationModel} from "../models/organization.model";
 import {Observable} from "rxjs";
 
 @Injectable({
@@ -12,16 +12,16 @@ export class OrganizationService {
 
     private http: HttpClient = inject(HttpClient);
 
-    public getById(id: string): Observable<Organization> {
-        return this.http.get<Organization>(`${this.MOCK_API_URL}/${id}`);
+    public getById(id: string): Observable<OrganizationModel> {
+        return this.http.get<OrganizationModel>(`${this.MOCK_API_URL}/${id}`);
     }
 
-    public getByOwner(id: string): Observable<Organization[]> {
-        return this.http.get<Organization[]>(`${this.MOCK_API_URL}?ownedBy=${id}`);
+    public getByOwner(id: string): Observable<OrganizationModel[]> {
+        return this.http.get<OrganizationModel[]>(`${this.MOCK_API_URL}?ownedBy=${id}`);
     }
 
-    public create(data: Organization): Observable<Organization> {
-        return this.http.post<Organization>(`${this.MOCK_API_URL}`, data);
+    public create(data: OrganizationModel): Observable<OrganizationModel> {
+        return this.http.post<OrganizationModel>(`${this.MOCK_API_URL}`, data);
     }
 
     public delete(id: string): Observable<void> {
