@@ -3,6 +3,7 @@ package org.example.trellite.card;
 import lombok.RequiredArgsConstructor;
 import org.example.trellite.card.dto.CardRequest;
 import org.example.trellite.card.dto.CardResponse;
+import org.example.trellite.common.BaseController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,26 +12,30 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/cards")
 @RequiredArgsConstructor
-public class CardController {
+public class CardController implements BaseController<CardRequest, CardResponse, String> {
 
     private final CardServiceImpl cardService;
 
 
+    @Override
     @GetMapping("/{id}")
     public ResponseEntity<CardResponse> getById(@PathVariable String id) {
         return ResponseEntity.ok(cardService.getById(id));
     }
 
+    @Override
     @GetMapping
     public ResponseEntity<List<CardResponse>> getAll() {
         return ResponseEntity.ok(cardService.getAll());
     }
 
+    @Override
     @PostMapping
     public ResponseEntity<CardResponse> create(@RequestBody CardRequest req) {
         return ResponseEntity.status(HttpStatus.CREATED).body(cardService.save(req));
     }
 
+    @Override
     @PutMapping("/{id}")
     public ResponseEntity<CardResponse> update(
             @PathVariable String id,
@@ -39,14 +44,7 @@ public class CardController {
         return ResponseEntity.ok(cardService.update(id, req));
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<CardResponse> patch(
-            @PathVariable String id,
-            @RequestBody CardRequest req
-    ) {
-        return ResponseEntity.ok(cardService.patch(id, req));
-    }
-
+    @Override
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable String id) {
         cardService.delete(id);
@@ -54,5 +52,13 @@ public class CardController {
     }
 
 
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<CardResponse> patch(
+            @PathVariable String id,
+            @RequestBody CardRequest req
+    ) {
+        return ResponseEntity.ok(cardService.patch(id, req));
+    }
 
 }

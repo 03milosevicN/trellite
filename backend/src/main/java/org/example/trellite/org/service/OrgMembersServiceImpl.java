@@ -3,6 +3,8 @@ package org.example.trellite.org.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.trellite.board.BoardServiceImpl;
+import org.example.trellite.board.dto.BoardResponse;
+import org.example.trellite.boardList.dto.BoardListResponse;
 import org.example.trellite.card.dto.CardResponse;
 import org.example.trellite.common.BaseService;
 import org.example.trellite.common.ResourceNotFoundException;
@@ -68,6 +70,15 @@ public class OrgMembersServiceImpl implements BaseService<OrgMembersRequest, Org
         return orgMembersMapper.toResponse(orgMembersRepository.save(existing));
     }
 
+    @Override
+    public void delete(Long id) {
+        orgMembersRepository.delete(
+                orgMembersRepository
+                        .findByOrgMembersId(id)
+                        .orElseThrow( () -> new ResourceNotFoundException("Organization member entry with id of " + id + " not found.") )
+        );
+    }
+
     public OrgMembersResponse updateUser(Long orgMembersId, UserTransferRequest req) {
         var existing = orgMembersRepository
                 .findByOrgMembersId(orgMembersId)
@@ -98,16 +109,6 @@ public class OrgMembersServiceImpl implements BaseService<OrgMembersRequest, Org
         return orgMembersMapper.toResponse(orgMembersRepository.save(existing));
     }
 
-    @Override
-    public void delete(Long id) {
-        orgMembersRepository.delete(
-                orgMembersRepository
-                        .findByOrgMembersId(id)
-                        .orElseThrow( () -> new ResourceNotFoundException("Organization member entry with id of " + id + " not found.") )
-        );
-    }
-
-
     /**
      * Given an org. member's (user) id, fetch all associated cards.
      * @param userId org. member's (user) id.
@@ -122,6 +123,23 @@ public class OrgMembersServiceImpl implements BaseService<OrgMembersRequest, Org
                 .stream();
 
         return boards.flatMap(board -> boardService.getCardsByBoardId(board.getId()).stream()).toList();
+    }
+
+    public List<BoardListResponse> getAllBoardListsByUserId(Long userId) {
+        var org = orgMembersRepository
+                .findOrgByUserId(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Organization member based on their user id " + userId + " not found."));
+        var boards = boardService.getByOrgId(org.getOrgId());
+        var res =boards.stream().flatMap(board -> boardService.getBoardListsByBoardId(board.getId()).stream()).toList();
+        log.info("Fetched {} board lists from {} boards", res.size(), boards.size());
+        return res;
+    }
+
+    public List<BoardResponse> getAllBoardsByUserId(Long userId) {
+        var org = orgMembersRepository
+                .findOrgByUserId(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Organization member based on their user id " + userId + " not found."));
+        return boardService.getByOrgId(org.getOrgId()).stream().toList();
     }
 
 }

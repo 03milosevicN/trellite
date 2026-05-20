@@ -1,14 +1,38 @@
 <h1>Cards</h1>
 
-@if (cards()?.length === 0) {
-    <p>Loading...</p>
+@if (accumulator().length > 0) {
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Card</th>
+            <th scope="col">List</th>
+            <th scope="col">Board</th>
+            <th scope="col">Labels</th>
+            <th scope="col">Due</th>
+        </tr>
+        </thead>
+        <tbody>
+            @for (data of accumulator(); track data.id) {
+                <tr>
+                    <td>{{ data.cardTitle }}</td>
+                    <td>{{ data.boardListTitle }}</td>
+                    <td>{{ data.boardTitle }}</td>
+                    <td>
+                        @if (data.labels.length) {
+                            @for (label of data.labels; track label) {
+                                <span>{{ label }}</span>
+                            }
+                        } @else {
+                            <span>None</span>
+                        }
+                    </td>
+                    <td>
+                        {{ data.due | date:'mediumDate' }}
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 } @else {
-    @for (card of cards(); track card.id) {
-        <p>Card: {{card.title}}</p>
-
-        <p>List: </p>
-        <p>Board: </p>
-        <p>Labels: {{card.labels}}</p>
-        <p>Due: {{card.dueDate | date}}</p>
-    }
+    <p>Loading...</p>
 }
