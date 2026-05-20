@@ -1,7 +1,10 @@
 package org.example.trellite.org.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.trellite.board.dto.BoardResponse;
+import org.example.trellite.boardList.dto.BoardListResponse;
 import org.example.trellite.card.dto.CardResponse;
+import org.example.trellite.common.BaseController;
 import org.example.trellite.org.dto.*;
 import org.example.trellite.org.service.OrgMembersServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,43 +16,62 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/org-members")
 @RequiredArgsConstructor
-public class OrgMembersController {
+public class OrgMembersController implements BaseController<OrgMembersRequest, OrgMembersResponse, Long> {
 
     private final OrgMembersServiceImpl orgMembersService;
 
 
-    @GetMapping("/{orgMembersId}")
-    public ResponseEntity<OrgMembersResponse> getById(@PathVariable Long orgMembersId) {
-        return ResponseEntity.ok(orgMembersService.getById(orgMembersId));
-    }
-
+    @Override
     @GetMapping
     public ResponseEntity<List<OrgMembersResponse>> getAll() {
         return ResponseEntity.ok(orgMembersService.getAll());
     }
 
-    @GetMapping("/{userId}/cards")
-    public ResponseEntity<List<CardResponse>> getAllCardsByUserIdViaBoards(@PathVariable Long userId) {
-        return ResponseEntity.ok(orgMembersService.getAllCardsByUserIdViaBoards(userId));
+    @Override
+    @GetMapping("/{orgMembersId}")
+    public ResponseEntity<OrgMembersResponse> getById(@PathVariable Long orgMembersId) {
+        return ResponseEntity.ok(orgMembersService.getById(orgMembersId));
     }
 
-    // @GetMapping("/{userId}/board-lists")
-
-
-    // @GetMapping("/{userId}/boards")
-
-
+    @Override
     @PostMapping
     public ResponseEntity<OrgMembersResponse> create(@RequestBody OrgMembersRequest req) {
         return ResponseEntity.status(HttpStatus.CREATED).body(orgMembersService.save(req));
     }
 
+    @Override
     @PutMapping("/{orgMembersId}")
     public ResponseEntity<OrgMembersResponse> update(
             @PathVariable Long orgMembersId,
             @RequestBody OrgMembersRequest req
     ) {
         return ResponseEntity.ok(orgMembersService.update(orgMembersId, req));
+    }
+
+    @Override
+    @DeleteMapping("/{orgMembersId}")
+    public ResponseEntity<Void> delete(@PathVariable Long orgMembersId) {
+        orgMembersService.delete(orgMembersId);
+        return ResponseEntity.noContent().build();
+    }
+
+
+
+    @GetMapping("/{userId}/cards")
+    public ResponseEntity<List<CardResponse>> getAllCardsByUserIdViaBoards(@PathVariable Long userId) {
+        return ResponseEntity.ok(orgMembersService.getAllCardsByUserIdViaBoards(userId));
+    }
+
+    @GetMapping("/{userId}/board-lists")
+    public ResponseEntity<List<BoardListResponse>> getAllBoardListsByUserId(@PathVariable Long userId) {
+        // todo: Implement method stub.
+        return null;
+    }
+
+    @GetMapping("/{userId}/boards")
+    public ResponseEntity<List<BoardResponse>> getAllBoardsByUserId(@PathVariable Long userId) {
+        // todo: Implement method stub.
+        return null;
     }
 
     @PatchMapping("/{orgMembersId}/user")
@@ -74,12 +96,6 @@ public class OrgMembersController {
             @RequestBody RoleUpdateRequest req
     ) {
         return ResponseEntity.ok(orgMembersService.updateRole(orgMembersId, req));
-    }
-
-    @DeleteMapping("/{orgMembersId}")
-    public ResponseEntity<Void> delete(@PathVariable Long orgMembersId) {
-        orgMembersService.delete(orgMembersId);
-        return ResponseEntity.noContent().build();
     }
 
 }
