@@ -3,6 +3,8 @@ import {HttpClient} from "@angular/common/http";
 import {OrgMemberModel} from "../models/orgMember.model";
 import {map, Observable} from "rxjs";
 import {CardModel} from "../models/card.model";
+import {BoardModel} from "../models/board.model";
+import {BoardListModel} from "../models/boardList.model";
 
 @Injectable({
     providedIn: 'root'
@@ -23,20 +25,13 @@ export class OrgMemberService {
         return this.http.get<CardModel[]>(`${this.API_URL}/${userId}/cards`);
     }
 
-    /**
-     * Just like fetching cards in getAllCardsByUserIdViaBoards(), fetch higher-level components.
-     */
     public getAllBoardsByUserId(userId: string) {
-        // todo: Implement method stub.
-        // return this.http.get<BoardModel[]>(`{this.API_URL/${userId}/boards}`);
+        return this.http.get<BoardModel[]>(`${this.API_URL}/${userId}/boards`);
     }
-    
-    /**
-     * Just like fetching cards in getAllCardsByUserIdViaBoards(), fetch higher-level components.
-     */
+
+
     public getAllBoardListsByUserId(userId: string) {
-        // todo: Implement method stub.
-        // return this.http.get<BoardModel[]>(`{this.API_URL/${userId}/board-lists}`);
+        return this.http.get<BoardListModel[]>(`${this.API_URL}/${userId}/board-lists`);
     }
 
     public create(data: OrgMemberModel): Observable<OrgMemberModel> {
