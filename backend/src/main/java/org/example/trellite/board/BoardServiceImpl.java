@@ -3,6 +3,7 @@ package org.example.trellite.board;
 import org.example.trellite.board.dto.BoardRequest;
 import org.example.trellite.board.dto.BoardResponse;
 import org.example.trellite.boardList.BoardListServiceImpl;
+import org.example.trellite.boardList.dto.BoardListResponse;
 import org.example.trellite.card.dto.CardResponse;
 import org.example.trellite.common.BaseService;
 import org.example.trellite.common.ObjectIdMapper;
@@ -108,6 +109,10 @@ public class BoardServiceImpl implements BaseService<BoardRequest, BoardResponse
                         boardListService.getCardsByBoardList(boardList.getId()).stream()
                 )
                 .toList();
+    }
+
+    public List<BoardListResponse> getBoardListsByBoardId(String boardId) {
+        return boardListService.findBoardListsByBoardId(boardId).stream().toList();
     }
 
 }

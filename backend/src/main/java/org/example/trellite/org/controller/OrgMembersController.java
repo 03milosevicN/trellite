@@ -62,16 +62,16 @@ public class OrgMembersController implements BaseController<OrgMembersRequest, O
         return ResponseEntity.ok(orgMembersService.getAllCardsByUserIdViaBoards(userId));
     }
 
+
     @GetMapping("/{userId}/board-lists")
     public ResponseEntity<List<BoardListResponse>> getAllBoardListsByUserId(@PathVariable Long userId) {
-        // todo: Implement method stub.
-        return null;
+        return ResponseEntity.ok(orgMembersService.getAllBoardListsByUserId(userId));
     }
+
 
     @GetMapping("/{userId}/boards")
     public ResponseEntity<List<BoardResponse>> getAllBoardsByUserId(@PathVariable Long userId) {
-        // todo: Implement method stub.
-        return null;
+        return ResponseEntity.ok(orgMembersService.getAllBoardsByUserId(userId));
     }
 
     @PatchMapping("/{orgMembersId}/user")
