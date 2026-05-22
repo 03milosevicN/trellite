@@ -31,15 +31,15 @@ export class CardsInfo implements OnInit {
   protected boardLists: WritableSignal<BoardListModel[] | null> = signal<BoardListModel[] | null>(null);
 
   protected accumulator: Signal<AccumulatorTemplate[]> = computed(() => {
-    const cards = this.cards() ?? [];
-    const boards = this.boards() ?? [];
-    const boardLists = this.boardLists() ?? [];
+    const cards: CardModel[] = this.cards() ?? [];
+    const boards: BoardModel[] = this.boards() ?? [];
+    const boardLists: BoardListModel[] = this.boardLists() ?? [];
 
     return cards.map(card => {
-      const boardList = boardLists.find(
+      const boardList: BoardListModel | undefined = boardLists.find(
           list => list.id === card.boardListId
       );
-      const board = boards.find(
+      const board: BoardModel | undefined = boards.find(
           b => b.id === boardList?.boardId
       );
       return {

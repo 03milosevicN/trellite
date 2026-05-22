@@ -2,9 +2,10 @@
 
 <div>
     @for (board of boards(); track board.id) {
-        <div class="border border-primary m-2">
-            <h2>Card: {{board.title}}</h2>
-            <p>Created: {{board.createdAt | date}}</p>
+        <div [style.background-color]="boardCardDiv()" class="card rounded w-50">
+            <div class="card-body">
+                <h3>{{board.title}}</h3>
+            </div>
         </div>
     }
 </div>
