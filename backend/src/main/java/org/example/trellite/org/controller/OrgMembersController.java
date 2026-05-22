@@ -7,7 +7,6 @@ import org.example.trellite.card.dto.CardResponse;
 import org.example.trellite.common.BaseController;
 import org.example.trellite.org.dto.*;
 import org.example.trellite.org.service.OrgMembersServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

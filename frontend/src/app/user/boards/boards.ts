@@ -1,4 +1,4 @@
-import {Component, inject, signal, WritableSignal} from "@angular/core";
+import {Component, ElementRef, inject, Signal, signal, viewChild, WritableSignal} from "@angular/core";
 import {BoardModel} from "../../../models/board.model";
 import {OrgMemberService} from "../../../services/orgMember.service";
 import {Router} from "@angular/router";
@@ -10,7 +10,6 @@ import {DatePipe} from "@angular/common";
 @Component({
   selector: "app-boards",
   imports: [
-    DatePipe
   ],
   templateUrl: "./boards.html",
   styleUrl: "./boards.css",
@@ -21,18 +20,20 @@ export class Boards {
 
   private orgMemberService: OrgMemberService = inject(OrgMemberService);
   private boardService: BoardService = inject(BoardService);
-  private boardListService: BoardListService = inject(BoardListService);
 
   private router: Router = inject(Router);
 
   private routeUserId: string | null = null;
+
+  protected boardCardDiv = signal('');
+
 
   constructor() {
     this.routeUserId = this.router.url[3];
     this.loadData();
   }
 
-  //! Might be too intense for the frontend.
+
   loadData(): void {
     this.orgMemberService.getByUserId(this.routeUserId!).pipe(
         switchMap(orgMember => {
@@ -44,13 +45,16 @@ export class Boards {
     ).subscribe({
       next: (data) => {
         this.boards.update( () => [...data.boards] );
+        this.boardCardColorPicker();
       },
       error: err => {
         console.error('Error loading data', err);
       }
     })
   }
-  //! Might be too intense for the frontend.
 
+  boardCardColorPicker(): void {
+    this.boardCardDiv.set('#32a852');
+  }
 
 }
