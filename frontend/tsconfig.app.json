@@ -5,9 +5,7 @@
   "compilerOptions": {
     "outDir": "./out-tsc/app",
     "types": [],
-    "lib": [
-      "es5", "es6", "dom", "dom.iterable"
-    ]
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
   },
   "include": [
     "src/**/*.ts"
