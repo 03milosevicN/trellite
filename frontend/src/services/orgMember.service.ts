@@ -5,6 +5,7 @@ import {map, Observable} from "rxjs";
 import {CardModel} from "../models/card.model";
 import {BoardModel} from "../models/board.model";
 import {BoardListModel} from "../models/boardList.model";
+import {OrganizationModel} from "../models/organization.model";
 
 @Injectable({
     providedIn: 'root'
@@ -36,6 +37,10 @@ export class OrgMemberService {
 
     public create(data: OrgMemberModel): Observable<OrgMemberModel> {
         return this.http.post<OrgMemberModel>(`${this.API_URL}`, data);
+    }
+
+    public getAllOrgsByUserId(userId: string): Observable<OrganizationModel[]> {
+        return this.http.get<OrganizationModel[]>(`${this.API_URL}/${userId}/orgs`);
     }
 
 }

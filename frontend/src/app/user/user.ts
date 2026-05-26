@@ -3,6 +3,7 @@ import {UserService} from "../../services/user.service";
 import {ActivatedRoute, RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
 import {UserModel} from "../../models/user.model";
 import {LucideCalendarClock, LucideCog, LucideCreditCard, LucideUsers, LucideWalletCards} from "@lucide/angular";
+import {OrganizationModel} from "../../models/organization.model";
 
 @Component({
   selector: "app-user",
@@ -22,6 +23,8 @@ import {LucideCalendarClock, LucideCog, LucideCreditCard, LucideUsers, LucideWal
 export class User implements OnInit {
 
   protected userSignal: WritableSignal<UserModel | null> = signal<UserModel | null>(null);
+
+  protected orgsSignal: WritableSignal<OrganizationModel | null> = signal<OrganizationModel | null>(null);
 
   protected userId: string = '';
 
