@@ -5,4 +5,5 @@ export interface BoardModel {
     members: number[];
     createdAt: Date;
     archived: boolean;
+    color?: string;
 }

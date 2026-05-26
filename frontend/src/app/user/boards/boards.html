@@ -1,10 +1,16 @@
 <h1>Boards</h1>
 
-<div>
+<div class="row g-2">
     @for (board of boards(); track board.id) {
-        <div [style.background-color]="boardCardDiv()" class="card rounded w-50">
-            <div class="card-body">
-                <h3>{{board.title}}</h3>
+        <div class="col-12 col-sm-6 col-md-4 col-xl-3 d-flex">
+            <div class="card w-100 rounded overflow-hidden position-relative" style="max-width: 280px;">
+                <div class="ratio" style="--bs-aspect-ratio: 62.5%;">
+                    <div class="d-flex align-items-end justify-content-center p-3 board-content" [style.background-color]="board.color">
+                        <p class="text-white m-0 board-title">
+                            {{ board.title }}
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     }

@@ -3,6 +3,9 @@ import {UserService} from "../../services/user.service";
 import {ActivatedRoute, RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
 import {UserModel} from "../../models/user.model";
 import {LucideCalendarClock, LucideCog, LucideCreditCard, LucideUsers, LucideWalletCards} from "@lucide/angular";
+import {OrganizationModel} from "../../models/organization.model";
+import {OrgMemberService} from "../../services/orgMember.service";
+import {forkJoin} from "rxjs";
 
 @Component({
   selector: "app-user",
@@ -23,9 +26,12 @@ export class User implements OnInit {
 
   protected userSignal: WritableSignal<UserModel | null> = signal<UserModel | null>(null);
 
+  protected orgsSignal: WritableSignal<OrganizationModel[] | null> = signal<OrganizationModel[] | null>(null);
+
   protected userId: string = '';
 
   private userService: UserService = inject(UserService);
+  private orgMemberService: OrgMemberService = inject(OrgMemberService);
 
   private activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
@@ -37,12 +43,16 @@ export class User implements OnInit {
 
 
   loadData(): void {
-    this.userService.getById(this.userId!).subscribe({
-      next: data => {
-        this.userSignal.set(data);
+    forkJoin({
+      user: this.userService.getById(this.userId!),
+      orgs: this.orgMemberService.getAllOrgsByUserId(this.userId!),
+    }).subscribe({
+      next: ({user, orgs}) => {
+        this.userSignal.set(user);
+        this.orgsSignal.update( () => [...orgs]);
       },
-      error: err => {
-        console.log(err);
+      error: error => {
+        console.log('Issue with loading data: ', error);
       }
     });
   }

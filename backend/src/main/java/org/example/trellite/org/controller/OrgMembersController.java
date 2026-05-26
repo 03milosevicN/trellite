@@ -73,6 +73,11 @@ public class OrgMembersController implements BaseController<OrgMembersRequest, O
         return ResponseEntity.ok(orgMembersService.getAllBoardsByUserId(userId));
     }
 
+    @GetMapping("/{userId}/orgs")
+    public ResponseEntity<List<OrganizationResponse>> findOrgsByUserId(@PathVariable Long userId)  {
+        return ResponseEntity.ok(orgMembersService.findOrgsByUserId(userId));
+    }
+
     @PatchMapping("/{orgMembersId}/user")
     public ResponseEntity<OrgMembersResponse> updateUser(
             @PathVariable Long orgMembersId,

@@ -1,11 +1,10 @@
-import {Component, ElementRef, inject, Signal, signal, viewChild, WritableSignal} from "@angular/core";
+import {Component, inject,  signal, WritableSignal} from "@angular/core";
 import {BoardModel} from "../../../models/board.model";
 import {OrgMemberService} from "../../../services/orgMember.service";
 import {Router} from "@angular/router";
 import {BoardService} from "../../../services/board.service";
 import {forkJoin, switchMap} from "rxjs";
-import {BoardListService} from "../../../services/board-list.service";
-import {DatePipe} from "@angular/common";
+import {flattenedColorStore} from "../../../models/color.store";
 
 @Component({
   selector: "app-boards",
@@ -19,13 +18,12 @@ export class Boards {
   protected boards: WritableSignal<BoardModel[] | null> = signal<BoardModel[] | null>(null);
 
   private orgMemberService: OrgMemberService = inject(OrgMemberService);
+
   private boardService: BoardService = inject(BoardService);
 
   private router: Router = inject(Router);
 
   private routeUserId: string | null = null;
-
-  protected boardCardDiv = signal('');
 
 
   constructor() {
@@ -54,7 +52,16 @@ export class Boards {
   }
 
   boardCardColorPicker(): void {
-    this.boardCardDiv.set('#32a852');
+    const updated = this.boards()!.map(board => {
+
+      const randColor = flattenedColorStore[Math.floor(Math.random() * flattenedColorStore.length)];
+
+      return {
+        ...board,
+        color: randColor
+      };
+    });
+    this.boards.set(updated);
   }
 
 }

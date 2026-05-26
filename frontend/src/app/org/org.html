@@ -1,1 +1,7 @@
-<p>org works!</p>
+<h1>Organizations</h1>
+
+<p>orgs works!</p>
+
+@for (org of orgsSignal(); track org.orgId) {
+    <p>{{org.name}}</p>
+}
