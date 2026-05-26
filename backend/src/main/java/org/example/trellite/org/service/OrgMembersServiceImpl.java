@@ -10,6 +10,7 @@ import org.example.trellite.common.BaseService;
 import org.example.trellite.common.ResourceNotFoundException;
 import org.example.trellite.org.dto.*;
 import org.example.trellite.org.mapper.OrgMembersMapper;
+import org.example.trellite.org.mapper.OrganizationMapper;
 import org.example.trellite.org.repository.OrgMembersRepository;
 import org.example.trellite.org.repository.OrganizationRepository;
 import org.example.trellite.user.UserRepository;
@@ -25,6 +26,8 @@ public class OrgMembersServiceImpl implements BaseService<OrgMembersRequest, Org
     private final OrgMembersRepository orgMembersRepository;
     private final UserRepository userRepository;
     private final OrganizationRepository organizationRepository;
+
+    private final OrganizationMapper organizationMapper;
     private final OrgMembersMapper orgMembersMapper;
 
     private final BoardServiceImpl boardService;
@@ -130,7 +133,7 @@ public class OrgMembersServiceImpl implements BaseService<OrgMembersRequest, Org
                 .findOrgByUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Organization member based on their user id " + userId + " not found."));
         var boards = boardService.getByOrgId(org.getOrgId());
-        var res =boards.stream().flatMap(board -> boardService.getBoardListsByBoardId(board.getId()).stream()).toList();
+        var res = boards.stream().flatMap(board -> boardService.getBoardListsByBoardId(board.getId()).stream()).toList();
         log.info("Fetched {} board lists from {} boards", res.size(), boards.size());
         return res;
     }
@@ -140,6 +143,22 @@ public class OrgMembersServiceImpl implements BaseService<OrgMembersRequest, Org
                 .findOrgByUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Organization member based on their user id " + userId + " not found."));
         return boardService.getByOrgId(org.getOrgId()).stream().toList();
+    }
+
+    public List<OrganizationResponse> findOrgsByUserId(Long userId) {
+        var res = orgMembersRepository
+                .findOrgByUserId(userId)
+                .stream()
+                .map(organizationMapper::toResponse)
+                .toList();
+        if (res.isEmpty()) {
+            log.warn("No organizations associated with userId={}", userId);
+        } else {
+            for (var r : res) {
+                log.info("Associated orgs for userId={} : {}", r, userId);
+            }
+        }
+        return res;
     }
 
 }
