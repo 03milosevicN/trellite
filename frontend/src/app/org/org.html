@@ -1,47 +1,7 @@
-<div class="row g-0">
+<h1>Organizations</h1>
 
-    <aside class="col-md-4 col-xl-2 bg-body-tertiary border-end min-vh-100 p-3 shadow-sm">
-        <div>
-            <nav class="nav flex-column gap-1">
+<p>orgs works!</p>
 
-                <a routerLink="orgs"
-                   class="nav-link d-flex align-items-center gap-2 rounded px-3 py-2 text-dark hover-bg"
-                   routerLinkActive="active sidebar-green-primary-app text-white"
-                >
-                    <svg lucideUsers class="icon-sm"></svg>
-                    <span>Organizations</span>
-                </a>
-
-                <a routerLink="boards"
-                   class="nav-link d-flex align-items-center gap-2 rounded px-3 py-2 text-dark hover-bg"
-                   routerLinkActive="active sidebar-green-primary-app text-white"
-                >
-                    <svg lucideCreditCard class="icon-sm"></svg>
-                    <span>Boards</span>
-                </a>
-
-                <a routerLink="cards"
-                   class="nav-link d-flex align-items-center gap-2 rounded px-3 py-2 text-dark hover-bg"
-                   routerLinkActive="active sidebar-green-primary-app text-white"
-                >
-                    <svg lucideWalletCards class="icon-sm"></svg>
-                    <span>Cards</span>
-                </a>
-
-                <a routerLink="activity"
-                   class="nav-link d-flex align-items-center gap-2 rounded px-3 py-2 text-dark hover-bg"
-                   routerLinkActive="active sidebar-green-primary-app text-white"
-                >
-                    <svg lucideCalendarClock class="icon-sm"></svg>
-                    <span>Activity</span>
-                </a>
-
-            </nav>
-        </div>
-    </aside>
-
-    <main class="col-md-8 col-xl-10 min-vh-100 bg-light p-4">
-        <router-outlet />
-    </main>
-
-</div>
+@for (org of orgsSignal(); track org.orgId) {
+    <p>{{org.name}}</p>
+}

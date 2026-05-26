@@ -21,10 +21,29 @@
                 Organization
             </h6>
 
-            <div class="d-flex align-items-center gap-2 px-3 mb-2 text-secondary small fw-semibold">
+            <div class="d-flex align-items-center gap-2 px-3 mb-2 small fw-semibold">
                 <svg lucideUsers class="icon-sm"></svg>
-                <span>Organizations</span>
 
+                @for (org of orgsSignal(); track org.orgId) {
+                    @if (orgsSignal()?.length == 1) {
+                        <a [routerLink]="['/orgs', org.orgId]" class="nav-link text-dark"
+                           routerLinkActive="active sidebar-green-primary-app text-white">
+                            {{org.name}}
+                        </a>
+                    } @else {
+                        <div class="dropdown">
+                            <div class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                Organizations
+                            </div>
+                            <div class="dropdown-menu">
+                                <a [routerLink]="['/orgs', org.orgId]" class="nav-link dropdown-item text-dark"
+                                   routerLinkActive="active sidebar-green-primary-app text-white">
+                                    {{org.name}}
+                                </a>
+                            </div>
+                        </div>
+                    }
+                }
             </div>
 
             <nav class="nav flex-column gap-1">
