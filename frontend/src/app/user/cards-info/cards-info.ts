@@ -42,6 +42,7 @@ export class CardsInfo implements OnInit {
       const board: BoardModel | undefined = boards.find(
           b => b.id === boardList?.boardId
       );
+
       return {
         id: card.id,
         cardTitle: card.title ?? '',
