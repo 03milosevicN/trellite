@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
 import {Org} from "./org/org";
-import {Board} from "./board/board";
 import {Header} from "./common/header/header";
 import {User} from "./user/user";
 import {Settings} from "./user/settings/settings";
 import {Boards} from "./user/boards/boards";
+import {Board as BoardComponent} from './board/board'
 import {Activity} from "./user/activity/activity";
 import {CardsInfo} from "./user/cards-info/cards-info";
 
@@ -22,10 +22,10 @@ export const routes: Routes = [
         path: 'orgs/:orgId', component: Org,
     },
     {
-        path: 'boards/:boardId', component: Board
+        path: 'orgs/:orgId/boards/:boardId', component: BoardComponent,
     },
-    // TEMPORARY ROUTES
+    // TEMPORARY ROUTE
     {
-        path: 'header', component: Header
+        path: 'header/:orgId', component: Header
     }
 ];

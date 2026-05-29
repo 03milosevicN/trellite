@@ -26,12 +26,12 @@ export class OrgMemberService {
         return this.http.get<CardModel[]>(`${this.API_URL}/${userId}/cards`);
     }
 
-    public getAllBoardsByUserId(userId: string) {
+    public getAllBoardsByUserId(userId: string): Observable<BoardModel[] | null> {
         return this.http.get<BoardModel[]>(`${this.API_URL}/${userId}/boards`);
     }
 
 
-    public getAllBoardListsByUserId(userId: string) {
+    public getAllBoardListsByUserId(userId: string): Observable<BoardListModel[] | null> {
         return this.http.get<BoardListModel[]>(`${this.API_URL}/${userId}/board-lists`);
     }
 
