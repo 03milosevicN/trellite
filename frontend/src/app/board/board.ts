@@ -9,4 +9,6 @@ import {Header} from "../common/header/header";
   templateUrl: "./board.html",
   styleUrl: "./board.css",
 })
-export class Board {}
+export class Board {
+
+}

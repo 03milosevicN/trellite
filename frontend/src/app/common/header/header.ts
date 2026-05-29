@@ -2,7 +2,7 @@ import {Component, inject, OnInit, signal, WritableSignal} from "@angular/core";
 import {UserModel} from "../../../models/user.model";
 import {OrganizationModel} from "../../../models/organization.model";
 import {UserService} from "../../../services/user.service";
-import {ActivatedRoute, ActivatedRouteSnapshot, Router} from "@angular/router";
+import {ActivatedRoute, ActivatedRouteSnapshot, Router, RouterLink} from "@angular/router";
 import {NgOptimizedImage, UpperCasePipe} from "@angular/common";
 import {OrganizationService} from "../../../services/organization.service";
 
@@ -10,7 +10,8 @@ import {OrganizationService} from "../../../services/organization.service";
   selector: "app-header",
   imports: [
     NgOptimizedImage,
-    UpperCasePipe
+    UpperCasePipe,
+    RouterLink
   ],
   templateUrl: "./header.html",
   styleUrl: "./header.css",
@@ -30,14 +31,6 @@ export class Header implements OnInit {
   ngOnInit(): void {
     this.orgId = this.activatedRoute.snapshot.paramMap.get('orgId') ?? '';
     this.loadData();
-  }
-
-  loadDataProto(): void {
-    this.organizationService.getById(this.orgId!).subscribe({
-      next: data => {
-        console.log(data);
-      }
-    })
   }
 
 
