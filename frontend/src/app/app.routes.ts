@@ -7,6 +7,7 @@ import {Boards} from "./user/boards/boards";
 import {Board as BoardComponent} from './board/board'
 import {Activity} from "./user/activity/activity";
 import {CardsInfo} from "./user/cards-info/cards-info";
+import {Home} from "./home/home";
 
 export const routes: Routes = [
     {
@@ -23,6 +24,10 @@ export const routes: Routes = [
     },
     {
         path: 'orgs/:orgId/boards/:boardId', component: BoardComponent,
+    },
+    {
+        path: '',
+        component: Home,
     },
     // TEMPORARY ROUTE
     {

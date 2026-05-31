@@ -1,3 +1,13 @@
-<app-header/>
+<div class="d-flex flex-column min-vh-100">
+    <app-header/>
 
-<p>board works!</p>
+    <div class="row g-0 flex-grow-1 overflow-hidden m-1">
+        <aside class="col-4 col-lg-2 border rounded-5 overflow-auto p-2">
+            <app-cards-section/>
+        </aside>
+        <main class="col-8 col-lg-10 border rounded-5 overflow-auto p-2">
+            <app-boards-section/>
+        </main>
+    </div>
+
+</div>

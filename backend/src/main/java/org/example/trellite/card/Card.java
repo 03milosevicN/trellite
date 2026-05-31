@@ -4,11 +4,8 @@ import jakarta.persistence.Id;
 import lombok.Data;
 import org.bson.types.ObjectId;
 import org.example.trellite.checklist.Checklist;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.FieldType;
-
 import java.time.Instant;
 import java.util.List;
 

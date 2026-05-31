@@ -6,6 +6,7 @@ import {CardModel} from "../models/card.model";
 import {BoardModel} from "../models/board.model";
 import {BoardListModel} from "../models/boardList.model";
 import {OrganizationModel} from "../models/organization.model";
+import {UserModel} from "../models/user.model";
 
 @Injectable({
     providedIn: 'root'
@@ -15,6 +16,12 @@ export class OrgMemberService {
     API_URL: string = 'http://localhost:8080/api/org-members';
     private http: HttpClient = inject(HttpClient);
 
+
+    public getUserByOrgId(orgId: string): Observable<OrgMemberModel | null> {
+        return this.http
+            .get<OrgMemberModel[]>(`${this.API_URL}?orgId=${orgId}`)
+            .pipe(map(results => results[0] ?? null));
+    }
 
     public getByUserId(userId: string): Observable<OrgMemberModel | null> {
         return this.http
