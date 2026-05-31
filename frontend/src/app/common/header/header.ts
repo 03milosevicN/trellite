@@ -36,7 +36,8 @@ export class Header implements OnInit {
     this.loadData();
   }
 
-  loadData() {
+
+  private loadData(): void {
     this.orgMemberService
         .getUserByOrgId(this.orgId!)
         .pipe(
@@ -50,10 +51,8 @@ export class Header implements OnInit {
               })
             })
         ).subscribe(result => {
-          this.user.set(result.user)
+      this.user.set(result.user)
     });
   }
-
-
 
 }
