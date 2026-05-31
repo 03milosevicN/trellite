@@ -5,6 +5,8 @@ import {UserService} from "../../../services/user.service";
 import {ActivatedRoute, ActivatedRouteSnapshot, Router, RouterLink} from "@angular/router";
 import {NgOptimizedImage, UpperCasePipe} from "@angular/common";
 import {OrganizationService} from "../../../services/organization.service";
+import {OrgMemberService} from "../../../services/orgMember.service";
+import {forkJoin, map, of, switchMap} from "rxjs";
 
 @Component({
   selector: "app-header",
@@ -22,27 +24,36 @@ export class Header implements OnInit {
   protected org: WritableSignal<OrganizationModel | null> = signal<OrganizationModel | null>(null);
 
   private userService: UserService = inject(UserService);
-  private organizationService: OrganizationService = inject(OrganizationService);
+  private orgMemberService: OrgMemberService = inject(OrgMemberService);
 
   private activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
   private orgId: string | null = null;
+
 
   ngOnInit(): void {
     this.orgId = this.activatedRoute.snapshot.paramMap.get('orgId') ?? '';
     this.loadData();
   }
 
+  loadData() {
+    this.orgMemberService
+        .getUserByOrgId(this.orgId!)
+        .pipe(
+            map(user => user?.userId ?? null),
+            switchMap(userId => {
+              if (!userId) throw new Error("Cannot find this id");
 
-  loadData(): void {
-    this.userService.getById(this.orgId!).subscribe({
-      next: data => {
-        this.user.set(data);
-      },
-      error: err => {
-        console.error(err);
-      }
-    })
+              return forkJoin({
+                userId: of(userId),
+                user: this.userService.getById(userId.toString())
+              })
+            })
+        ).subscribe(result => {
+          this.user.set(result.user)
+    });
   }
+
+
 
 }

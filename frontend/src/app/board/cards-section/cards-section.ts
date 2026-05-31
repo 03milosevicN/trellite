@@ -3,6 +3,7 @@ import {FormsModule} from "@angular/forms";
 import {CardModel} from "../../../models/card.model";
 import {CardService} from "../../../services/card.service";
 import {OrgMemberService} from "../../../services/orgMember.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: "app-cards-section",
@@ -18,12 +19,20 @@ export class CardsSection implements OnInit {
   cardText: WritableSignal<string> = signal("+");
   cardsContainer: WritableSignal<CardModel[] | null> = signal([]);
 
+  private userIdParam: string | null = null;
+
+  private router: Router = inject(Router);
+
   draft: string = '';
 
   private cardService: CardService = inject(CardService);
   private orgMemberService: OrgMemberService = inject(OrgMemberService);
 
 
+  constructor() {
+    this.userIdParam = this.router.url[3];
+    console.log('ey yo param check ' + this.userIdParam);
+  }
   ngOnInit(): void {
 
   }
