@@ -1,0 +1,33 @@
+<div class="d-flex flex-column align-items-center justify-content-center">
+
+    <div class="item card border rounded align-items-center justify-content-center"
+         (click)="createCard()"
+    >
+        @if (!isEditing()) {
+            {{ cardText() }}
+        }
+        @if(isEditing()) {
+            <div (click)="$event.stopPropagation()">
+                <input [(ngModel)]="draft" (keydown.enter)="isEditing.set(false)"/>
+                <button (click)="save()">Save</button>
+            </div>
+        }
+    </div>
+
+    @if (cardsContainer() === null) {
+        <p>Loading...</p>
+    } @else if (cardsContainer()?.length === 0) {
+        <p>No cards yet.</p>
+    } @else {
+        @for (card of cardsContainer(); track card.title) {
+            <div class="item card border rounded align-items-center justify-content-center">
+                {{ card.title }}
+            </div>
+        }
+    }
+</div>
+
+
+
+
+

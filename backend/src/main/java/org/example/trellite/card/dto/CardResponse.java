@@ -3,7 +3,6 @@ package org.example.trellite.card.dto;
 import lombok.Data;
 import org.example.trellite.checklist.dto.ChecklistResponse;
 import org.springframework.data.mongodb.core.mapping.Field;
-
 import java.time.Instant;
 import java.util.List;
 
