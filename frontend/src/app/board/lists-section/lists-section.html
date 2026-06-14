@@ -1,12 +1,12 @@
-<div class="d-flex gap-1 flex-column align-items-center justify-content-center overflow-auto">
+<div class="d-flex flex-row gap-3 align-items-start justify-content-start overflow-auto">
 
     <div class="item card border rounded align-items-center justify-content-center"
-         (click)="createCard()"
+        (click)="createBoard()"
     >
         @if (!isEditing()) {
-            {{ cardText() }}
+            {{ listText() }}
         }
-        @if(isEditing()) {
+        @if (isEditing()) {
             <div (click)="$event.stopPropagation()">
                 <input [(ngModel)]="draft" (keydown.enter)="isEditing.set(false)"/>
                 <button (click)="save()">Save</button>
@@ -14,22 +14,17 @@
         }
     </div>
 
-    @if (cardsContainer() === null) {
+    @if (listsContainer() === null) {
         <p>Loading...</p>
-    } @else if (cardsContainer()?.length === 0) {
-        <p>No cards yet.</p>
+    } @else if (listsContainer()?.length === 0) {
+        <p>No boards yet.</p>
     } @else {
         <!-- Obviously change to id later!-->
-        @for (card of cardsContainer(); track card.id) {
+        @for (list of listsContainer(); track list.id) {
             <div class="item card border rounded align-items-center justify-content-center">
-                {{ card.title }}
+                {{list.title}}
             </div>
         }
     }
 
 </div>
-
-
-
-
-

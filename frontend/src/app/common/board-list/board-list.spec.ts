@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { BoardsSection } from "./boards-section";
+import { BoardList } from "./board-list";
 
-describe("BoardsSection", () => {
-  let component: BoardsSection;
-  let fixture: ComponentFixture<BoardsSection>;
+describe("BoardList", () => {
+  let component: BoardList;
+  let fixture: ComponentFixture<BoardList>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BoardsSection],
+      imports: [BoardList],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(BoardsSection);
+    fixture = TestBed.createComponent(BoardList);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import {Org} from "./org/org";
-import {Header} from "./common/header/header";
 import {User} from "./user/user";
 import {Settings} from "./user/settings/settings";
 import {Boards} from "./user/boards/boards";
@@ -8,6 +7,8 @@ import {Board as BoardComponent} from './board/board'
 import {Activity} from "./user/activity/activity";
 import {CardsInfo} from "./user/cards-info/cards-info";
 import {Home} from "./home/home";
+import {Card} from "./common/card/card";
+import {BoardList} from "./common/board-list/board-list";
 
 export const routes: Routes = [
     {
@@ -29,8 +30,11 @@ export const routes: Routes = [
         path: '',
         component: Home,
     },
-    // TEMPORARY ROUTE
+    // TEMPORARY ROUTES
     {
-        path: 'header/:orgId', component: Header
+      path: 'card-component', component: Card
+    },
+    {
+        path: 'list-component', component: BoardList
     }
 ];

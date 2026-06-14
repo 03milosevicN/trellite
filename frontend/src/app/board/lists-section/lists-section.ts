@@ -1,34 +1,30 @@
 import {Component, inject, OnInit, signal, WritableSignal} from "@angular/core";
 import {FormsModule} from "@angular/forms";
-import {CardModel} from "../../../models/card.model";
-import {CardService} from "../../../services/card.service";
 import {OrgMemberService} from "../../../services/orgMember.service";
+import {UserService} from "../../../services/user.service";
 import {ActivatedRoute} from "@angular/router";
 import {forkJoin, map, of, switchMap} from "rxjs";
-import {UserService} from "../../../services/user.service";
-import {UserModel} from "../../../models/user.model";
+import {BoardListModel} from "../../../models/boardList.model";
 
 @Component({
-  selector: "app-cards-section",
+  selector: "app-lists-section",
   imports: [
     FormsModule
   ],
-  templateUrl: "./cards-section.html",
-  styleUrl: "./cards-section.css",
+  templateUrl: "./lists-section.html",
+  styleUrl: "./lists-section.css",
 })
-export class CardsSection implements OnInit {
+export class ListsSection implements OnInit {
 
   isEditing: WritableSignal<boolean> = signal(false);
-  cardText: WritableSignal<string> = signal("+");
-  cardsContainer: WritableSignal<CardModel[] | null> = signal([]);
-  protected user: WritableSignal<UserModel | null> = signal<UserModel | null>(null);
+  listText: WritableSignal<string> = signal("+");
+  listsContainer: WritableSignal<BoardListModel[] | null> = signal([]);
 
   private activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
-  draft: string = '';
+  draft: string = "";
   private orgId: string | null = null;
 
-  private cardService: CardService = inject(CardService);
   private orgMemberService: OrgMemberService = inject(OrgMemberService);
   private userService: UserService = inject(UserService);
 
@@ -48,15 +44,13 @@ export class CardsSection implements OnInit {
               if (!userId) throw new Error("Cannot find user with id of" + userId);
               return forkJoin({
                 userId: of(userId),
-                user: this.userService.getById(userId.toString()),
-                cards: this.orgMemberService.getAllCardsByUserIdViaBoards(userId.toString()),
+                boardLists: this.orgMemberService.getAllBoardListsByUserId(userId.toString())
               });
             })
         )
         .subscribe({
           next: data => {
-            this.user.set(data.user);
-            this.cardsContainer.update(cards => (data.cards ?? []));
+            this.listsContainer.update(lists => (data.boardLists ?? []));
           },
           error: err => {
             console.error(err);
@@ -64,31 +58,27 @@ export class CardsSection implements OnInit {
     });
   }
 
-  createCard(): void {
+  protected createBoard(): void {
     this.isEditing.set(true);
   }
 
   save(): void {
     if (this.draft === '') return;
-      const card: CardModel = {
-        id: '',
-        boardListId: '',
-        title: this.draft,
-        desc: '',
-        assignees: [],
-        labels: [],
-        dueDate: new Date(),
-        checklists: []
-      };
-    console.log('log: new card named: ' + card.title );
+    const list: BoardListModel = {
+      id: '',
+      boardId: '',
+      title: this.draft,
+      createdAt: new Date()
+    }
+    console.log('log: new board named ' + list.title);
     this.isEditing.set(false);
-    this.pushToContainer(card);
+    this.pushToContainer(list);
     this.draft = '';
   }
 
-  pushToContainer(newCard: CardModel): void {
-    this.cardsContainer.update(data => [...data!, newCard]);
-    console.log(`received new card: ${newCard.title}`);
+  pushToContainer(newBoard: BoardListModel): void {
+    this.listsContainer.update(data => [...data!, newBoard]);
+    console.log(`container received new board ${newBoard.title}`)
   }
 
 }
