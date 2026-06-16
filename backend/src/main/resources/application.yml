@@ -25,3 +25,10 @@ spring:
         database: ${MONGODB_DB}
         port: ${MONGODB_PORT}
         uri: ${MONGODB_URI}
+
+application:
+    security:
+        jwt:
+            secret-key: ${JWT_SECRET_KEY}
+            expiration-ms: ${JWT_EXPIRATION_MS}
+            refresh-token-expiration-ms: ${JWT_REFRESH_TOKEN_EXPIRATION_MS}
