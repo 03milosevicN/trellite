@@ -1,0 +1,27 @@
+logging:
+    file:
+        name: logs/boardListServiceImpl.log
+    level:
+        org:
+            example:
+                trellite:
+                    boardList:
+                        BoardListServiceImpl: INFO
+            hibernate: DEBUG
+    pattern:
+        console: '%d{yyyy-MM-dd HH:mm:ss} - %logger{36} - %msg%n'
+spring:
+    application:
+        name: trellite
+    datasource:
+        password: ${POSTGRES_PASSWORD}
+        url: ${POSTGRES_DB_URL}
+        username: ${POSTGRES_USERNAME}
+    jpa:
+        hibernate:
+            ddl-auto: update
+        show-sql: true
+    mongodb:
+        database: ${MONGODB_DB}
+        port: ${MONGODB_PORT}
+        uri: ${MONGODB_URI}
