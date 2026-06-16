@@ -30,6 +30,8 @@
                            routerLinkActive="active sidebar-green-primary-app text-white">
                             {{org.name}}
                         </a>
+                    } @else if (orgsSignal() == null) {
+                        <p>Create org</p>
                     } @else {
                         <div class="dropdown">
                             <div class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">

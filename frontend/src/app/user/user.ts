@@ -48,6 +48,13 @@ export class User implements OnInit {
       orgs: this.orgMemberService.getAllOrgsByUserId(this.userId!),
     }).subscribe({
       next: ({user, orgs}) => {
+
+        if (user == null || orgs == null) {
+          console.log('One of the fetched data pairs is currently null');
+          this.userSignal.set(null);
+          this.orgsSignal.set(null);
+          return;
+        }
         this.userSignal.set(user);
         this.orgsSignal.update( () => [...orgs]);
       },
