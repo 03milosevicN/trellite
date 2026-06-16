@@ -9,6 +9,7 @@ import {CardsInfo} from "./user/cards-info/cards-info";
 import {Home} from "./home/home";
 import {Card} from "./common/card/card";
 import {BoardList} from "./common/board-list/board-list";
+import {Auth} from "./auth/auth";
 
 export const routes: Routes = [
     {
@@ -29,6 +30,12 @@ export const routes: Routes = [
     {
         path: '',
         component: Home,
+    },
+    {
+        path: 'auth/register', component: Auth,
+    },
+    {
+        path: 'auth/login', component: Auth,
     },
     // TEMPORARY ROUTES
     {

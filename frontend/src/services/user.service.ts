@@ -12,7 +12,7 @@ export class UserService {
     private http: HttpClient = inject(HttpClient);
 
 
-    public getById(id: string): Observable<UserModel> {
+    getById(id: string): Observable<UserModel> {
         return this.http.get<UserModel>(`${this.API_URL}/${id}`);
     }
 

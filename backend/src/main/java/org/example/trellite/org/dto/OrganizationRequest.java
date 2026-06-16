@@ -11,6 +11,4 @@ public class OrganizationRequest {
     private String name;
     @NotBlank
     private Instant createdAt;
-    @NotBlank
-    private Long ownedBy;
 }

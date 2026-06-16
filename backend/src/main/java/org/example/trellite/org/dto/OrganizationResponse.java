@@ -9,5 +9,4 @@ public class OrganizationResponse {
     private Long orgId;
     private String name;
     private Instant createdAt;
-    private Long ownedBy;
 }

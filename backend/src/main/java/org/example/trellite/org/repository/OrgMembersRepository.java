@@ -6,7 +6,9 @@ import org.example.trellite.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.GrantedAuthority;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface OrgMembersRepository extends JpaRepository<OrgMembers, Long> {
@@ -17,4 +19,7 @@ public interface OrgMembersRepository extends JpaRepository<OrgMembers, Long> {
     Optional<Organization> findOrgByUserId(@Param("userId") Long userId);
 
     Long user(User user);
+
+    List<OrgMembers> findAllByUser(User user);
+
 }

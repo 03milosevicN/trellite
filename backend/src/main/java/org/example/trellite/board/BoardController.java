@@ -1,5 +1,6 @@
 package org.example.trellite.board;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.trellite.board.dto.BoardRequest;
 import org.example.trellite.board.dto.BoardResponse;
@@ -14,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/boards")
 @RequiredArgsConstructor
+@Tag(name = "Board")
 public class BoardController implements BaseController<BoardRequest, BoardResponse, String> {
 
     private final BoardServiceImpl boardService;
