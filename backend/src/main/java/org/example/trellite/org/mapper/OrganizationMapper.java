@@ -8,8 +8,6 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface OrganizationMapper {
-    @Mapping(target = "ownedBy", ignore = true)
     Organization toModel(OrganizationRequest request);
-    @Mapping(target = "ownedBy", source = "ownedBy.userId")
     OrganizationResponse toResponse(Organization model);
 }

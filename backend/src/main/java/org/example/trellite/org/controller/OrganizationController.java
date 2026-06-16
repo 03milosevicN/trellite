@@ -1,15 +1,19 @@
 package org.example.trellite.org.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
+import org.example.trellite.auth.AuthenticatedUser;
 import org.example.trellite.common.BaseController;
 import org.example.trellite.org.dto.NameUpdateRequest;
 import org.example.trellite.org.dto.OrganizationRequest;
 import org.example.trellite.org.dto.OrganizationResponse;
 import org.example.trellite.org.service.OrganizationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -39,6 +43,38 @@ public class OrganizationController implements BaseController<OrganizationReques
         return ResponseEntity.status(HttpStatus.CREATED).body(organizationService.save(req));
     }
 
+    // PROTO //
+    @PostMapping
+    public ResponseEntity<OrganizationResponse> createOrg(
+            @RequestBody @Valid OrganizationRequest req,
+            @AuthenticationPrincipal AuthenticatedUser authenticatedUser
+    ) {
+        var response = organizationService.saveProto(req, authenticatedUser.getUser());
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PatchMapping("/{orgId}")
+    public ResponseEntity<OrganizationResponse> patchName(
+            @PathVariable Long orgId,
+            @RequestBody NameUpdateRequest req,
+            @AuthenticationPrincipal AuthenticatedUser authenticatedUser
+    ) {
+        var response = organizationService.patchNameProto(orgId, req, authenticatedUser.getUser());
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{orgId}")
+    public ResponseEntity<Void> deleteOrg(
+            @PathVariable Long orgId,
+            @AuthenticationPrincipal AuthenticatedUser authenticatedUser
+    ) {
+        organizationService.deleteProto(orgId, authenticatedUser.getUser());
+        return ResponseEntity.noContent().build();
+    }
+    // PROTO //
+
+
+    @Deprecated
     @Override
     @PutMapping("/{orgId}")
     public ResponseEntity<OrganizationResponse> update(
