@@ -1,7 +1,12 @@
 package org.example.trellite.auth.dto;
 
-/**
- * TODO: Implement DTO class.
- */
+import lombok.Builder;
+import lombok.Data;
+
+@Data
+@Builder
 public class LoginResponse {
+
+    private String token;
+
 }
