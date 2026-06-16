@@ -2,104 +2,57 @@ package org.example.trellite.org.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.example.trellite.auth.AuthenticatedUser;
-import org.example.trellite.common.BaseController;
 import org.example.trellite.org.dto.NameUpdateRequest;
 import org.example.trellite.org.dto.OrganizationRequest;
 import org.example.trellite.org.dto.OrganizationResponse;
-import org.example.trellite.org.service.OrganizationServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.example.trellite.org.service.OrganizationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/orgs")
 @RequiredArgsConstructor
-public class OrganizationController implements BaseController<OrganizationRequest, OrganizationResponse, Long> {
+public class OrganizationController {
 
-    private final OrganizationServiceImpl organizationService;
+    private final OrganizationService service;
 
 
-    @Override
-    @GetMapping
-    public ResponseEntity<List<OrganizationResponse>> getAll() {
-        return ResponseEntity.ok(organizationService.getAll());
+    @GetMapping("/{id}")
+    public ResponseEntity<OrganizationResponse> getById(@PathVariable Long id) {
+        return ResponseEntity.ok( service.getById(id) );
     }
 
-    @Override
-    @GetMapping("/{orgId}")
-    public ResponseEntity<OrganizationResponse> getById(@PathVariable Long orgId) {
-        return ResponseEntity.ok(organizationService.getById(orgId));
-    }
 
-    @Override
     @PostMapping
-    public ResponseEntity<OrganizationResponse> create(@RequestBody OrganizationRequest req) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(organizationService.save(req));
-    }
-
-    // PROTO //
-    // TODO: Finish method implementation.
-    @PostMapping
-    public ResponseEntity<OrganizationResponse> createOrg(
+    public ResponseEntity<OrganizationResponse> create(
             @RequestBody @Valid OrganizationRequest req,
-            @AuthenticationPrincipal AuthenticatedUser authenticatedUser
+            @AuthenticationPrincipal AuthenticatedUser creator
     ) {
-        var response = organizationService.saveProto(req, authenticatedUser.getUser());
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        var response = service.save(req, creator.getUser());
+        return ResponseEntity.status( HttpStatus.CREATED ).body(response);
     }
 
-    @PatchMapping("/{orgId}")
-    public ResponseEntity<OrganizationResponse> patchName(
-            @PathVariable Long orgId,
+    @PatchMapping("/{id}")
+    public ResponseEntity<OrganizationResponse> patch(
+            @PathVariable Long id,
             @RequestBody NameUpdateRequest req,
-            @AuthenticationPrincipal AuthenticatedUser authenticatedUser
+            @AuthenticationPrincipal AuthenticatedUser creator
     ) {
-        var response = organizationService.patchNameProto(orgId, req, authenticatedUser.getUser());
+        var response = service.patch(id, req, creator.getUser());
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{orgId}")
-    public ResponseEntity<Void> deleteOrg(
-            @PathVariable Long orgId,
-            @AuthenticationPrincipal AuthenticatedUser authenticatedUser
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(
+            @PathVariable Long id,
+            @AuthenticationPrincipal AuthenticatedUser creator
     ) {
-        organizationService.deleteProto(orgId, authenticatedUser.getUser());
+        service.delete(id, creator.getUser());
         return ResponseEntity.noContent().build();
-    }
-    // PROTO //
-
-
-    @Deprecated
-    @Override
-    @PutMapping("/{orgId}")
-    public ResponseEntity<OrganizationResponse> update(
-            @PathVariable Long orgId,
-            @RequestBody OrganizationRequest req
-    ) {
-        return ResponseEntity.ok(organizationService.update(orgId, req));
-    }
-
-    @Override
-    @DeleteMapping("/{orgId}")
-    public ResponseEntity<Void> delete(@PathVariable Long orgId) {
-        organizationService.delete(orgId);
-        return ResponseEntity.noContent().build();
-    }
-
-
-
-    @PatchMapping("/{orgId}")
-    public ResponseEntity<OrganizationResponse> patchName(
-            @PathVariable Long orgId,
-            @RequestBody NameUpdateRequest req
-    ) {
-        return ResponseEntity.ok(organizationService.patchName(orgId, req));
     }
 
 }
