@@ -66,7 +66,9 @@ backend/logs
 .c9/
 *.launch
 *.sublime-workspace
-.env
+
+**/.env
+.env.*
 
 ### System files
 .DS_Store
