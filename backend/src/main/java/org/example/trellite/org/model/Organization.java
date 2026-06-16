@@ -24,8 +24,8 @@ public class Organization {
     @Column(name = "created_at")
     private Instant createdAt;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="owned_by", referencedColumnName = "user_id")
-    private User ownedBy;
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name="owned_by", referencedColumnName = "user_id")
+//    private User ownedBy;
 
 }

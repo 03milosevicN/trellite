@@ -1,5 +1,6 @@
 package org.example.trellite.item;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.trellite.checklist.ChecklistServiceImpl;
 import org.example.trellite.item.dto.ItemRequest;
@@ -12,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/cards/{cardId}/checklists/{checklistId}/items")
 @RequiredArgsConstructor
+@Tag(name = "Checklist item")
 public class ItemController {
 
     private final ItemServiceImpl itemService;

@@ -3,11 +3,14 @@ package org.example.trellite.user;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import java.time.Instant;
 
 @Entity
 @Data
 @Table(name = "users")
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class User {
 
     @Id
@@ -26,5 +29,17 @@ public class User {
 
     @Column(name = "password")
     private String password;
+
+    @Column(name = "account_locked")
+    private Boolean accountLocked;
+
+    @Column(name = "enabled")
+    private Boolean enabled;
+
+    @Column(name = "created_at")
+    private Instant createdAt;
+
+    @Column(name = "last_modified_at")
+    private Instant lastModifiedAt;
 
 }

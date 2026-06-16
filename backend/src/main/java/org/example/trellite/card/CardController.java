@@ -1,5 +1,6 @@
 package org.example.trellite.card;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.trellite.card.dto.CardRequest;
 import org.example.trellite.card.dto.CardResponse;
@@ -12,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/cards")
 @RequiredArgsConstructor
+@Tag(name = "Card")
 public class CardController implements BaseController<CardRequest, CardResponse, String> {
 
     private final CardServiceImpl cardService;
