@@ -104,5 +104,14 @@ public class OrganizationServiceImpl implements BaseService<OrganizationRequest,
     }
 
 
+    public Object patchNameProto(Long orgId, NameUpdateRequest req, User user) {
+        // TODO: Implement method stub.
+        return null;
+    }
+
+
+    public void deleteProto(Long orgId, User user) {
+        // TODO: Implement method stub.
+    }
 
 }
