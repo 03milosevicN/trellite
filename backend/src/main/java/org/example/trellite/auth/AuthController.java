@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.example.trellite.auth.dto.LoginRequest;
 import org.example.trellite.auth.dto.LoginResponse;
 import org.example.trellite.auth.dto.RegistrationRequest;
@@ -31,6 +32,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
+    @SneakyThrows(Exception.class)
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest req) {
         return ResponseEntity.ok(authService.authenticate(req));
     }
