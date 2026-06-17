@@ -1,15 +1,16 @@
 package org.example.trellite.user;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.Instant;
 
+@Builder
 @Entity
 @Data
 @Table(name = "users")
 @NoArgsConstructor
+@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class User {
 
