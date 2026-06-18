@@ -2,7 +2,6 @@ package org.example.trellite.org.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.trellite.auth.AuthenticatedUser;
 import org.example.trellite.org.dto.NameUpdateRequest;
 import org.example.trellite.org.dto.OrganizationRequest;
 import org.example.trellite.org.dto.OrganizationResponse;

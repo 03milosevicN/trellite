@@ -3,7 +3,7 @@ package org.example.trellite.org.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.trellite.common.Role;
+import org.example.trellite.auth.role.Role;
 import org.example.trellite.user.User;
 
 @Entity
@@ -25,8 +25,8 @@ public class OrgMembers {
     @JoinColumn(name = "org_id", nullable = false)
     private Organization organization;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
 }
