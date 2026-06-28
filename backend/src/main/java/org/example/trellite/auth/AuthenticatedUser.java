@@ -14,6 +14,7 @@ import java.util.Collection;
  * Helper layer, resolves User and OrgMembers fields.
  * [User.email & User.password, OrgMembers.role] -> AuthenticatedUser -> UserDetailsServiceImpl
  */
+@Deprecated
 @RequiredArgsConstructor
 public class AuthenticatedUser implements UserDetails, Principal {
 

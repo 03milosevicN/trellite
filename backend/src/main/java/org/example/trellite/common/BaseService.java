@@ -2,6 +2,7 @@ package org.example.trellite.common;
 
 import java.util.List;
 
+@Deprecated
 public interface BaseService<Req, Res, ID> {
 
     List<Res> getAll();

@@ -1,7 +1,6 @@
 package org.example.trellite.auth;
 
 import jakarta.validation.Valid;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.trellite.auth.dto.LoginRequest;
@@ -9,10 +8,13 @@ import org.example.trellite.auth.dto.LoginResponse;
 import org.example.trellite.auth.dto.RegistrationRequest;
 import org.example.trellite.auth.jwt.JwtService;
 import org.example.trellite.user.User;
+import org.example.trellite.user.UserMapperProto;
 import org.example.trellite.user.UserRepository;
+import org.example.trellite.user.dto.UserResponse;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,9 +30,11 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapperProto userMapper;
 
 
-    public void register(@Valid RegistrationRequest req) {
+    public UserResponse register(@Valid RegistrationRequest req) {
+
         var user = User
                 .builder()
                 .firstName( req.getFirstName() )
@@ -44,13 +48,12 @@ public class AuthService {
                 .build();
 
         log.info("Successfully registered user {} @ {}", req.getEmail(), Instant.now());
+        var saved = userRepository.save(user);
 
-        userRepository.save(user);
+        return userMapper.toResponse(saved);
     }
 
-    public LoginResponse authenticate(
-            LoginRequest req
-    ) throws Exception {
+    public LoginResponse authenticate(LoginRequest req) {
         var auth = authenticationManager.authenticate(
           new UsernamePasswordAuthenticationToken(req.getEmail(), req.getPassword())
         );
@@ -68,8 +71,8 @@ public class AuthService {
         log.info("Token generated for {}", req.getEmail());
 
         var userQuery = userRepository
-                .findByUserId(user.getUserId())
-                .orElseThrow( () -> new Exception("Failed to query principal-context user") );
+                .findById(user.getId())
+                .orElseThrow( () -> new UsernameNotFoundException("Failed to query user principal User not found."));
 
         userQuery.setEnabled(true);
         log.info("{}'s account enabled.", req.getEmail());

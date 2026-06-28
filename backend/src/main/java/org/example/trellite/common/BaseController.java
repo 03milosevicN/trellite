@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 
+@Deprecated
 public interface BaseController<Req, Res, ID> {
 
     ResponseEntity<List<Res>> getAll();

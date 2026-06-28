@@ -6,11 +6,11 @@ import org.example.trellite.common.ResourceNotFoundException;
 import org.example.trellite.user.dto.PasswordUpdateRequest;
 import org.example.trellite.user.dto.UserRequest;
 import org.example.trellite.user.dto.UserResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Deprecated
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements BaseService<UserRequest, UserResponse, Long> {
