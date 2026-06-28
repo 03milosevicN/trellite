@@ -1,22 +1,6 @@
-logging:
-    file:
-        name: logs/work-logs.log
-    level:
-        org:
-            example:
-                trellite:
-                    board:
-                        BoardService: INFO
-                    boardList:
-                        BoardListService: INFO
-                    card:
-                        CardService: INFO
-                    item:
-                        ItemService: INFO
-            hibernate: DEBUG
-    pattern:
-        console: '%d{yyyy-MM-dd HH:mm:ss} - %logger{36} - %msg%n'
 spring:
+    config:
+        import: optional:file:.env[.properties]
     application:
         name: trellite
     datasource:
