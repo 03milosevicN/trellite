@@ -58,25 +58,32 @@ public class OrganizationService {
                 .findById(orgId)
                 .orElseThrow(() -> new ResourceNotFoundException("Organization with id of " + orgId + " not found."));
 
+        if (memberRepository.existsByOrganizationIdAndUserId(orgId, user.getId())) {
+            log.warn("User with ID of {} is already a member of {}", user.getId(), org);
+            throw new IllegalStateException();
+        }
 
+        var membership = new Member();
+        membership.setOrganization(org);
+        membership.setUser(user);
+        membership.setRole(RoleType.MEMBER);
+        memberRepository.save(membership);
 
+        log.info("User {} joined {}.", user.getEmail(), org.getName());
     }
 
 
     @Transactional
-    public void delete(
-            Long id,
-            User user
-    ) {
-        var roleByName = roleRepository.findByName("ADMIN").orElseThrow(() -> new NullPointerException("Role with name of ADMIN is null (does not exist)."));
+    public void delete(Long id, User user) {
 
         var existing = organizationRepository
-                .findByOrgId(id)
+                .findById(id)
                 .orElseThrow( () -> new ResourceNotFoundException("Organization with id of " + id + " not found."));
-        membersRepository
+
+        memberRepository
                 .findByOrganizationAndUser(existing, user)
-                .filter(m -> m.getRoles().contains(roleByName))
-                .orElseThrow( () -> new AccessDeniedException("Operation not performed by an org. admin."));
+                .filter(member -> member.getRole().equals(RoleType.ADMIN))
+                .orElseThrow(() -> new AccessDeniedException("Unauthorized access. User is not an admin."));
 
         organizationRepository.delete(existing);
     }
