@@ -3,7 +3,7 @@ package org.example.trellite.board;
 import lombok.RequiredArgsConstructor;
 import org.example.trellite.board.dto.BoardRequest;
 import org.example.trellite.board.dto.BoardResponse;
-import org.example.trellite.boardList.BoardListServiceImpl;
+import org.example.trellite.boardList.BoardListService;
 import org.example.trellite.boardList.dto.BoardListResponse;
 import org.example.trellite.card.dto.CardResponse;
 import org.example.trellite.common.ObjectIdMapper;
@@ -21,7 +21,7 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final BoardMapper boardMapper;
-    private final BoardListServiceImpl boardListService;
+    private final BoardListService boardListService;
     private final ObjectIdMapper objectIdMapper;
 
 

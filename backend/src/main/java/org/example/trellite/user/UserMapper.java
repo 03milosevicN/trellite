@@ -18,7 +18,7 @@ public interface UserMapper {
     @Mapping(target = "lastModifiedAt", ignore = true)
     User toEntity(LoginRequest request);
 
-    @Mapping(target = "id", source = "entity.id")
+    @Mapping(target = "userId", source = "entity.id")
     UserResponse toResponse(User entity);
 
 }

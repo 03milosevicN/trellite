@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.trellite.org.dto.NameUpdateRequest;
 import org.example.trellite.org.dto.OrganizationRequest;
 import org.example.trellite.org.dto.OrganizationResponse;
+import org.example.trellite.user.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,28 +29,19 @@ public class OrganizationController {
     @PostMapping
     public ResponseEntity<OrganizationResponse> create(
             @RequestBody @Valid OrganizationRequest req,
-            @AuthenticationPrincipal AuthenticatedUser creator
+            @AuthenticationPrincipal User creator
     ) {
-        var response = service.save(req, creator.getUser());
+        var response = service.save(req, creator);
         return ResponseEntity.status( HttpStatus.CREATED ).body(response);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<OrganizationResponse> patch(
-            @PathVariable Long id,
-            @RequestBody NameUpdateRequest req,
-            @AuthenticationPrincipal AuthenticatedUser creator
-    ) {
-        var response = service.patch(id, req, creator.getUser());
-        return ResponseEntity.ok(response);
-    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
             @PathVariable Long id,
-            @AuthenticationPrincipal AuthenticatedUser creator
+            @AuthenticationPrincipal User creator
     ) {
-        service.delete(id, creator.getUser());
+        service.delete(id, creator);
         return ResponseEntity.noContent().build();
     }
 

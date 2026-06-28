@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.trellite.boardList.dto.BoardListRequest;
 import org.example.trellite.boardList.dto.BoardListResponse;
-import org.example.trellite.card.CardServiceImpl;
+import org.example.trellite.card.CardService;
 import org.example.trellite.card.dto.CardResponse;
 import org.example.trellite.common.ObjectIdMapper;
 import org.example.trellite.common.ResourceNotFoundException;
@@ -30,7 +30,7 @@ public class BoardListService {
     private final BoardListRepository boardListRepository;
     private final BoardListMapper boardListMapper;
     private final ObjectIdMapper objectIdMapper;
-    private final CardServiceImpl cardService;
+    private final CardService cardService;
     private final MongoTemplate mongoTemplate;
 
 
