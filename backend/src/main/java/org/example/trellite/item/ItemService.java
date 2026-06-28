@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Transactional
 @RequiredArgsConstructor
-public class ItemServiceImpl {
+public class ItemService {
 
     private final CardRepository cardRepository;
     private final ItemMapper itemMapper;
@@ -59,6 +59,7 @@ public class ItemServiceImpl {
                 .findFirst()
                 .orElseThrow(() -> new ResourceNotFoundException("Item with id of " + id + "not found"));
     }
+
 
     public ItemResponse save(String cardId, String checklistId, ItemRequest req) {
         var card = cardRepository

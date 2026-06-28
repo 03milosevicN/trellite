@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.trellite.card.dto.CardRequest;
 import org.example.trellite.card.dto.CardResponse;
-import org.example.trellite.common.BaseController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,30 +13,27 @@ import java.util.List;
 @RequestMapping("/api/cards")
 @RequiredArgsConstructor
 @Tag(name = "Card")
-public class CardController implements BaseController<CardRequest, CardResponse, String> {
+public class CardController {
 
-    private final CardServiceImpl cardService;
+    private final CardService cardService;
 
 
-    @Override
     @GetMapping("/{id}")
     public ResponseEntity<CardResponse> getById(@PathVariable String id) {
         return ResponseEntity.ok(cardService.getById(id));
     }
 
-    @Override
     @GetMapping
     public ResponseEntity<List<CardResponse>> getAll() {
         return ResponseEntity.ok(cardService.getAll());
     }
 
-    @Override
+
     @PostMapping
     public ResponseEntity<CardResponse> create(@RequestBody CardRequest req) {
         return ResponseEntity.status(HttpStatus.CREATED).body(cardService.save(req));
     }
 
-    @Override
     @PutMapping("/{id}")
     public ResponseEntity<CardResponse> update(
             @PathVariable String id,
@@ -46,14 +42,11 @@ public class CardController implements BaseController<CardRequest, CardResponse,
         return ResponseEntity.ok(cardService.update(id, req));
     }
 
-    @Override
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable String id) {
         cardService.delete(id);
         return ResponseEntity.noContent().build();
     }
-
-
 
     @PatchMapping("/{id}")
     public ResponseEntity<CardResponse> patch(

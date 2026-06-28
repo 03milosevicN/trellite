@@ -2,7 +2,6 @@ package org.example.trellite.item;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.example.trellite.checklist.ChecklistServiceImpl;
 import org.example.trellite.item.dto.ItemRequest;
 import org.example.trellite.item.dto.ItemResponse;
 import org.springframework.http.HttpStatus;
@@ -16,7 +15,7 @@ import java.util.List;
 @Tag(name = "Checklist item")
 public class ItemController {
 
-    private final ItemServiceImpl itemService;
+    private final ItemService itemService;
 
 
     @GetMapping("/{id}")
@@ -35,6 +34,7 @@ public class ItemController {
     ) {
         return ResponseEntity.ok(itemService.getAll(cardId, checklistId));
     }
+
 
     @PostMapping
     public ResponseEntity<ItemResponse> create(

@@ -8,6 +8,7 @@ import lombok.SneakyThrows;
 import org.example.trellite.auth.dto.LoginRequest;
 import org.example.trellite.auth.dto.LoginResponse;
 import org.example.trellite.auth.dto.RegistrationRequest;
+import org.example.trellite.user.dto.UserResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,14 +26,11 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<Void> register(@RequestBody @Valid RegistrationRequest req) {
-        authService.register(req);
-        return ResponseEntity.accepted().build();
+    public ResponseEntity<UserResponse> register(@RequestBody @Valid RegistrationRequest req) {
+        return ResponseEntity.ok(authService.register(req));
     }
 
     @PostMapping("/login")
-    @SneakyThrows(Exception.class)
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest req) {
         return ResponseEntity.ok(authService.authenticate(req));
     }

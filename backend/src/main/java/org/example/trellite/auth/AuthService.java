@@ -8,7 +8,7 @@ import org.example.trellite.auth.dto.LoginResponse;
 import org.example.trellite.auth.dto.RegistrationRequest;
 import org.example.trellite.auth.jwt.JwtService;
 import org.example.trellite.user.User;
-import org.example.trellite.user.UserMapperProto;
+import org.example.trellite.user.UserMapper;
 import org.example.trellite.user.UserRepository;
 import org.example.trellite.user.dto.UserResponse;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,7 +30,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
-    private final UserMapperProto userMapper;
+    private final UserMapper userMapper;
 
 
     public UserResponse register(@Valid RegistrationRequest req) {
