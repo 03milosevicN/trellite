@@ -1,11 +1,10 @@
-package org.example.trellite.org.controller;
+package org.example.trellite.org;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.trellite.org.dto.NameUpdateRequest;
 import org.example.trellite.org.dto.OrganizationRequest;
 import org.example.trellite.org.dto.OrganizationResponse;
-import org.example.trellite.org.service.OrganizationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

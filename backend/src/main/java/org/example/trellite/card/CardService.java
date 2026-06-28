@@ -5,8 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.example.trellite.card.dto.CardRequest;
 import org.example.trellite.card.dto.CardResponse;
-import org.example.trellite.checklist.ChecklistServiceImpl;
-import org.example.trellite.common.BaseService;
 import org.example.trellite.common.ObjectIdMapper;
 import org.example.trellite.common.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
@@ -18,14 +16,13 @@ import java.util.stream.Collectors;
 @Slf4j
 @Transactional
 @RequiredArgsConstructor
-public class CardServiceImpl implements BaseService<CardRequest, CardResponse, String> {
+public class CardService {
 
     private final CardRepository cardRepository;
     private final CardMapper cardMapper;
     private final ObjectIdMapper objectIdMapper;
 
 
-    @Override
     public List<CardResponse> getAll() {
         return cardRepository
                 .findAll()
@@ -34,7 +31,6 @@ public class CardServiceImpl implements BaseService<CardRequest, CardResponse, S
                 .collect(Collectors.toList());
     }
 
-    @Override
     public CardResponse getById(String id) {
         return cardRepository
                 .findById(id)
@@ -42,7 +38,7 @@ public class CardServiceImpl implements BaseService<CardRequest, CardResponse, S
                 .orElseThrow(() -> new ResourceNotFoundException("Card with id of" + id + " not found."));
     }
 
-    @Override
+
     public CardResponse save(CardRequest dto) {
         var model = cardMapper.toModel(dto);
 
@@ -61,7 +57,6 @@ public class CardServiceImpl implements BaseService<CardRequest, CardResponse, S
         return cardMapper.toResponse(saved);
     }
 
-    @Override
     public CardResponse update(String id, CardRequest dto) {
         var existing = cardRepository
                 .findById(id)
@@ -88,7 +83,6 @@ public class CardServiceImpl implements BaseService<CardRequest, CardResponse, S
         return cardMapper.toResponse(cardRepository.save(existing));
     }
 
-    @Override
     public void delete(String id) {
         cardRepository.deleteById(id);
     }

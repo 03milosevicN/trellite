@@ -7,7 +7,6 @@ import org.example.trellite.boardList.dto.BoardListRequest;
 import org.example.trellite.boardList.dto.BoardListResponse;
 import org.example.trellite.card.CardServiceImpl;
 import org.example.trellite.card.dto.CardResponse;
-import org.example.trellite.common.BaseService;
 import org.example.trellite.common.ObjectIdMapper;
 import org.example.trellite.common.ResourceNotFoundException;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -26,7 +25,7 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 @Slf4j
 @Transactional
 @RequiredArgsConstructor
-public class BoardListServiceImpl implements BaseService<BoardListRequest, BoardListResponse, String> {
+public class BoardListService {
 
     private final BoardListRepository boardListRepository;
     private final BoardListMapper boardListMapper;
@@ -34,7 +33,7 @@ public class BoardListServiceImpl implements BaseService<BoardListRequest, Board
     private final CardServiceImpl cardService;
     private final MongoTemplate mongoTemplate;
 
-    @Override
+
     public List<BoardListResponse> getAll() {
         return boardListRepository
                 .findAll()
@@ -44,19 +43,17 @@ public class BoardListServiceImpl implements BaseService<BoardListRequest, Board
                 .collect(Collectors.toList());
     }
 
-    @Override
     public BoardListResponse getById(String id) {
         return boardListRepository.findById(id).map(boardListMapper::toResponse).orElseThrow(() -> new ResourceNotFoundException("BoardList with id of " + id + " not found."));
     }
 
-    @Override
+
     public BoardListResponse save(BoardListRequest dto) {
         var model = boardListMapper.toModel(dto);
         var saved = boardListRepository.save(model);
         return boardListMapper.toResponse(saved);
     }
 
-    @Override
     public BoardListResponse update(String id, BoardListRequest dto) {
         var existing = boardListRepository
                 .findById(id)
@@ -75,7 +72,6 @@ public class BoardListServiceImpl implements BaseService<BoardListRequest, Board
         return boardListMapper.toResponse(boardListRepository.save(existing));
     }
 
-    @Override
     public void delete(String id) {
         cardService.deleteByBoardListId(id);
         boardListRepository.deleteById(id);

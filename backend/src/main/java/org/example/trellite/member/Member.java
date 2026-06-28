@@ -1,21 +1,19 @@
-package org.example.trellite.org.model;
+package org.example.trellite.member;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.example.trellite.auth.role.Role;
+import org.example.trellite.common.RoleType;
+import org.example.trellite.org.Organization;
 import org.example.trellite.user.User;
 
-@Entity
 @Data
-@Table(name="org_members")
-@NoArgsConstructor
-public class OrgMembers {
+@Entity
+@Table(name = "members", uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "org_id"}))
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="org_members_id")
-    private Long orgMembersId;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -25,8 +23,8 @@ public class OrgMembers {
     @JoinColumn(name = "org_id", nullable = false)
     private Organization organization;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private RoleType role;
 
 }

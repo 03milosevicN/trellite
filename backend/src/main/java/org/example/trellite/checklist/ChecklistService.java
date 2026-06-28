@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Transactional
 @RequiredArgsConstructor
-public class ChecklistServiceImpl {
+public class ChecklistService {
 
     private final CardRepository cardRepository;
     private final ChecklistMapper checklistMapper;

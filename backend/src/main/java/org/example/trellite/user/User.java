@@ -1,30 +1,33 @@
 package org.example.trellite.user;
 
 import jakarta.persistence.*;
+
 import lombok.*;
-import org.example.trellite.auth.role.Role;
+
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import java.security.Principal;
+
+import java.nio.file.attribute.UserPrincipal;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 
-@Builder
-@Entity
+
 @Data
-@Table(name = "users")
+@Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "users")
 @EntityListeners(AuditingEntityListener.class)
-public class User implements UserDetails, Principal {
+public class User implements UserDetails, UserPrincipal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Long userId;
+    private Long id;
 
     @Column(name = "first_name")
     private String firstName;
@@ -37,9 +40,6 @@ public class User implements UserDetails, Principal {
 
     @Column(name = "password")
     private String password;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<Role> roles;
 
     @Column(name = "account_locked")
     private Boolean accountLocked;
@@ -55,22 +55,17 @@ public class User implements UserDetails, Principal {
 
 
     @Override
-    @NonNull
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles
-                .stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName()))
-                .toList();
-    }
-
-    @Override
-    @NonNull
-    public String getUsername() {
+    public String getName() {
         return email;
     }
 
     @Override
-    public String getName() {
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("USER"));
+    }
+
+    @Override
+    public String getUsername() {
         return email;
     }
 
@@ -93,6 +88,4 @@ public class User implements UserDetails, Principal {
     public boolean isEnabled() {
         return enabled;
     }
-
-
 }

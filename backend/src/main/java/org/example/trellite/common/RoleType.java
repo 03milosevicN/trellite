@@ -1,7 +1,6 @@
 package org.example.trellite.common;
 
-public enum Role {
+public enum RoleType {
     MEMBER,
     ADMIN,
-    OWNER
 }

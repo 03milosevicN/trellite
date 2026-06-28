@@ -1,12 +1,18 @@
 logging:
     file:
-        name: logs/boardListServiceImpl.log
+        name: logs/work-logs.log
     level:
         org:
             example:
                 trellite:
+                    board:
+                        BoardService: INFO
                     boardList:
-                        BoardListServiceImpl: INFO
+                        BoardListService: INFO
+                    card:
+                        CardService: INFO
+                    item:
+                        ItemService: INFO
             hibernate: DEBUG
     pattern:
         console: '%d{yyyy-MM-dd HH:mm:ss} - %logger{36} - %msg%n'

@@ -19,28 +19,15 @@ import java.util.stream.Collectors;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private final OrgMembersRepository membersRepository;
 
 
     @Override
     @NonNull
     @Transactional
     public UserDetails loadUserByUsername(@NonNull String email) throws UsernameNotFoundException {
-
-        var user = userRepository
+        return userRepository
                 .findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User with email of " + email + " not found."));
-
-        List<GrantedAuthority> authorities = membersRepository
-                .findAllByUser(user)
-                .stream()
-                // at-runtime formatting, prevents database role bleedover: ORG_{orgs.org_id}_{org_members.role} //
-                .map(member -> new SimpleGrantedAuthority(
-                        "ORG_" + member.getOrganization().getOrgId() + "_" + member.getRole().name()
-                ))
-                .collect(Collectors.toList());
-
-        return new AuthenticatedUser(user, authorities);
     }
 
 }

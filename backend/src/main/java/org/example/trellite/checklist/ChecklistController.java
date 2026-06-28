@@ -15,7 +15,7 @@ import java.util.List;
 @Tag(name = "Checklist")
 public class ChecklistController {
 
-    private final ChecklistServiceImpl checklistService;
+    private final ChecklistService checklistService;
 
 
     @GetMapping("/{id}")
@@ -30,6 +30,7 @@ public class ChecklistController {
     public ResponseEntity<List<ChecklistResponse>> getAll(@PathVariable String cardId) {
         return ResponseEntity.ok(checklistService.getAll(cardId));
     }
+
 
     @PostMapping
     public ResponseEntity<ChecklistResponse> create(
@@ -64,6 +65,5 @@ public class ChecklistController {
         checklistService.delete(cardId, id);
         return ResponseEntity.noContent().build();
     }
-
 
 }
