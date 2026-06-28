@@ -1,5 +1,6 @@
 package org.example.trellite.member;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.trellite.member.dto.MemberResponse;
 import org.example.trellite.user.User;
@@ -8,8 +9,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/member")
+@Tag(name = "Member")
 @RequiredArgsConstructor
+@RequestMapping("/api/member")
 public class MemberController {
 
     private final MemberService memberService;

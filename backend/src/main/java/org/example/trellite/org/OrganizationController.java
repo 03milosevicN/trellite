@@ -1,8 +1,8 @@
 package org.example.trellite.org;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.trellite.org.dto.NameUpdateRequest;
 import org.example.trellite.org.dto.OrganizationRequest;
 import org.example.trellite.org.dto.OrganizationResponse;
 import org.example.trellite.user.User;
@@ -11,10 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
-@RequestMapping("/api/orgs")
 @RequiredArgsConstructor
+@Tag(name = "Organization")
+@RequestMapping("/api/orgs")
 public class OrganizationController {
 
     private final OrganizationService service;

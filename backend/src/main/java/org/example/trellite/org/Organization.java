@@ -1,17 +1,19 @@
 package org.example.trellite.org;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.example.trellite.member.Member;
 
 import java.time.Instant;
 import java.util.List;
 
-@Entity
 @Data
+@Entity
+@RequiredArgsConstructor
 @Table(name = "organizations")
-@NoArgsConstructor
 public class Organization {
 
     @Id
