@@ -1,11 +1,11 @@
 import {Component, computed, inject, OnInit, Signal, signal, WritableSignal} from "@angular/core";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {CardModel} from "../../../models/card.model";
 import {OrgMemberService} from "../../../services/orgMember.service";
 import {DatePipe} from "@angular/common";
 import {BoardModel} from "../../../models/board.model";
 import {BoardListModel} from "../../../models/boardList.model";
-import {forkJoin} from "rxjs";
+import {filter, forkJoin, map} from "rxjs";
 
 type AccumulatorTemplate = {
   id: string;
@@ -56,13 +56,19 @@ export class CardsInfo implements OnInit {
 
   private orgMemberService: OrgMemberService = inject(OrgMemberService);
 
-  private router: Router = inject(Router);
+  private activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+
   private routeUserId: string | null = null;
 
 
   ngOnInit(): void {
-    this.routeUserId = this.router.url[3];
-    this.loadData();
+    this.activatedRoute.parent?.paramMap.pipe(
+        map(params => params.get('userId')),
+        filter( (id) : id is string => id !== null )
+    ).subscribe(id => {
+      this.routeUserId = id;
+      this.loadData();
+    });
   }
 
 

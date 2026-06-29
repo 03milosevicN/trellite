@@ -13,6 +13,16 @@
                     <svg lucideCog class="icon-sm"></svg>
                     <span>Settings</span>
                 </a>
+                @if (this.authService.isLoggedIn()) {
+                    <button routerLink="settings"
+                            class="nav-link d-flex align-items-center gap-2 rounded px-3 py-2 text-dark hover-bg"
+                            routerLinkActive="active sidebar-green-primary-app text-white"
+                            (click)="authService.logout()"
+                    >
+                        <svg lucideLogOut class="icon-sm"></svg>
+                        <span>Logout</span>
+                    </button>
+                }
             </nav>
         </div>
 
@@ -21,65 +31,44 @@
                 Organization
             </h6>
 
-            <div class="d-flex align-items-center gap-2 px-3 mb-2 small fw-semibold">
-                <svg lucideUsers class="icon-sm"></svg>
-
+            @if (!orgsSignal()) {
+                <p>No orgs</p>
+            } @else {
                 @for (org of orgsSignal(); track org.orgId) {
-                    @if (orgsSignal()?.length == 1) {
-                        <a [routerLink]="['/orgs', org.orgId]" class="nav-link text-dark"
-                           routerLinkActive="active sidebar-green-primary-app text-white">
-                            {{org.name}}
-                        </a>
-                    } @else if (orgsSignal() == null) {
-                        <p>Create org</p>
-                    } @else {
-                        <div class="dropdown">
-                            <div class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                Organizations
-                            </div>
-                            <div class="dropdown-menu">
-                                <a [routerLink]="['/orgs', org.orgId]" class="nav-link dropdown-item text-dark"
+                    <div class="d-flex align-items-center gap-2 px-3 mb-2 small fw-semibold">
+                        <svg lucideUsers class="icon-sm"></svg>
+
+                        @for (org of orgsSignal(); track org.orgId) {
+                            @if (orgsSignal()?.length == 1) {
+                                <a [routerLink]="['/orgs', org.orgId]" class="nav-link text-dark"
                                    routerLinkActive="active sidebar-green-primary-app text-white">
-                                    {{org.name}}
+                                    {{ org.name }}
                                 </a>
-                            </div>
-                        </div>
-                    }
+                            } @else if (orgsSignal()?.length === 0) {
+                                <p>Create org</p>
+                            } @else {
+                                <div class="dropdown">
+                                    <div class="btn btn-secondary dropdown-toggle" type="button"
+                                         data-bs-toggle="dropdown">
+                                        Organizations
+                                    </div>
+                                    <div class="dropdown-menu">
+                                        <a [routerLink]="['/orgs', org.orgId]" class="nav-link dropdown-item text-dark"
+                                           routerLinkActive="active sidebar-green-primary-app text-white">
+                                            {{ org.name }}
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
                 }
-            </div>
-
-            <nav class="nav flex-column gap-1">
-
-                <a routerLink="boards"
-                   class="nav-link d-flex align-items-center gap-2 rounded px-3 py-2 text-dark hover-bg"
-                   routerLinkActive="active sidebar-green-primary-app text-white"
-                >
-                    <svg lucideCreditCard class="icon-sm"></svg>
-                    <span>Boards</span>
-                </a>
-
-                <a routerLink="cards"
-                   class="nav-link d-flex align-items-center gap-2 rounded px-3 py-2 text-dark hover-bg"
-                   routerLinkActive="active sidebar-green-primary-app text-white"
-                >
-                    <svg lucideWalletCards class="icon-sm"></svg>
-                    <span>Cards</span>
-                </a>
-
-                <a routerLink="activity"
-                   class="nav-link d-flex align-items-center gap-2 rounded px-3 py-2 text-dark hover-bg"
-                   routerLinkActive="active sidebar-green-primary-app text-white"
-                >
-                    <svg lucideCalendarClock class="icon-sm"></svg>
-                    <span>Activity</span>
-                </a>
-
-            </nav>
+            }
         </div>
     </aside>
 
     <main class="col-md-8 col-xl-10 min-vh-100 bg-light p-4">
-        <router-outlet />
+        <router-outlet/>
     </main>
 
 </div>

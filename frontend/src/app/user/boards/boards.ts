@@ -1,9 +1,9 @@
 import {Component, inject,  signal, WritableSignal} from "@angular/core";
 import {BoardModel} from "../../../models/board.model";
 import {OrgMemberService} from "../../../services/orgMember.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {BoardService} from "../../../services/board.service";
-import {forkJoin, switchMap} from "rxjs";
+import {filter, forkJoin, map, switchMap} from "rxjs";
 import {flattenedColorStore} from "../../../models/color.store";
 
 @Component({
@@ -21,14 +21,19 @@ export class Boards {
 
   private boardService: BoardService = inject(BoardService);
 
-  private router: Router = inject(Router);
+  private activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
   private routeUserId: string | null = null;
 
 
   constructor() {
-    this.routeUserId = this.router.url[3];
-    this.loadData();
+    this.activatedRoute.parent?.paramMap.pipe(
+        map(params => params.get('userId')),
+        filter( (id) : id is string => id !== null )
+    ).subscribe(id => {
+      this.routeUserId = id;
+      this.loadData();
+    });
   }
 
 

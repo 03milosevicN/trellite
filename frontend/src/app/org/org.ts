@@ -1,9 +1,9 @@
 import {Component, inject, signal, WritableSignal} from "@angular/core";
 import {OrganizationModel} from "../../models/organization.model";
 import {OrgMemberService} from "../../services/orgMember.service";
-import {Router, RouterLink} from "@angular/router";
+import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {BoardModel} from "../../models/board.model";
-import {forkJoin} from "rxjs";
+import {filter, forkJoin, map} from "rxjs";
 import {LucideCalendarClock, LucidePersonStanding} from "@lucide/angular";
 import {UpperCasePipe} from "@angular/common";
 import {Header} from "../common/header/header";
@@ -27,13 +27,19 @@ export class Org {
 
   private orgMemberService:OrgMemberService = inject(OrgMemberService);
 
-  private router: Router = inject(Router);
+  private activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+
   protected routeUserId: string = '';
 
 
   constructor() {
-    this.routeUserId = this.router.url[6];
-    this.loadData();
+    this.activatedRoute.parent?.paramMap.pipe(
+        map(params => params.get('userId')),
+        filter( (id) : id is string => id !== null )
+    ).subscribe(id => {
+      this.routeUserId = id;
+      this.loadData();
+    });
   }
 
 

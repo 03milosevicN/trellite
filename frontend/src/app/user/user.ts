@@ -2,10 +2,20 @@ import {Component, inject, OnInit, signal, WritableSignal} from "@angular/core";
 import {UserService} from "../../services/user.service";
 import {ActivatedRoute, RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
 import {UserModel} from "../../models/user.model";
-import {LucideCalendarClock, LucideCog, LucideCreditCard, LucideUsers, LucideWalletCards} from "@lucide/angular";
+import {
+  LucideCalendarClock,
+  LucideCog,
+  LucideCreditCard,
+  LucideLogOut,
+  LucideUsers,
+  LucideWalletCards
+} from "@lucide/angular";
 import {OrganizationModel} from "../../models/organization.model";
 import {OrgMemberService} from "../../services/orgMember.service";
 import {forkJoin} from "rxjs";
+import {AuthService} from "../../services/auth.service";
+import {BoardModel} from "../../models/board.model";
+import {CardModel} from "../../models/card.model";
 
 @Component({
   selector: "app-user",
@@ -17,7 +27,8 @@ import {forkJoin} from "rxjs";
     LucideUsers,
     RouterLink,
     RouterOutlet,
-    RouterLinkActive
+    RouterLinkActive,
+    LucideLogOut
   ],
   templateUrl: "./user.html",
   styleUrl: "./user.css",
@@ -31,6 +42,8 @@ export class User implements OnInit {
   protected userId: string = '';
 
   private userService: UserService = inject(UserService);
+  protected authService: AuthService = inject(AuthService);
+
   private orgMemberService: OrgMemberService = inject(OrgMemberService);
 
   private activatedRoute: ActivatedRoute = inject(ActivatedRoute);
@@ -38,9 +51,24 @@ export class User implements OnInit {
 
   ngOnInit(): void {
     this.userId = this.activatedRoute.snapshot.paramMap.get('userId')!;
-    this.loadData();
+    this.loadDataProto();
   }
 
+
+  loadDataProto(): void {
+    this.userService.getById(this.userId!).subscribe({
+      next: data => {
+        this.orgMemberService.getAllOrgsByUserId(data.userId.toString()).subscribe({
+          next: data => {
+            this.orgsSignal.update(() => [...data]);
+          },
+          error: err => {
+            console.error('Error accessing orgs: ' + err);
+          }
+        })
+      }
+    })
+  }
 
   loadData(): void {
     forkJoin({

@@ -1,5 +1,5 @@
 import {Component, inject, signal, WritableSignal} from "@angular/core";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Route, Router} from "@angular/router";
 import {UserService} from "../../../services/user.service";
 import {UserModel} from "../../../models/user.model"
 
@@ -11,21 +11,21 @@ import {UserModel} from "../../../models/user.model"
 })
 export class Settings {
 
-  private router: Router = inject(Router);
+  private route: ActivatedRoute = inject(ActivatedRoute);
   private userService: UserService = inject(UserService);
 
-  private routeUserId: string | null = null;
+  private readonly routeUserId: string | null | undefined = null;
   protected user: WritableSignal<UserModel | null> = signal<UserModel | null>(null);
 
   constructor() {
-    this.routeUserId = this.router.url[3];
+    this.routeUserId = this.route.parent?.snapshot.paramMap.get('userId');
     this.loadData();
   }
-
 
   loadData(): void {
     this.userService.getById(this.routeUserId!).subscribe({
       next: data => {
+        console.log('user data: ', data);
         this.user.set(data);
       },
       error: err => {
