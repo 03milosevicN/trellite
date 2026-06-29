@@ -5,11 +5,14 @@ import org.example.trellite.common.RoleType;
 import org.example.trellite.org.dto.OrganizationResponse;
 import org.example.trellite.user.dto.UserResponse;
 
+import java.util.List;
+
 @Data
 public class MemberResponse {
 
     private Long memberId;
     private UserResponse userResponse;
+//    private List<OrganizationResponse> orgResponses;
     private OrganizationResponse orgResponse;
     private RoleType role;
 

@@ -16,6 +16,7 @@ public interface MemberMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user.id", source = "userId")
     @Mapping(target = "organization.id", source = "orgId")
+//    @Mapping(target = "organizations", ignore = true)
     Member toEntity(MemberRequest request);
 
     @Mapping(target = "memberId", source = "entity.id")

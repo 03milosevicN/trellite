@@ -5,9 +5,6 @@ import org.example.trellite.user.dto.UserResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-/**
- * TODO: Upon integration, rename to UserMapper.
- */
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 

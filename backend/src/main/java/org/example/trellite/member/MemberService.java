@@ -5,10 +5,13 @@ import org.example.trellite.common.ResourceNotFoundException;
 import org.example.trellite.common.RoleType;
 import org.example.trellite.member.dto.MemberResponse;
 import org.example.trellite.org.OrganizationRepository;
+import org.example.trellite.org.dto.OrganizationResponse;
 import org.example.trellite.user.User;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +27,12 @@ public class MemberService {
                 .findById(id)
                 .map(memberMapper::toResponse)
                 .orElseThrow(() -> new ResourceNotFoundException("Member with id of " + id + " not found."));
+    }
+
+    public List<OrganizationResponse> getMyOrgs(Long userId) {
+        var member = memberRepository.findById(userId);
+
+        return null;
     }
 
     @Transactional

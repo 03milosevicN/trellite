@@ -1,14 +1,10 @@
 package org.example.trellite.org;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.example.trellite.member.Member;
-
+import org.example.trellite.user.User;
 import java.time.Instant;
-import java.util.List;
 
 @Data
 @Entity
@@ -27,11 +23,8 @@ public class Organization {
     @Column(name = "created_at")
     private Instant createdAt;
 
-    @OneToMany(
-            mappedBy = "organization",
-            cascade = CascadeType.REMOVE,
-            orphanRemoval = true
-    )
-    private List<Member> members;
+    @ManyToOne
+    @JoinColumn(name = "owned_by", nullable = false)
+    private User ownedBy;
 
 }

@@ -45,4 +45,13 @@ public class OrganizationController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/{id}")
+    public ResponseEntity<Void> joinOrg(
+            @PathVariable Long id,
+            @AuthenticationPrincipal User user
+    ) {
+        service.joinOrg(id, user);
+        return ResponseEntity.noContent().build();
+    }
+
 }

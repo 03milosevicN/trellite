@@ -13,6 +13,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
+import java.util.List;
 
 
 @Slf4j
@@ -32,13 +33,23 @@ public class OrganizationService {
                 .orElseThrow(() -> new ResourceNotFoundException("Organization with id of " + id + " not found."));
     }
 
+    public List<OrganizationResponse> getOwnedOrganizations(User ownedBy) {
+        var orgs = organizationRepository.findOrganizationsByOwnedById(ownedBy).orElseThrow(() -> new RuntimeException("User owns no organizations."));
+        return orgs
+                .stream()
+                .map(organizationMapper::toResponse)
+                .toList();
+    }
+
+
 
     @Transactional
     public OrganizationResponse save(OrganizationRequest req, User creator) {
 
         var model = organizationMapper.toModel(req);
         model.setCreatedAt(Instant.now());
-        var saved = organizationRepository.save(model);
+        model.setOwnedBy(creator);
+        var savedOrg = organizationRepository.save(model);
 
         var membership = new Member();
         membership.setOrganization(model);
@@ -46,9 +57,9 @@ public class OrganizationService {
         membership.setRole(RoleType.ADMIN);
         memberRepository.save(membership);
 
-        log.info("User {} created new organization and received role of {}.", creator.getEmail(), RoleType.ADMIN);
+        log.info("User {} created new organization {} and received role of {}.", creator.getEmail(), savedOrg.getName(),RoleType.ADMIN);
 
-        return organizationMapper.toResponse(saved);
+        return organizationMapper.toResponse(savedOrg);
     }
 
     @Transactional
@@ -59,7 +70,7 @@ public class OrganizationService {
                 .orElseThrow(() -> new ResourceNotFoundException("Organization with id of " + orgId + " not found."));
 
         if (memberRepository.existsByOrganizationIdAndUserId(orgId, user.getId())) {
-            log.warn("User with ID of {} is already a member of {}", user.getId(), org);
+            log.warn("User with ID of {} is already a member of {}", user.getId(), org.getName());
             throw new IllegalStateException();
         }
 
