@@ -2,53 +2,61 @@
 
 <h1>Organizations</h1>
 
-@for (org of orgsSignal(); track org.orgId) {
+@if (orgsSignal() != null) {
+    @for (org of orgsSignal(); track org.orgId) {
 
-    <div class="d-flex align-items-center gap-2 flex-nowrap mb-2">
+        <div class="d-flex align-items-center gap-2 flex-nowrap mb-2">
 
-        <div class="d-flex align-items-center justify-content-center primary-green text-white fw-semibold rounded"
-             style="width: 28px; height: 28px; font-size: 13px; flex: 0 0 28px;">
-            {{ org.name.charAt(0) | uppercase }}
+            <div class="d-flex align-items-center justify-content-center primary-green text-white fw-semibold rounded"
+                 style="width: 28px; height: 28px; font-size: 13px; flex: 0 0 28px;">
+                {{ org.name.charAt(0) | uppercase }}
+            </div>
+            <p class="m-0 fw-semibold text-truncate">
+                {{ org.name }}
+            </p>
+
+            <button type="button" class="btn btn-sm py-0 px-2 primary-green">
+                <svg lucidePersonStanding class="icon-sm text-white"></svg>
+                <span class="text-white">Members</span>
+            </button>
+
+            <button type="button" class="btn btn-sm py-0 px-2 primary-green">
+                <svg lucideCalendarClock class="icon-sm text-white"></svg>
+                <span class="text-white">Activities</span>
+            </button>
         </div>
-        <p class="m-0 fw-semibold text-truncate">
-            {{ org.name }}
-        </p>
 
-        <button type="button" class="btn btn-sm py-0 px-2 primary-green">
-            <svg lucidePersonStanding class="icon-sm text-white"></svg>
-            <span class="text-white">Members</span>
-        </button>
+        <div class="row g-2 mb-4">
+            @for (board of boardsSignal(); track board.id) {
+                <div class="col-6 col-md-3 d-flex">
+                    <a [routerLink]="['/orgs', org.orgId, 'boards', board.id]"
+                       class="card w-100 rounded overflow-hidden position-relative text-decoration-none"
+                       style="max-width: 280px;">
+                        <div class="ratio" style="--bs-aspect-ratio: 62.5%;">
+                            <div class="d-flex align-items-end justify-content-center p-3 board-content">
+                                <p class="text-black m-0 board-title">
+                                    {{ board.title }}
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
 
-        <button type="button" class="btn btn-sm py-0 px-2 primary-green">
-            <svg lucideCalendarClock class="icon-sm text-white"></svg>
-            <span class="text-white">Activities</span>
-        </button>
-    </div>
-
-    <div class="row g-2 mb-4">
-        @for (board of boardsSignal(); track board.id) {
             <div class="col-6 col-md-3 d-flex">
-                <a [routerLink]="['/orgs', org.orgId, 'boards', board.id]" class="card w-100 rounded overflow-hidden position-relative text-decoration-none" style="max-width: 280px;">
+                <a href="#" class="card w-100 rounded border border-dashed text-decoration-none"
+                   style="max-width: 280px;">
                     <div class="ratio" style="--bs-aspect-ratio: 62.5%;">
-                        <div class="d-flex align-items-end justify-content-center p-3 board-content">
-                            <p class="text-black m-0 board-title">
-                                {{ board.title }}
-                            </p>
+                        <div class="d-flex flex-column align-items-center justify-content-center text-muted">
+                            <span class="fs-1">+</span>
+                            <span class="small fw-semibold">Create board</span>
                         </div>
                     </div>
                 </a>
             </div>
-        }
-
-        <div class="col-6 col-md-3 d-flex">
-            <a href="#" class="card w-100 rounded border border-dashed text-decoration-none" style="max-width: 280px;">
-                <div class="ratio" style="--bs-aspect-ratio: 62.5%;">
-                    <div class="d-flex flex-column align-items-center justify-content-center text-muted">
-                        <span class="fs-1">+</span>
-                        <span class="small fw-semibold">Create board</span>
-                    </div>
-                </div>
-            </a>
         </div>
-    </div>
+    }
+} @else {
+    <p>Loading...</p>
 }
+

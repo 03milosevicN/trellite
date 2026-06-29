@@ -60,11 +60,13 @@ public class User implements UserDetails, UserPrincipal {
     }
 
     @Override
+    @NonNull
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("USER"));
     }
 
     @Override
+    @NonNull
     public String getUsername() {
         return email;
     }

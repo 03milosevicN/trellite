@@ -34,53 +34,59 @@ public class AuthService {
 
 
     public UserResponse register(@Valid RegistrationRequest req) {
-
         var user = User
                 .builder()
-                .firstName( req.getFirstName() )
-                .lastName( req.getLastName() )
-                .email( req.getEmail() )
-                .password( passwordEncoder.encode(req.getPassword()) )
-                .accountLocked( false )
-                .enabled( false )
-                .createdAt( Instant.now() )
-                .lastModifiedAt( Instant.now() )
+                .firstName(req.getFirstName())
+                .lastName(req.getLastName())
+                .email(req.getEmail())
+                .password(passwordEncoder.encode(req.getPassword()))
+                .accountLocked(false)
+                .enabled(true)
+                .createdAt(Instant.now())
+                .lastModifiedAt(Instant.now())
                 .build();
 
         log.info("Successfully registered user {} @ {}", req.getEmail(), Instant.now());
         var saved = userRepository.save(user);
 
+
         return userMapper.toResponse(saved);
     }
 
     public LoginResponse authenticate(LoginRequest req) {
-        var auth = authenticationManager.authenticate(
-          new UsernamePasswordAuthenticationToken(req.getEmail(), req.getPassword())
-        );
+        try {
+            var auth = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(req.getEmail(), req.getPassword())
+            );
 
-        log.info("Authenticating {}", req.getEmail() );
+            log.info("Authenticating {}", req.getEmail());
 
-        var claims = new HashMap<String, Object>();
-        var user = (User) auth.getPrincipal();
-        if (user == null) {
-            throw new NullPointerException("User principal is null.");
+            var claims = new HashMap<String, Object>();
+            var user = (User) auth.getPrincipal();
+            if (user == null) {
+                throw new NullPointerException("User principal is null.");
+            }
+            claims.put("email", user.getEmail());
+
+            var jwtToken = jwtService.generateToken(claims, (UserDetails) auth.getPrincipal());
+            log.info("Token generated for {}", req.getEmail());
+
+            var userQuery = userRepository
+                    .findById(user.getId())
+                    .orElseThrow(() -> new UsernameNotFoundException("Failed to query user principal User not found."));
+
+            userQuery.setEnabled(true);
+            log.info("{}'s account enabled.", req.getEmail());
+
+            return LoginResponse
+                    .builder()
+                    .token(jwtToken)
+                    .id(userQuery.getId())
+                    .build();
+        } catch (Exception e) {
+            IO.println("EXCEPTION REACHED: " + e.getMessage());
+            throw e;
         }
-        claims.put("email", user.getEmail());
-
-        var jwtToken = jwtService.generateToken(claims, (UserDetails)auth.getPrincipal() );
-        log.info("Token generated for {}", req.getEmail());
-
-        var userQuery = userRepository
-                .findById(user.getId())
-                .orElseThrow( () -> new UsernameNotFoundException("Failed to query user principal User not found."));
-
-        userQuery.setEnabled(true);
-        log.info("{}'s account enabled.", req.getEmail());
-
-        return LoginResponse
-                .builder()
-                .token( jwtToken )
-                .build();
     }
 
 }

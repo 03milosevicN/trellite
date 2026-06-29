@@ -13,7 +13,7 @@ import {UserModel} from "../models/user.model";
 })
 export class OrgMemberService {
 
-    API_URL: string = 'http://localhost:8080/api/org-members';
+    API_URL: string = 'http://localhost:8080/api/members';
     private http: HttpClient = inject(HttpClient);
 
 
