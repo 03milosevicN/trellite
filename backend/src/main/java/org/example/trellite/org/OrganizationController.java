@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,6 +26,11 @@ public class OrganizationController {
         return ResponseEntity.ok( service.getById(id) );
     }
 
+    @GetMapping("owner/{ownerId}")
+    public ResponseEntity<List<OrganizationResponse>> getByOwner(@PathVariable Long ownerId) {
+        return ResponseEntity.ok( service.getOwnedOrganizations(ownerId) );
+    }
+
 
     @PostMapping
     public ResponseEntity<OrganizationResponse> create(
@@ -34,7 +40,6 @@ public class OrganizationController {
         var response = service.save(req, creator);
         return ResponseEntity.status( HttpStatus.CREATED ).body(response);
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
