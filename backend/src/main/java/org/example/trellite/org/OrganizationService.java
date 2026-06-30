@@ -9,6 +9,7 @@ import org.example.trellite.member.MemberRepository;
 import org.example.trellite.org.dto.OrganizationRequest;
 import org.example.trellite.org.dto.OrganizationResponse;
 import org.example.trellite.user.User;
+import org.example.trellite.user.UserRepository;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,9 +24,11 @@ public class OrganizationService {
 
     private final OrganizationRepository organizationRepository;
     private final MemberRepository memberRepository;
+    private final UserRepository userRepository;
     private final OrganizationMapper organizationMapper;
 
 
+    // Query
     public OrganizationResponse getById(Long id) {
         return organizationRepository
                 .findById(id)
@@ -33,7 +36,8 @@ public class OrganizationService {
                 .orElseThrow(() -> new ResourceNotFoundException("Organization with id of " + id + " not found."));
     }
 
-    public List<OrganizationResponse> getOwnedOrganizations(User ownedBy) {
+    public List<OrganizationResponse> getOwnedOrganizations(Long ownerId) {
+        var ownedBy = userRepository.findById(ownerId).orElseThrow(() -> new RuntimeException("User with id of + " + ownerId + "does not exist."));
         var orgs = organizationRepository.findOrganizationsByOwnedById(ownedBy).orElseThrow(() -> new RuntimeException("User owns no organizations."));
         return orgs
                 .stream()
@@ -42,7 +46,7 @@ public class OrganizationService {
     }
 
 
-
+    // Command
     @Transactional
     public OrganizationResponse save(OrganizationRequest req, User creator) {
 
