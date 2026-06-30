@@ -16,8 +16,4 @@ export class UserService {
         return this.http.get<UserModel>(`${this.API_URL}/${id}`);
     }
 
-    public create(data: UserModel): Observable<UserModel> {
-        return this.http.post<UserModel>(`${this.API_URL}`, data);
-    }
-
 }

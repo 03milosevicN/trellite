@@ -23,7 +23,7 @@ export const routes: Routes = [
         ]
     },
     {
-        path: 'orgs/:orgId', component: Org,
+        path: 'orgs/:userId', component: Org,
     },
     {
         path: 'orgs/:orgId/boards/:boardId', component: BoardComponent,
