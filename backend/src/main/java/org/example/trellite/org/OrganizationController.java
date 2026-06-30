@@ -26,7 +26,7 @@ public class OrganizationController {
         return ResponseEntity.ok( service.getById(id) );
     }
 
-    @GetMapping("org/{ownerId}")
+    @GetMapping("owner/{ownerId}")
     public ResponseEntity<List<OrganizationResponse>> getByOwner(@PathVariable Long ownerId) {
         return ResponseEntity.ok( service.getOwnedOrganizations(ownerId) );
     }
