@@ -6,7 +6,6 @@ import org.example.trellite.common.ResourceNotFoundException;
 import org.example.trellite.user.dto.UserResponse;
 import org.springframework.stereotype.Service;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -19,7 +18,14 @@ public class UserService {
         return userRepository
                 .findById(id)
                 .map(userMapper::toResponse)
-                .orElseThrow(() -> new ResourceNotFoundException(""));
+                .orElseThrow(() -> new ResourceNotFoundException("User with id of " + id + " not found."));
+    }
+
+    public UserResponse getByEmail(String email) {
+        return userRepository
+                .findByEmail(email)
+                .map(userMapper::toResponse)
+                .orElseThrow(() -> new ResourceNotFoundException("User with email of " + email + " not found."));
     }
 
 }
