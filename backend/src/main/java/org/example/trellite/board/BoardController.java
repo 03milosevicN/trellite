@@ -19,12 +19,10 @@ public class BoardController {
     private final BoardService boardService;
 
 
-
     @GetMapping
     public ResponseEntity<List<BoardResponse>> getAll() {
         return ResponseEntity.ok(boardService.getAll());
     }
-
 
     @GetMapping("/{id}")
     public ResponseEntity<BoardResponse> getById(@PathVariable String id) {

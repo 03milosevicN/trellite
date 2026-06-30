@@ -13,6 +13,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -50,6 +52,9 @@ public class BoardListService {
 
     public BoardListResponse save(BoardListRequest dto) {
         var model = boardListMapper.toModel(dto);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        assert auth != null;
+        log.info("{} saved new board-list:  {}", auth.getName(), dto.getTitle());
         var saved = boardListRepository.save(model);
         return boardListMapper.toResponse(saved);
     }
@@ -73,7 +78,11 @@ public class BoardListService {
     }
 
     public void delete(String id) {
+        var removedBoardList = boardListRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("BoardList with id of " + id + " not found."));
         cardService.deleteByBoardListId(id);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        assert auth != null;
+        log.info("{} deleted board-list:  {}", auth.getName(), removedBoardList.getTitle());
         boardListRepository.deleteById(id);
     }
 
