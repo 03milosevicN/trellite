@@ -11,7 +11,7 @@ import {OrganizationModel} from "../../models/organization.model";
 import {AuthService} from "../../services/auth.service";
 import {OrganizationService} from "../../services/organization.service";
 import {FormsModule} from "@angular/forms";
-import {OrganizationRequestModel} from "../../models/organizationRequest.model";
+import {OrganizationRequestModel} from "../../models/organization-request.model";
 import {ModalDialog} from "./modal-dialog/modalDialog";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {MatButton} from "@angular/material/button";
@@ -77,7 +77,6 @@ export class User implements OnInit {
     this.orgRequest.createdAt = new Date();
     this.orgService.create(this.orgRequest).subscribe({
       next: (data) => {
-        console.log(`Created org: ${data}`);
         this.router.navigate([`/orgs/${data.orgId}`]);
       },
       error: err => {
@@ -87,7 +86,7 @@ export class User implements OnInit {
   }
 
   openOrgModal(): void {
-    const dialogPointer = this.dialog.open(ModalDialog, {
+    const dialogPointer: MatDialogRef<ModalDialog> = this.dialog.open(ModalDialog, {
       width: '300px'
     });
     dialogPointer.afterClosed().subscribe(result => {

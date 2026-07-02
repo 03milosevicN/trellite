@@ -7,11 +7,16 @@ import {ActivatedRoute} from "@angular/router";
 import {forkJoin, map, of, switchMap} from "rxjs";
 import {UserService} from "../../../services/user.service";
 import {UserModel} from "../../../models/user.model";
+import {Card} from "../../common/card/card";
+import {CdkDrag, CdkDragDrop, CdkDropList} from "@angular/cdk/drag-drop";
 
 @Component({
   selector: "app-cards-section",
   imports: [
-    FormsModule
+    FormsModule,
+      Card,
+      CdkDrag,
+      CdkDropList
   ],
   templateUrl: "./cards-section.html",
   styleUrl: "./cards-section.css",
@@ -80,15 +85,25 @@ export class CardsSection implements OnInit {
         dueDate: new Date(),
         checklists: []
       };
-    console.log('log: new card named: ' + card.title );
     this.isEditing.set(false);
     this.pushToContainer(card);
+    this.cardService.create(card).subscribe({
+      next: (data) => {
+        console.log(`Log: created card: ${data.title}`);
+      },
+      error: err => {
+        console.error(`Error creating card: ${err}`);
+      }
+    })
     this.draft = '';
   }
 
   pushToContainer(newCard: CardModel): void {
     this.cardsContainer.update(data => [...data!, newCard]);
-    console.log(`received new card: ${newCard.title}`);
+  }
+
+  onCardDropped(event: CdkDragDrop<CardModel[] | null>): void {
+
   }
 
 }

@@ -1,4 +1,8 @@
-<div class="d-flex gap-1 flex-column align-items-center justify-content-center overflow-auto">
+<div class="d-flex gap-1 flex-column align-items-center justify-content-center overflow-auto"
+    cdkDropList
+     [cdkDropListData]="cardsContainer()"
+     (cdkDropListDropped)="onCardDropped($event)"
+>
 
     <div class="item card border rounded align-items-center justify-content-center"
          (click)="createCard()"
@@ -19,11 +23,8 @@
     } @else if (cardsContainer()?.length === 0) {
         <p>No cards yet.</p>
     } @else {
-        <!-- Obviously change to id later!-->
         @for (card of cardsContainer(); track card.id) {
-            <div class="item card border rounded align-items-center justify-content-center">
-                {{ card.title }}
-            </div>
+            <app-card [cardSignal]="card" cdkDrag [cdkDragData]="card"></app-card>
         }
     }
 

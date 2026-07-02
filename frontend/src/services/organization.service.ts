@@ -2,7 +2,7 @@ import {inject, Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {OrganizationModel} from "../models/organization.model";
 import {Observable} from "rxjs";
-import {OrganizationRequestModel} from "../models/organizationRequest.model";
+import {OrganizationRequestModel} from "../models/organization-request.model";
 
 @Injectable({
     providedIn: 'root'

@@ -17,13 +17,10 @@
     @if (listsContainer() === null) {
         <p>Loading...</p>
     } @else if (listsContainer()?.length === 0) {
-        <p>No boards yet.</p>
+        <p>No lists yet.</p>
     } @else {
-        <!-- Obviously change to id later!-->
         @for (list of listsContainer(); track list.id) {
-            <div class="item card border rounded align-items-center justify-content-center">
-                {{list.title}}
-            </div>
+            <app-board-list [boardListSignal]="list"></app-board-list>
         }
     }
 

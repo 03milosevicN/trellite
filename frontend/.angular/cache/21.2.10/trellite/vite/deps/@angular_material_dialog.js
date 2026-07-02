@@ -1,7 +1,9 @@
 import {
+  _animationsDisabled
+} from "./chunk-TXFL2ULX.js";
+import {
   CdkDialogContainer,
   CdkPortalOutlet,
-  CdkScrollable,
   Dialog,
   DialogConfig,
   DialogModule,
@@ -10,21 +12,25 @@ import {
   PortalModule,
   createBlockScrollStrategy,
   createGlobalPositionStrategy
-} from "./chunk-XZRGQ45O.js";
+} from "./chunk-4ULZ2ZZT.js";
 import {
-  _animationsDisabled
-} from "./chunk-QNADJCWY.js";
-import {
-  BidiModule,
   ESCAPE,
-  _IdGenerator,
-  coerceNumberProperty,
   hasModifierKey
-} from "./chunk-JTJOF3S4.js";
-import "./chunk-HEBNWZQD.js";
-import "./chunk-CCHOBSBC.js";
-import "./chunk-EEB65I2G.js";
-import "./chunk-OYTERLTZ.js";
+} from "./chunk-ZI7KHESE.js";
+import {
+  CdkScrollable
+} from "./chunk-YGN2L4JN.js";
+import {
+  _IdGenerator,
+  coerceNumberProperty
+} from "./chunk-XELZARLM.js";
+import {
+  BidiModule
+} from "./chunk-WIL2MHC4.js";
+import "./chunk-OINPEKAK.js";
+import "./chunk-2XRHRAVS.js";
+import "./chunk-EGHKXIHK.js";
+import "./chunk-5KZ3LDS7.js";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -56,18 +62,20 @@ import {
   ɵɵgetInheritedFactory,
   ɵɵlistener,
   ɵɵtemplate
-} from "./chunk-7AH5S3WC.js";
+} from "./chunk-EIVWOGM7.js";
 import {
   ReplaySubject,
   Subject,
-  __spreadProps,
-  __spreadValues,
   defer,
   filter,
   merge,
   startWith,
   take
-} from "./chunk-PJVWDKLX.js";
+} from "./chunk-F77N3ZJV.js";
+import {
+  __spreadProps,
+  __spreadValues
+} from "./chunk-4FRP4S3T.js";
 
 // node_modules/@angular/cdk/fesm2022/overlay.mjs
 var FullscreenOverlayContainer = class _FullscreenOverlayContainer extends OverlayContainer {

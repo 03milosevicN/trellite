@@ -17,24 +17,15 @@
             + Create Organization
         </button>
     </div>
-
-
-<!--    <div class="text-center p-5 border rounded bg-light my-4">-->
-<!--        <svg lucideUsers class="icon-lg text-muted mb-3" style="width: 48px; height: 48px;"></svg>-->
-<!--        <h4>No Boards Found</h4>-->
-
-<!--        <button type="button" class="btn btn-success px-4">-->
-<!--            + Create Board-->
-<!--        </button>-->
-<!--    </div>-->
 }
+
 @else {
     @for (org of orgsSignal(); track org.orgId) {
 
         <div class="d-flex align-items-center gap-2 flex-nowrap mb-2 mt-4">
             <div class="d-flex align-items-center justify-content-center primary-green text-white fw-semibold rounded"
                  style="width: 28px; height: 28px; font-size: 13px; flex: 0 0 28px;">
-                {{ org.name?.charAt(0) | uppercase }}
+                {{ org.name.charAt(0) | uppercase }}
             </div>
 
             <p class="m-0 fw-semibold text-truncate flex-grow-1" style="min-width: 0;">
@@ -70,16 +61,12 @@
             }
 
             <div class="col-6 col-md-3 d-flex">
-                <a [routerLink]="['/orgs', org.orgId, 'boards', 'new']"
-                   class="card w-100 rounded border border-dashed text-decoration-none"
-                   style="max-width: 280px; border-style: dashed !important;">
-                    <div class="ratio" style="--bs-aspect-ratio: 62.5%;">
-                        <div class="d-flex flex-column align-items-center justify-content-center text-muted">
+                    <div class="card w-100 rounded overflow-hidden position-relative text-decoration-none ratio" style="--bs-aspect-ratio: 62.5%;">
+                        <div (click)="openBoardModal()" class="d-flex flex-column align-items-center justify-content-center text-muted">
                             <span class="fs-1 lh-1">+</span>
                             <span class="small fw-semibold">Create board</span>
                         </div>
                     </div>
-                </a>
             </div>
         </div>
     }

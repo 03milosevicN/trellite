@@ -8,7 +8,7 @@ import {CardModel} from "../models/card.model";
 })
 export class CardService {
 
-    API_URL: string = 'http://localhost:8080/cards';
+    API_URL: string = 'http://localhost:8080/api/cards';
     private http: HttpClient = inject(HttpClient);
 
 
