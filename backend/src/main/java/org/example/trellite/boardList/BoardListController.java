@@ -7,7 +7,6 @@ import org.example.trellite.boardList.dto.BoardListResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/board-lists")
@@ -18,16 +17,10 @@ public class BoardListController {
     private final BoardListService boardListService;
 
 
-    @GetMapping
-    public ResponseEntity<List<BoardListResponse>> getAll() {
-        return ResponseEntity.ok(boardListService.getAll());
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<BoardListResponse> getById(@PathVariable String id) {
         return ResponseEntity.ok(boardListService.getById(id));
     }
-
 
 
     @PostMapping

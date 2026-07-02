@@ -43,6 +43,8 @@ public class CardService {
     public CardResponse save(CardRequest dto) {
         var model = cardMapper.toModel(dto);
 
+        log.info("Trying to save card with ID of {}", model.getId());
+
         if (model.getChecklists() != null) {
             model.getChecklists().forEach(checklist -> {
                 if (checklist.getId() == null) checklist.setId(new ObjectId());
