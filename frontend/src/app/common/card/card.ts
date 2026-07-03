@@ -8,6 +8,7 @@ import {
   MatCardTitleGroup
 } from "@angular/material/card";
 import {CardModel} from "../../../models/card.model";
+import {DatePipe} from "@angular/common";
 
 @Component({
   selector: "app-card",
@@ -17,7 +18,8 @@ import {CardModel} from "../../../models/card.model";
     MatCardTitle,
     MatCardContent,
     MatCardSubtitle,
-    MatCardTitleGroup
+    MatCardTitleGroup,
+    DatePipe
   ],
   template: `
     <mat-card class="p-2 shadow-sm border-0 rounded-2 bg-light">
@@ -29,8 +31,8 @@ import {CardModel} from "../../../models/card.model";
             {{ cardSignal()?.title }}
           </mat-card-title>
 
-          <mat-card-subtitle class="small text-muted">
-            {{ cardSignal()?.dueDate }}
+          <mat-card-subtitle class="small text-muted">s
+            {{ cardSignal()?.dueDate | date:'mediumDate' }}
           </mat-card-subtitle>
 
         </mat-card-title-group>
@@ -69,7 +71,6 @@ import {CardModel} from "../../../models/card.model";
 
     </mat-card>
   `,
-  styleUrl: "./card.css",
 })
 export class Card {
   public cardSignal = input<CardModel | null>(null);

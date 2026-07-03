@@ -38,7 +38,6 @@ import {CardModel} from "../../../models/card.model";
       </mat-card>
     </div>
   `,
-  styleUrl: "./board-list.css",
 })
 export class BoardList {
 
