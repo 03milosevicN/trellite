@@ -2,6 +2,8 @@ package org.example.trellite.user.dto;
 
 import lombok.Data;
 
+import java.time.Instant;
+
 @Data
 public class UserResponse {
     private Long userId;
@@ -9,4 +11,5 @@ public class UserResponse {
     private String lastName;
     private String email;
     private String password;
+    private Instant createdAt;
 }
