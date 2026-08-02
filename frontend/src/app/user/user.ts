@@ -97,4 +97,8 @@ export class User implements OnInit {
     });
   }
 
+  logout(): void {
+    this.authService.logout();
+  }
+
 }

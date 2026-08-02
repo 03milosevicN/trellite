@@ -8,7 +8,7 @@ import {forkJoin, map, of, switchMap} from "rxjs";
 import {UserService} from "../../../services/user.service";
 import {UserModel} from "../../../models/user.model";
 import {Card} from "../../common/card/card";
-import {CdkDrag, CdkDragDrop, CdkDropList} from "@angular/cdk/drag-drop";
+import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from "@angular/cdk/drag-drop";
 
 @Component({
   selector: "app-cards-section",
@@ -103,7 +103,29 @@ export class CardsSection implements OnInit {
   }
 
   onCardDropped(event: CdkDragDrop<CardModel[] | null>): void {
+    if (event.previousContainer === event.container) {
+      this.cardsContainer.update(cards => {
+        if (!cards) return [];
+        const updatedCards = [...cards];
+        moveItemInArray(updatedCards, event.previousIndex, event.currentIndex);
+        return updatedCards;
+      });
+    }
+    else {
+      const movedCard = event.previousContainer.data?.[event.previousIndex];
 
+      if (movedCard) {
+        this.cardsContainer.update(cards =>
+            cards ? cards.filter(c => c.id !== movedCard.id) : []
+        );
+      }
+    }
+  }
+
+  onCardDeleted(deletedCardId: string): void {
+    this.cardsContainer.update(cards =>
+        cards ? cards.filter(card => card.id !== deletedCardId) : []
+    );
   }
 
 }

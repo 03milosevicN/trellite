@@ -14,10 +14,10 @@
                     <span>Settings</span>
                 </a>
                 @if (this.authService.isLoggedIn()) {
-                    <button routerLink="settings"
+                    <button
                             class="nav-link d-flex align-items-center gap-2 rounded px-3 py-2 text-dark hover-bg"
                             routerLinkActive="active sidebar-green-primary-app text-white"
-                            (click)="authService.logout()"
+                            (click)="logout()"
                     >
                         <svg lucideLogOut class="icon-sm"></svg>
                         <span>Logout</span>

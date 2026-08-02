@@ -169,7 +169,9 @@ var BidiModule = class _BidiModule {
 })();
 
 export {
+  DIR_DOCUMENT,
   Directionality,
+  Dir,
   BidiModule
 };
-//# sourceMappingURL=chunk-WIL2MHC4.js.map
+//# sourceMappingURL=chunk-LR7DLQH6.js.map

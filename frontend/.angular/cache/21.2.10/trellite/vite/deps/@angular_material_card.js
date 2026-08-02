@@ -1,6 +1,6 @@
 import {
   BidiModule
-} from "./chunk-WIL2MHC4.js";
+} from "./chunk-LR7DLQH6.js";
 import {
   ChangeDetectionStrategy,
   Component,

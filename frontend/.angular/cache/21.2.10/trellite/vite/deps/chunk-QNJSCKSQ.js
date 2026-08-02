@@ -9,7 +9,7 @@ import {
   coerceNumberProperty,
   isFakeMousedownFromScreenReader,
   isFakeTouchstartFromScreenReader
-} from "./chunk-XELZARLM.js";
+} from "./chunk-WN4OB2MO.js";
 import {
   DomSanitizer
 } from "./chunk-OINPEKAK.js";
@@ -1658,4 +1658,4 @@ export {
   coerceCssPixelValue,
   hasModifierKey
 };
-//# sourceMappingURL=chunk-ZI7KHESE.js.map
+//# sourceMappingURL=chunk-QNJSCKSQ.js.map

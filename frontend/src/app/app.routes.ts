@@ -30,7 +30,7 @@ export const routes: Routes = [
     },
     {
         path: '',
-        component: Home,
+        component: Register,
     },
     {
         path: 'auth/register', component: Register,
@@ -38,11 +38,4 @@ export const routes: Routes = [
     {
         path: 'auth/login', component: Login,
     },
-    // TEMPORARY ROUTES
-    {
-      path: 'card-component', component: Card
-    },
-    {
-        path: 'list-component', component: BoardList
-    }
 ];

@@ -25,6 +25,7 @@ export class CardService {
     }
 
     public update(id: string, data: CardModel): Observable<CardModel> {
+        console.log("Accessing card's ID: " + id);
         return this.http.put<CardModel>(`${this.API_URL}/${id}`, data);
     }
 
