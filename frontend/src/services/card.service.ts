@@ -8,7 +8,7 @@ import {CardModel} from "../models/card.model";
 })
 export class CardService {
 
-    API_URL: string = 'http://localhost:8080/cards';
+    API_URL: string = 'http://localhost:8080/api/cards';
     private http: HttpClient = inject(HttpClient);
 
 
@@ -25,6 +25,7 @@ export class CardService {
     }
 
     public update(id: string, data: CardModel): Observable<CardModel> {
+        console.log("Accessing card's ID: " + id);
         return this.http.put<CardModel>(`${this.API_URL}/${id}`, data);
     }
 

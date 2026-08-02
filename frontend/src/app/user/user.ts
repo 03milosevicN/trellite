@@ -1,39 +1,38 @@
 import {Component, inject, OnInit, signal, WritableSignal} from "@angular/core";
 import {UserService} from "../../services/user.service";
-import {ActivatedRoute, RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
+import {ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
 import {UserModel} from "../../models/user.model";
 import {
-  LucideCalendarClock,
   LucideCog,
-  LucideCreditCard,
   LucideLogOut,
   LucideUsers,
-  LucideWalletCards
 } from "@lucide/angular";
 import {OrganizationModel} from "../../models/organization.model";
-import {OrgMemberService} from "../../services/orgMember.service";
-import {forkJoin} from "rxjs";
 import {AuthService} from "../../services/auth.service";
-import {BoardModel} from "../../models/board.model";
-import {CardModel} from "../../models/card.model";
+import {OrganizationService} from "../../services/organization.service";
+import {FormsModule} from "@angular/forms";
+import {OrganizationRequestModel} from "../../models/organization-request.model";
+import {ModalDialog} from "./modal-dialog/modalDialog";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {MatButton} from "@angular/material/button";
 
 @Component({
   selector: "app-user",
   imports: [
     LucideCog,
-    LucideCreditCard,
-    LucideWalletCards,
-    LucideCalendarClock,
     LucideUsers,
     RouterLink,
     RouterOutlet,
     RouterLinkActive,
-    LucideLogOut
+    LucideLogOut,
+    FormsModule,
+    MatButton
   ],
   templateUrl: "./user.html",
   styleUrl: "./user.css",
 })
 export class User implements OnInit {
+
 
   protected userSignal: WritableSignal<UserModel | null> = signal<UserModel | null>(null);
 
@@ -43,53 +42,63 @@ export class User implements OnInit {
 
   private userService: UserService = inject(UserService);
   protected authService: AuthService = inject(AuthService);
-
-  private orgMemberService: OrgMemberService = inject(OrgMemberService);
-
+  protected orgService: OrganizationService = inject(OrganizationService);
   private activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+  private router: Router = inject(Router);
+
+  protected orgRequest: OrganizationRequestModel = {
+    name: '',
+    createdAt: new Date(),
+  };
+
+  private dialog: MatDialog = inject(MatDialog);
 
 
   ngOnInit(): void {
     this.userId = this.activatedRoute.snapshot.paramMap.get('userId')!;
-    this.loadDataProto();
+    console.log(`Parsed userId type: ${typeof this.userId}`);
+    this.loadData();
   }
 
 
-  loadDataProto(): void {
-    this.userService.getById(this.userId!).subscribe({
+  loadData(): void {
+    this.orgService.getByOwner(this.userId).subscribe({
       next: data => {
-        this.orgMemberService.getAllOrgsByUserId(data.userId.toString()).subscribe({
-          next: data => {
-            this.orgsSignal.update(() => [...data]);
-          },
-          error: err => {
-            console.error('Error accessing orgs: ' + err);
-          }
-        })
+        this.orgsSignal.update(() => [...data]);
+        console.log(this.orgsSignal()?.length);
+      },
+      error: err => {
+        console.error('Error accessing user orgs: ' + err);
       }
     })
   }
 
-  loadData(): void {
-    forkJoin({
-      user: this.userService.getById(this.userId!),
-      orgs: this.orgMemberService.getAllOrgsByUserId(this.userId!),
-    }).subscribe({
-      next: ({user, orgs}) => {
-
-        if (user == null || orgs == null) {
-          console.log('One of the fetched data pairs is currently null');
-          this.userSignal.set(null);
-          this.orgsSignal.set(null);
-          return;
-        }
-        this.userSignal.set(user);
-        this.orgsSignal.update( () => [...orgs]);
+  createOrg(): void {
+    this.orgRequest.createdAt = new Date();
+    this.orgService.create(this.orgRequest).subscribe({
+      next: (data) => {
+        this.router.navigate([`/orgs/${data.orgId}`]);
       },
-      error: error => {
-        console.log('Issue with loading data: ', error);
+      error: err => {
+        console.error('Error creating org: ' + err);
       }
     });
+  }
+
+  openOrgModal(): void {
+    const dialogPointer: MatDialogRef<ModalDialog> = this.dialog.open(ModalDialog, {
+      width: '300px'
+    });
+    dialogPointer.afterClosed().subscribe(result => {
+      if (result !== undefined) {
+        this.orgRequest.name = result;
+        this.createOrg();
+      }
+    });
+  }
+
+  logout(): void {
+    this.authService.logout();
   }
 
 }

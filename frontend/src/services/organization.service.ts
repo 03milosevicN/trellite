@@ -2,6 +2,7 @@ import {inject, Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {OrganizationModel} from "../models/organization.model";
 import {Observable} from "rxjs";
+import {OrganizationRequestModel} from "../models/organization-request.model";
 
 @Injectable({
     providedIn: 'root'
@@ -12,15 +13,13 @@ export class OrganizationService {
 
     private http: HttpClient = inject(HttpClient);
 
-    public getById(id: string): Observable<OrganizationModel> {
-        return this.http.get<OrganizationModel>(`${this.API_URL}/${id}`);
+
+    public getByOwner(ownerId: string): Observable<OrganizationModel[]> {
+        return this.http.get<OrganizationModel[]>(`${this.API_URL}/owner/${ownerId}`);
     }
 
-    public getByOwner(id: string): Observable<OrganizationModel[]> {
-        return this.http.get<OrganizationModel[]>(`${this.API_URL}?ownedBy=${id}`);
-    }
 
-    public create(data: OrganizationModel): Observable<OrganizationModel> {
+    public create(data: OrganizationRequestModel): Observable<OrganizationModel> {
         return this.http.post<OrganizationModel>(`${this.API_URL}`, data);
     }
 

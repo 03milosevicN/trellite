@@ -23,14 +23,14 @@ export const routes: Routes = [
         ]
     },
     {
-        path: 'orgs/:orgId', component: Org,
+        path: 'orgs/:userId', component: Org,
     },
     {
         path: 'orgs/:orgId/boards/:boardId', component: BoardComponent,
     },
     {
         path: '',
-        component: Home,
+        component: Register,
     },
     {
         path: 'auth/register', component: Register,
@@ -38,11 +38,4 @@ export const routes: Routes = [
     {
         path: 'auth/login', component: Login,
     },
-    // TEMPORARY ROUTES
-    {
-      path: 'card-component', component: Card
-    },
-    {
-        path: 'list-component', component: BoardList
-    }
 ];

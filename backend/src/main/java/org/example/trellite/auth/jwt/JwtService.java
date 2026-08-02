@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.example.trellite.user.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -44,15 +45,19 @@ public class JwtService {
                 .map(GrantedAuthority::getAuthority)
                 .toList();
 
-        return Jwts
-                .builder()
+
+        var jwtBuilder =  Jwts.builder()
                 .claims( claims )
                 .subject( userDetails.getUsername() )
                 .issuedAt( new Date(System.currentTimeMillis()) )
                 .expiration( new Date(System.currentTimeMillis() + JWT_EXPIRATION) )
-                .claim("authorities", authorities)
-                .signWith( getSignInKey() )
-                .compact();
+                .claim("authorities", authorities);
+
+        if (userDetails instanceof User user) {
+            jwtBuilder.claim("userId", user.getId());
+        }
+
+        return jwtBuilder.signWith( getSignInKey() ).compact();
     }
 
     private SecretKey getSignInKey() {

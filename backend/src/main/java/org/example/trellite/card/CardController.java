@@ -7,7 +7,6 @@ import org.example.trellite.card.dto.CardResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/cards")
@@ -21,11 +20,6 @@ public class CardController {
     @GetMapping("/{id}")
     public ResponseEntity<CardResponse> getById(@PathVariable String id) {
         return ResponseEntity.ok(cardService.getById(id));
-    }
-
-    @GetMapping
-    public ResponseEntity<List<CardResponse>> getAll() {
-        return ResponseEntity.ok(cardService.getAll());
     }
 
 

@@ -1,0 +1,3 @@
+.masked-password {
+    -webkit-text-security: disc;
+}

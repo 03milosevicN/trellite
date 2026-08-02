@@ -1,6 +1,7 @@
 package org.example.trellite.board;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.trellite.board.dto.BoardRequest;
 import org.example.trellite.board.dto.BoardResponse;
 import org.example.trellite.boardList.BoardListService;
@@ -8,14 +9,17 @@ import org.example.trellite.boardList.dto.BoardListResponse;
 import org.example.trellite.card.dto.CardResponse;
 import org.example.trellite.common.ObjectIdMapper;
 import org.example.trellite.common.ResourceNotFoundException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class BoardService {
 
@@ -23,7 +27,6 @@ public class BoardService {
     private final BoardMapper boardMapper;
     private final BoardListService boardListService;
     private final ObjectIdMapper objectIdMapper;
-
 
 
     public List<BoardResponse> getAll() {
@@ -49,6 +52,11 @@ public class BoardService {
 
     public BoardResponse save(BoardRequest dto) {
         var model = boardMapper.toModel(dto);
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        assert auth != null;
+        log.info("{} saved new board:  {}", auth.getName(), dto.getTitle());
+
         var saved = boardRepository.save(model);
         return boardMapper.toResponse(saved);
     }
@@ -80,6 +88,10 @@ public class BoardService {
                 boardListService.delete(objectIdMapper.objectIdToString(list.getId()));
             }
         }
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        assert auth != null;
+        log.info("{} deleted board:  {}", auth.getName(), board.getTitle());
 
         boardRepository.deleteById(id);
     }

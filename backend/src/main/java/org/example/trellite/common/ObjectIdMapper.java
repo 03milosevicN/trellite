@@ -9,7 +9,16 @@ public class ObjectIdMapper {
 
     @Named("stringToObjectId")
     public ObjectId stringToObjectId(String id) {
-        return id == null ? null : new ObjectId(id);
+
+        if (id == null || id.isBlank()) {
+            return null;
+        }
+
+        if (!ObjectId.isValid(id)) {
+            throw new IllegalArgumentException("Invalid ObjectId: " + id);
+        }
+
+        return new ObjectId(id);
     }
 
     @Named("objectIdToString")

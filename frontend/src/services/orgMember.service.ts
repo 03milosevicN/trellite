@@ -13,7 +13,7 @@ import {UserModel} from "../models/user.model";
 })
 export class OrgMemberService {
 
-    API_URL: string = 'http://localhost:8080/api/members';
+    API_URL: string = 'http://localhost:8080/api/boards';
     private http: HttpClient = inject(HttpClient);
 
 
@@ -33,9 +33,12 @@ export class OrgMemberService {
         return this.http.get<CardModel[]>(`${this.API_URL}/${userId}/cards`);
     }
 
+
+
     public getAllBoardsByUserId(userId: string): Observable<BoardModel[] | null> {
-        return this.http.get<BoardModel[]>(`${this.API_URL}/${userId}/boards`);
+        return this.http.get<BoardModel[]>(`${this.API_URL}/${userId}`);
     }
+
 
 
     public getAllBoardListsByUserId(userId: string): Observable<BoardListModel[] | null> {

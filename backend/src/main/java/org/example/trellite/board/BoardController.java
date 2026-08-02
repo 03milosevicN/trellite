@@ -19,18 +19,20 @@ public class BoardController {
     private final BoardService boardService;
 
 
-
     @GetMapping
     public ResponseEntity<List<BoardResponse>> getAll() {
         return ResponseEntity.ok(boardService.getAll());
     }
 
-
-    @GetMapping("/{id}")
-    public ResponseEntity<BoardResponse> getById(@PathVariable String id) {
-        return ResponseEntity.ok(boardService.getById(id));
+    @GetMapping("{orgId}")
+    public ResponseEntity<BoardResponse> getById(@PathVariable String orgId) {
+        return ResponseEntity.ok(boardService.getById(orgId));
     }
 
+    @GetMapping("/org/{orgId}")
+    public ResponseEntity<List<BoardResponse>> getByOrgId(@PathVariable long orgId) {
+        return ResponseEntity.ok(boardService.getByOrgId(orgId));
+    }
 
 
     @PostMapping

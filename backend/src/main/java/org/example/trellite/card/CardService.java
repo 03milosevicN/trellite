@@ -7,6 +7,8 @@ import org.example.trellite.card.dto.CardRequest;
 import org.example.trellite.card.dto.CardResponse;
 import org.example.trellite.common.ObjectIdMapper;
 import org.example.trellite.common.ResourceNotFoundException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -14,7 +16,6 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-@Transactional
 @RequiredArgsConstructor
 public class CardService {
 
@@ -38,9 +39,11 @@ public class CardService {
                 .orElseThrow(() -> new ResourceNotFoundException("Card with id of" + id + " not found."));
     }
 
-
+    @Transactional
     public CardResponse save(CardRequest dto) {
         var model = cardMapper.toModel(dto);
+
+        log.info("Trying to save card with ID of {}", model.getId());
 
         if (model.getChecklists() != null) {
             model.getChecklists().forEach(checklist -> {
@@ -52,11 +55,14 @@ public class CardService {
                 }
             });
         }
-
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        assert auth != null;
+        log.info("{} saved new card:  {}", auth.getName(), dto.getTitle());
         var saved = cardRepository.save(model);
         return cardMapper.toResponse(saved);
     }
 
+    @Transactional
     public CardResponse update(String id, CardRequest dto) {
         var existing = cardRepository
                 .findById(id)
@@ -70,6 +76,7 @@ public class CardService {
         return cardMapper.toResponse(cardRepository.save(existing));
     }
 
+    @Transactional
     public CardResponse patch(String id, CardRequest dto) {
         var existing = cardRepository
                 .findById(id)
@@ -84,9 +91,14 @@ public class CardService {
     }
 
     public void delete(String id) {
+        var removedCard = cardRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Card with id of " + id + " not found."));
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        assert auth != null;
+        log.info("{} deleted card: {}", auth.getName(), removedCard.getTitle());
         cardRepository.deleteById(id);
     }
 
+    @Transactional
     public void deleteByBoardListId(String boardListId) {
         cardRepository.deleteAllByBoardListId(objectIdMapper.stringToObjectId(boardListId));
     }

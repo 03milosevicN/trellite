@@ -1,15 +1,28 @@
 <div class="d-flex flex-row gap-3 align-items-start justify-content-start overflow-auto">
 
     <div class="item card border rounded align-items-center justify-content-center"
-        (click)="createBoard()"
+         [class.border-0]="isEditing()"
+         [class.shadow-none]="isEditing()"
+         (click)="createBoard()"
     >
         @if (!isEditing()) {
             {{ listText() }}
         }
         @if (isEditing()) {
-            <div (click)="$event.stopPropagation()">
-                <input [(ngModel)]="draft" (keydown.enter)="isEditing.set(false)"/>
-                <button (click)="save()">Save</button>
+            <div (click)="$event.stopPropagation()" class="d-inline-block w-100" style="max-width: 400px;">
+                <div class="input-group shadow-sm">
+                    <input [(ngModel)]="draft"
+                           (keydown.enter)="isEditing.set(false)"
+                           type="text"
+                           class="form-control form-control-sm border-secondary-subtle focus-ring focus-ring-primary"
+                           placeholder="Edit item..."
+                           aria-label="Edit item"/>
+
+                    <button (click)="save()"
+                            class="btn btn-sm btn-primary fw-medium px-3 d-flex align-items-center">
+                        Save
+                    </button>
+                </div>
             </div>
         }
     </div>
@@ -17,13 +30,10 @@
     @if (listsContainer() === null) {
         <p>Loading...</p>
     } @else if (listsContainer()?.length === 0) {
-        <p>No boards yet.</p>
+
     } @else {
-        <!-- Obviously change to id later!-->
         @for (list of listsContainer(); track list.id) {
-            <div class="item card border rounded align-items-center justify-content-center">
-                {{list.title}}
-            </div>
+            <app-board-list [boardListSignal]="list"></app-board-list>
         }
     }
 

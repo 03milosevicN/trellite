@@ -2,6 +2,7 @@ import {inject, Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {BoardModel} from "../models/board.model";
+import {BoardRequest} from "../models/board-request.model";
 
 @Injectable({
     providedIn: 'root'
@@ -20,7 +21,7 @@ export class BoardService {
         return this.http.get<BoardModel[]>(`${this.API_URL}?org_id=${id}`);
     }
 
-    public create(data: BoardModel): Observable<BoardModel> {
+    public create(data: BoardRequest): Observable<BoardModel> {
         return this.http.post<BoardModel>(`${this.API_URL}`, data);
     }
 
