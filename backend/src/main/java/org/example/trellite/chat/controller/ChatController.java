@@ -1,8 +1,10 @@
-package org.example.trellite.chat;
+package org.example.trellite.chat.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.trellite.chat.service.ChatService;
+import org.example.trellite.chat.dto.ChatMessageResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;

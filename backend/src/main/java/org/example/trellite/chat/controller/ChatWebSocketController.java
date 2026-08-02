@@ -1,7 +1,9 @@
-package org.example.trellite.chat;
+package org.example.trellite.chat.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.trellite.chat.service.ChatService;
+import org.example.trellite.chat.dto.ChatMessageRequestDto;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

@@ -1,4 +1,4 @@
-package org.example.trellite.chat;
+package org.example.trellite.chat.dto;
 
 import lombok.Builder;
 import lombok.Data;

@@ -1,6 +1,7 @@
 package org.example.trellite.chat;
 
 import lombok.RequiredArgsConstructor;
+import org.example.trellite.chat.dto.ChatMessageResponseDto;
 import org.example.trellite.common.ObjectIdMapper;
 import org.example.trellite.user.UserRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
