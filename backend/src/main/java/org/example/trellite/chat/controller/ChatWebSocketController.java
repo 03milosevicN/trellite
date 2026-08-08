@@ -27,7 +27,7 @@ public class ChatWebSocketController {
     ) {
         var res = chatService.send(boardId, principal.getName(), req.getContent());
 
-        String destination = "/topic/boards" + boardId + "/chat";
+        String destination = "/topic/boards/" + boardId + "/chat";
         messagingTemplate.convertAndSend(destination, res);
 
         log.debug("MESSAGE SENT TO DESTINATION: {}", destination);

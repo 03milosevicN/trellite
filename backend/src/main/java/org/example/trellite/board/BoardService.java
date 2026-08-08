@@ -9,12 +9,15 @@ import org.example.trellite.boardList.dto.BoardListResponse;
 import org.example.trellite.card.dto.CardResponse;
 import org.example.trellite.common.ObjectIdMapper;
 import org.example.trellite.common.ResourceNotFoundException;
+import org.example.trellite.user.UserRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +27,7 @@ import java.util.stream.Collectors;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final UserRepository userRepository;
     private final BoardMapper boardMapper;
     private final BoardListService boardListService;
     private final ObjectIdMapper objectIdMapper;
@@ -54,10 +58,19 @@ public class BoardService {
         var model = boardMapper.toModel(dto);
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        assert auth != null;
-        log.info("{} saved new board:  {}", auth.getName(), dto.getTitle());
+        String userEmail = auth.getName();
 
+        log.info("{} saved new board:  {}", userEmail, dto.getTitle());
+
+        var user = userRepository.findByEmail(userEmail).orElseThrow(() -> new UsernameNotFoundException("User with email of " + userEmail + " not found."));
+
+        if (model.getMembers() == null) {
+            model.setMembers(new ArrayList<>());
+        }
+        model.getMembers().add(user.getId());
+        log.info("{} is owner and sole member of board {}", user.getId(), dto.getTitle());
         var saved = boardRepository.save(model);
+        log.info("Saved members: {}", saved.getMembers());
         return boardMapper.toResponse(saved);
     }
 

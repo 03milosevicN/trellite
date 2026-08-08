@@ -16,6 +16,12 @@ spring:
         port: ${MONGODB_PORT}
         uri: ${MONGODB_URI}
 
+logging:
+    level:
+        org:
+            springframework:
+                security: DEBUG
+
 application:
     security:
         jwt:

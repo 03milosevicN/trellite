@@ -10,6 +10,8 @@ import org.example.trellite.org.dto.OrganizationRequest;
 import org.example.trellite.org.dto.OrganizationResponse;
 import org.example.trellite.user.User;
 import org.example.trellite.user.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +31,12 @@ public class OrganizationService {
 
 
     // Query
+    public Page<OrganizationResponse> getAll(Pageable pageable) {
+        return organizationRepository
+                .findAll(pageable)
+                .map(organizationMapper::toResponse);
+    }
+
     public OrganizationResponse getById(Long id) {
         return organizationRepository
                 .findById(id)
@@ -67,11 +75,15 @@ public class OrganizationService {
     }
 
     @Transactional
-    public void joinOrg(Long orgId, User user) {
+    public void joinOrg(Long orgId, Long userId) {
 
         var org = organizationRepository
                 .findById(orgId)
                 .orElseThrow(() -> new ResourceNotFoundException("Organization with id of " + orgId + " not found."));
+
+        var user = userRepository
+                .findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User with id of " + userId + " not found."));
 
         if (memberRepository.existsByOrganizationIdAndUserId(orgId, user.getId())) {
             log.warn("User with ID of {} is already a member of {}", user.getId(), org.getName());

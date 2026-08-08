@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.example.trellite.org.dto.OrganizationRequest;
 import org.example.trellite.org.dto.OrganizationResponse;
 import org.example.trellite.user.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,6 +23,15 @@ public class OrganizationController {
 
     private final OrganizationService service;
 
+
+    @GetMapping
+    public ResponseEntity<Page<OrganizationResponse>> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.ok( service.getAll(pageable) );
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<OrganizationResponse> getById(@PathVariable Long id) {
@@ -55,7 +67,7 @@ public class OrganizationController {
             @PathVariable Long id,
             @AuthenticationPrincipal User user
     ) {
-        service.joinOrg(id, user);
+        service.joinOrg(id, user.getId());
         return ResponseEntity.noContent().build();
     }
 

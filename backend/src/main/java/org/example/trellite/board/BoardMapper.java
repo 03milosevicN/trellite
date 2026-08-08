@@ -18,6 +18,7 @@ public interface BoardMapper {
             target = "id",
             qualifiedByName = "objectIdToString"
     )
+    @Mapping(source = "members", target = "members")
     BoardResponse toResponse(Board model);
 
 }

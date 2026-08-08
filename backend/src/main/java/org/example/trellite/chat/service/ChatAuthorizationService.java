@@ -21,11 +21,21 @@ public class ChatAuthorizationService {
         var board = boardRepository.findById(boardId);
         if (board.isEmpty()) {
             log.warn("Failed to check board membership. Board {} doesn't exist.", board);
+            return false;
         }
 
         var user = userRepository.findByEmail(email);
         if (user.isEmpty()) {
             log.warn("Failed to check board membership. User {} doesn't exist.", user);
+            return false;
+        }
+        log.info("Checking fetched user with email of {}'s authorities: {}", user.get().getEmail(), user.get().getAuthorities());
+        user.get().getAuthorities();
+
+        boolean isAdmin = user.get().getAuthorities().toString().contains("ROLE_ADMIN") || user.get().getAuthorities().toString().contains("ADMIN");
+        if (isAdmin) {
+            log.info("Access granted to ADMIN user {} for board {}", email, boardId);
+            return true;
         }
 
         var members = board.get().getMembers();

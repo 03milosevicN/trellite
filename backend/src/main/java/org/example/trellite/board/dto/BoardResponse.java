@@ -3,6 +3,7 @@ package org.example.trellite.board.dto;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.Instant;
+import java.util.List;
 
 @Data
 public class BoardResponse {
@@ -11,6 +12,7 @@ public class BoardResponse {
     @Field("org_id")
     private Long orgId;
     private String title;
+    private List<Long> members;
     @Field("created_at")
     private Instant createdAt;
     private Boolean archived;
