@@ -3,9 +3,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "./out-tsc/app",
-    "types": [],
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": []
   },
   "include": [
     "src/**/*.ts"
