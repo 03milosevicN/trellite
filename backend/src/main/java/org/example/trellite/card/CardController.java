@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/cards")
 @RequiredArgsConstructor
@@ -20,6 +22,16 @@ public class CardController {
     @GetMapping("/{id}")
     public ResponseEntity<CardResponse> getById(@PathVariable String id) {
         return ResponseEntity.ok(cardService.getById(id));
+    }
+
+    @GetMapping("/by-list/{boardListId}")
+    public ResponseEntity<List<CardResponse>> getByBoardListId(@PathVariable String boardListId) {
+        return ResponseEntity.ok(cardService.getCardsByBoardListId(boardListId));
+    }
+
+    @GetMapping("/my-backlog")
+    public ResponseEntity<List<CardResponse>> getMyBacklog() {
+        return ResponseEntity.ok(cardService.getMyBacklog());
     }
 
 

@@ -28,7 +28,6 @@ public class BoardList {
     @Field(name = "created_at")
     private Instant createdAt;
 
-
     @Transient
     private List<Card> cards;
 

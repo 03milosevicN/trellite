@@ -3,6 +3,8 @@ package org.example.trellite.boardList;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.trellite.board.BoardRepository;
+import org.example.trellite.board.BoardService;
 import org.example.trellite.boardList.dto.BoardListRequest;
 import org.example.trellite.boardList.dto.BoardListResponse;
 import org.example.trellite.card.CardService;
@@ -32,21 +34,25 @@ public class BoardListService {
     private final BoardListRepository boardListRepository;
     private final BoardListMapper boardListMapper;
     private final ObjectIdMapper objectIdMapper;
-    private final CardService cardService;
     private final MongoTemplate mongoTemplate;
+    private final CardService cardService;
+    private final BoardRepository boardRepository;
 
-
-    public List<BoardListResponse> getAll() {
-        return boardListRepository
-                .findAll()
-                .stream()
-                .peek(q -> log.info("Logging BoardLists: {} : {} : {}", q.getId(),q.getBoardId(), q.getTitle()))
-                .map(boardListMapper::toResponse)
-                .collect(Collectors.toList());
-    }
 
     public BoardListResponse getById(String id) {
         return boardListRepository.findById(id).map(boardListMapper::toResponse).orElseThrow(() -> new ResourceNotFoundException("BoardList with id of " + id + " not found."));
+    }
+
+    // Given particular board and particular board list id (assuming boardList is in board) return board list from that board.
+    public BoardListResponse getBoardListByBoardId(String boardId, String boardListId) {
+        var board = boardRepository.findById(boardId).orElseThrow();
+        return boardListRepository
+                .findByBoardId(board.getId())
+                .stream()
+                .filter(boardList -> boardList.getId().toString().equals(boardListId))
+                .findFirst()
+                .map(boardListMapper::toResponse)
+                .orElseThrow(() -> new ResourceNotFoundException("BoardList with id of " + boardListId + " not found."));
     }
 
 

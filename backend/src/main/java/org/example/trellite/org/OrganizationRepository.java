@@ -16,5 +16,4 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
     @Query("SELECT o FROM Organization o WHERE o.ownedBy = :ownedBy")
     Optional<List<Organization>> findOrganizationsByOwnedById(User ownedBy);
 
-
 }

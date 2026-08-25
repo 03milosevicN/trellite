@@ -16,6 +16,9 @@ public class Card {
     @Id
     private ObjectId id;
 
+    @Field(name = "board_id")
+    private ObjectId boardId;
+
     @Field(name = "board_list_id")
     private ObjectId boardListId;
 

@@ -6,6 +6,8 @@ import org.example.trellite.common.ResourceNotFoundException;
 import org.example.trellite.user.dto.UserResponse;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -13,6 +15,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
+
+    public List<UserResponse> getAll() {
+        return userRepository
+                .findAll()
+                .stream()
+                .map(userMapper::toResponse)
+                .toList();
+    }
 
     public UserResponse getById(Long id) {
         return userRepository

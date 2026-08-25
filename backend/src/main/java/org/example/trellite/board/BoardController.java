@@ -2,8 +2,10 @@ package org.example.trellite.board;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.example.trellite.board.dto.BoardRequest;
 import org.example.trellite.board.dto.BoardResponse;
+import org.example.trellite.member.dto.MemberResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,16 +26,34 @@ public class BoardController {
         return ResponseEntity.ok(boardService.getAll());
     }
 
-    @GetMapping("{orgId}")
-    public ResponseEntity<BoardResponse> getById(@PathVariable String orgId) {
-        return ResponseEntity.ok(boardService.getById(orgId));
+    @GetMapping("{boardId}")
+    public ResponseEntity<BoardResponse> getById(@PathVariable String boardId) {
+        return ResponseEntity.ok(boardService.getById(boardId));
     }
 
     @GetMapping("/org/{orgId}")
-    public ResponseEntity<List<BoardResponse>> getByOrgId(@PathVariable long orgId) {
-        return ResponseEntity.ok(boardService.getByOrgId(orgId));
+    public ResponseEntity<List<BoardResponse>> getAllByOrgId(@PathVariable long orgId) {
+        return ResponseEntity.ok(boardService.getAllByOrgId(orgId));
     }
 
+    @GetMapping("/{orgId}/members")
+    public ResponseEntity<List<MemberResponse>> getMembers(@PathVariable Long orgId) {
+        return ResponseEntity.ok (boardService.fetchMembers(orgId));
+    }
+
+    @GetMapping("/{boardId}/board-members")
+    public ResponseEntity<List<MemberResponse>> getBoardMembers(@PathVariable String boardId) {
+        return ResponseEntity.ok(boardService.getBoardMembers(boardId));
+    }
+
+
+    @PostMapping("/{userId}/{boardId}")
+    public ResponseEntity<BoardResponse> assignToBoard(
+            @PathVariable Long userId,
+            @PathVariable String boardId
+    ) {
+        return ResponseEntity.ok(boardService.assignToBoard(userId, boardId));
+    }
 
     @PostMapping
     public ResponseEntity<BoardResponse> create(@RequestBody BoardRequest req) {
@@ -60,6 +80,15 @@ public class BoardController {
             @RequestBody BoardRequest req
     ) {
         return ResponseEntity.ok(boardService.patch(id, req));
+    }
+
+    @DeleteMapping("/{boardId}")
+    public ResponseEntity<Void> leaveBoard(
+            @PathVariable String boardId,
+            @RequestParam Long userId
+    ) {
+        boardService.leaveBoard(boardId, userId);
+        return ResponseEntity.noContent().build();
     }
 
 }

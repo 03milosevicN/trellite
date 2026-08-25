@@ -2,11 +2,14 @@ package org.example.trellite.boardList;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.example.trellite.boardList.dto.BoardListRequest;
 import org.example.trellite.boardList.dto.BoardListResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/board-lists")
@@ -22,6 +25,10 @@ public class BoardListController {
         return ResponseEntity.ok(boardListService.getById(id));
     }
 
+    @GetMapping("/by-board/{boardId}")
+    public ResponseEntity<List<BoardListResponse>> getByBoardId(@PathVariable String boardId) {
+        return ResponseEntity.ok(boardListService.findBoardListsByBoardId(boardId));
+    }
 
     @PostMapping
     public ResponseEntity<BoardListResponse> create(@RequestBody BoardListRequest req) {
