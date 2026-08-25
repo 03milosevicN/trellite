@@ -20,9 +20,9 @@ import { OrgRequestModel } from '../org/org.model';
         <div class="flex-1">
           <div class="dropdown">
             <button tabindex="0" class="btn btn-ghost"><svg lucideMenu></svg></button>
-            <!--TODO: org modal menu here-->
+            <!--TODO: org modal menu-->
 
-            <!--TODO: org modal menu here-->
+            <!--TODO: org modal menu-->
           </div>
         </div>
         <div class="flex-none">
