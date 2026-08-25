@@ -20,7 +20,7 @@ export class OrgService {
   }
 
   getByOwner(userId: string) {
-    return this.http.get<OrgResponseModel>(`${this.API}/owner/${userId}`);
+    return this.http.get<OrgResponseModel[]>(`${this.API}/owner/${userId}`);
   }
 
   create(data: OrgRequestModel) {

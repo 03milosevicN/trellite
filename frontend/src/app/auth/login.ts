@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
 import { LoginRequestModel } from './auth.model';
 import { email, form, FormField, minLength, required } from '@angular/forms/signals';
+import { UserState } from '../states/user.state';
 
 @Component({
   selector: 'app-login',
@@ -36,6 +37,7 @@ import { email, form, FormField, minLength, required } from '@angular/forms/sign
   `,
 })
 export class Login {
+
   private authService = inject(AuthService);
   private router = inject(Router);
 
