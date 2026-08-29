@@ -24,6 +24,11 @@ public class CardController {
         return ResponseEntity.ok(cardService.getById(id));
     }
 
+    @GetMapping("/by-board/{boardId}")
+    public ResponseEntity<List<CardResponse>> getByBoardId(@PathVariable String boardId) {
+        return ResponseEntity.ok(cardService.getCardsByBoardId(boardId));
+    }
+
     @GetMapping("/by-list/{boardListId}")
     public ResponseEntity<List<CardResponse>> getByBoardListId(@PathVariable String boardListId) {
         return ResponseEntity.ok(cardService.getCardsByBoardListId(boardListId));

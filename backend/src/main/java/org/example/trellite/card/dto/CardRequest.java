@@ -3,6 +3,7 @@ package org.example.trellite.card.dto;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import org.bson.types.ObjectId;
 import org.example.trellite.checklist.dto.ChecklistRequest;
 import java.time.Instant;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 public class CardRequest {
     @NotBlank(message = "BoardList ID cannot be blank.")
     private String boardListId;
+    private String boardId;
     @NotBlank(message = "Title shouldn't be blank.")
     private String title;
     private String desc;

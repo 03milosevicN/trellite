@@ -10,6 +10,7 @@ import java.util.List;
 public class CardResponse {
     @Field("_id")
     private String id;
+    private String boardId;
     @Field("board_list_id")
     private String boardListId;
     private String title;

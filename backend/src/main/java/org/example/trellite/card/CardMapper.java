@@ -26,6 +26,11 @@ public interface CardMapper {
             qualifiedByName = "stringToObjectId"
     )
     @Mapping(
+            source = "boardId",
+            target = "boardId",
+            qualifiedByName = "stringToObjectId"
+    )
+    @Mapping(
             target = "id",
             ignore = true
     )
@@ -34,6 +39,11 @@ public interface CardMapper {
     @Mapping(
             source = "id",
             target = "id",
+            qualifiedByName = "objectIdToString"
+    )
+    @Mapping(
+            source = "boardId",
+            target = "boardId",
             qualifiedByName = "objectIdToString"
     )
     @Mapping(

@@ -13,7 +13,10 @@ public interface BoardListMapper {
             target = "id",
             ignore = true
     )
-    @Mapping(target = "boardId", ignore = true)
+    @Mapping(
+            source = "boardId",
+            target = "boardId",
+            qualifiedByName = "stringToObjectId")
     BoardList toModel(BoardListRequest request);
 
     @Mapping(

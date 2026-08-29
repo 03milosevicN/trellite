@@ -65,9 +65,9 @@ public class OrganizationController {
     @PostMapping("/{id}")
     public ResponseEntity<Void> joinOrg(
             @PathVariable Long id,
-            @AuthenticationPrincipal User user
+            @RequestParam Long userId
     ) {
-        service.joinOrg(id, user.getId());
+        service.joinOrg(id, userId);
         return ResponseEntity.noContent().build();
     }
 

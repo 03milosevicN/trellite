@@ -13,6 +13,10 @@ public interface ItemMapper {
             target = "id",
             ignore = true
     )
+    @Mapping(
+            target = "checklistId",
+            ignore = true
+    )
     Item toModel(ItemRequest request);
 
     @Mapping(

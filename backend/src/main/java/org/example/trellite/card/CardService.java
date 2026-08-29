@@ -55,6 +55,14 @@ public class CardService {
                 .toList();
     }
 
+    public List<CardResponse> getCardsByBoardId(String boardId) {
+        return cardRepository
+                .findByBoardId( objectIdMapper.stringToObjectId(boardId) )
+                .stream()
+                .map(cardMapper::toResponse)
+                .toList();
+    }
+
     public List<CardResponse> getMyBacklog() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !auth.isAuthenticated()) {

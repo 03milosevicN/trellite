@@ -10,6 +10,7 @@ import java.util.List;
 public interface CardRepository extends MongoRepository<Card, String> {
     void deleteAllByBoardListId(ObjectId boardListId);
     List<Card> findByBoardListId(ObjectId boardListId);
+    List<Card> findByBoardId(ObjectId boardId);
     List<Card> findByBoardIdAndBoardListIdIsNull(ObjectId boardId);
     // For backlog + board-list fetching
     List<Card> findByAssigneesContaining(Long userId);
