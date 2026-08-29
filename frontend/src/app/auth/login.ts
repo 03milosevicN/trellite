@@ -1,14 +1,17 @@
 import { Component, inject, signal } from '@angular/core';
 import { AuthService } from './auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { LoginRequestModel } from './auth.model';
 import { email, form, FormField, minLength, required } from '@angular/forms/signals';
 import { UserState } from '../states/user.state';
 
 @Component({
   selector: 'app-login',
-  imports: [FormField],
+  imports: [FormField, RouterLink],
   template: `
+    <div class="navbar shadow-lg">
+      <p class="font-medium text-2xl">Trellite</p>
+    </div>
     <div class="hero bg-base-200 min-h-screen">
       <div class="her-content flex-col lg:flex-row-reverse">
         <div class="text-center lg:text-left">
@@ -18,17 +21,19 @@ import { UserState } from '../states/user.state';
           <div class="card-body p-10">
             <form (submit)="onSubmit($event)" class="fieldset">
               <label class="label">Email</label>
-              <input [formField]="loginForm.email" type="email" class="input" placeholder="Email" />
+              <input [formField]="loginForm.email" type="email" class="input border rounded-md" />
 
               <label class="label">Password</label>
               <input
                 [formField]="loginForm.password"
                 type="password"
-                class="input"
-                placeholder="Password"
+                class="input border rounded-md"
               />
 
               <button class="btn btn-neutral mt-4">Login</button>
+              <button routerLink="/register" class="btn btn-neutral mt-4">
+                Don't have an account? Register
+              </button>
             </form>
           </div>
         </div>

@@ -1,13 +1,16 @@
 import { Component, inject, signal } from '@angular/core';
 import { AuthService } from './auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { RegistrationRequestModel } from './auth.model';
 import { email, form, FormField, minLength, required } from '@angular/forms/signals';
 
 @Component({
   selector: 'app-register',
-  imports: [FormField],
+  imports: [FormField, RouterLink],
   template: `
+    <div class="navbar shadow-lg">
+      <p class="font-medium text-2xl">Trellite</p>
+    </div>
     <div class="hero bg-base-200 min-h-screen">
       <div class="her-content flex-col lg:flex-row-reverse">
         <div class="text-center lg:text-left">
@@ -17,28 +20,29 @@ import { email, form, FormField, minLength, required } from '@angular/forms/sign
           <div class="card-body p-10">
             <form (submit)="onSubmit($event)" class="fieldset">
               <label class="label">First name</label>
-              <input [formField]="registerForm.firstName" class="input" placeholder="First name" />
+              <input [formField]="registerForm.firstName" class="input border rounded-md" />
 
               <label class="label">Last name</label>
-              <input [formField]="registerForm.lastName" class="input" placeholder="Last" />
+              <input [formField]="registerForm.lastName" class="input border rounded-md" />
 
               <label class="label">Email</label>
               <input
                 [formField]="registerForm.email"
                 type="email"
-                class="input"
-                placeholder="Email"
+                class="input border rounded-md"
               />
 
               <label class="label">Password</label>
               <input
                 [formField]="registerForm.password"
                 type="password"
-                class="input"
-                placeholder="Password"
+                class="input border rounded-md"
               />
 
               <button class="btn btn-neutral mt-4">Register</button>
+              <button routerLink="/login" class="btn btn-neutral mt-4">
+                Already have an account? Log in
+              </button>
             </form>
           </div>
         </div>
@@ -47,7 +51,6 @@ import { email, form, FormField, minLength, required } from '@angular/forms/sign
   `,
 })
 export class Register {
-
   private authService = inject(AuthService);
   private router = inject(Router);
 
@@ -71,9 +74,12 @@ export class Register {
     event.preventDefault();
     const creds: RegistrationRequestModel = this.registerModel();
     this.authService.register(creds).subscribe({
-      next: () => { this.router.navigate(['/login']); },
-      error: (error) => { console.error(`Registration error: ${error}`); },
+      next: () => {
+        this.router.navigate(['/login']);
+      },
+      error: (error) => {
+        console.error(`Registration error: ${error}`);
+      },
     });
   }
-
 }
