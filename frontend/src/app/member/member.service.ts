@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { OrgResponseModel } from '../org/org.model';
 import { HttpClient } from '@angular/common/http';
 import { UserResponseModel } from '../user/user.model';
-import { RoleType } from './member.model';
+import { MemberResponseModel, RoleType } from './member.model';
 
 @Injectable({
   providedIn: 'root',
@@ -30,7 +30,7 @@ export class MemberService {
   }
 
   public getOrgMembers(orgId: string) {
-    return this.http.get<UserResponseModel[]>(`${this.API}/by-org/${orgId}`);
+    return this.http.get<MemberResponseModel[]>(`${this.API}/by-org/${orgId}`);
   }
 
   public hasRole(orgId: string, role: RoleType) {
