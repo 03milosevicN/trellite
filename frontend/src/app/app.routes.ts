@@ -8,7 +8,10 @@ import { Board } from './board/board';
 export const routes: Routes = [
   { path: 'register', component: Register },
   { path: 'login', component: Login },
-  { path: 'u/:userId', component: User },
-  { path: 'org/:orgId', component: Org },
+  {
+    path: 'u/:userId',
+    component: User,
+    children: [{ path: 'orgs/:orgId', component: Org }],
+  },
   { path: 'b/:boardId', component: Board },
 ];
