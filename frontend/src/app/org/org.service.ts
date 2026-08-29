@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { JoinOrgRequestModel, OrgRequestModel, OrgResponseModel } from './org.model';
 
 @Injectable({
@@ -28,7 +28,8 @@ export class OrgService {
   }
 
   join(data: JoinOrgRequestModel) {
-    return this.http.post<OrgResponseModel>(`${this.API}/${data.orgId}`, data);
+    const params = new HttpParams().set('userId', data.userId);
+    return this.http.post<null>(`${this.API}/${data.orgId}`, null, {params});
   }
 
   delete(orgId: string) {

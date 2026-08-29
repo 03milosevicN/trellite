@@ -1,34 +1,108 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { UserService } from './user.service';
-import { UserState } from '../states/user.state';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { LucideHamburger, LucideMenu, LucideMoon, LucideSun, LucideTrash2 } from '@lucide/angular';
+import { LucideMenu, LucideMoon, LucidePlus, LucideSun, LucideTrash2 } from '@lucide/angular';
 import { OrgService } from '../org/org.service';
 import { OrgState } from '../states/org.state';
 import { OrgRequestModel } from '../org/org.model';
+import { FormsModule } from '@angular/forms';
+import { MemberService } from '../member/member.service';
 
 @Component({
   selector: 'app-user',
-  imports: [LucideMenu, LucideSun, LucideMoon, LucideTrash2],
+  imports: [
+    LucideMenu,
+    LucideSun,
+    LucideMoon,
+    LucideTrash2,
+    FormsModule,
+    LucidePlus,
+    RouterLink,
+    RouterOutlet,
+  ],
   template: `
     @if (userResource.isLoading()) {
       <span class="loading loading-spinner text-accent"></span>
     } @else if (userResource.value(); as user) {
       <div class="navbar bg-base-100 shadow-sm">
         <div class="flex-1">
-          <div class="dropdown">
-            <button tabindex="0" class="btn btn-ghost"><svg lucideMenu></svg></button>
-            <!--TODO: org modal menu-->
-
-            <!--TODO: org modal menu-->
-          </div>
+          <details class="dropdown">
+            <summary class="btn btn-ghost m-1"><svg lucideMenu></svg></summary>
+            <ul class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+              <li>
+                <div class="flex items-center justify-between w-full">
+                  <span class="text-lg font-semibold">Organizations</span>
+                  <button
+                    class="btn btn-ghost btn-sm btn-square"
+                    (click)="orgDivOpened.set(!orgDivOpened())"
+                  >
+                    <svg lucidePlus></svg>
+                  </button>
+                </div>
+                @if (orgDivOpened()) {
+                  <div class="mt-2 p-3 bg-base-200 rounded-box flex flex-col gap-3 w-full">
+                    <form
+                      (ngSubmit)="
+                        createOrg(orgTitle.value); orgTitle.value = ''; orgDivOpened.set(false)
+                      "
+                      class="flex flex-col gap-3"
+                    >
+                      <input
+                        #orgTitle
+                        class="input input-bordered w-full"
+                        placeholder="Organization name"
+                        autofocus
+                      />
+                      <div class="flex justify-end gap-2">
+                        <button
+                          type="button"
+                          class="btn btn-ghost btn-sm"
+                          (click)="orgDivOpened.set(false)"
+                        >
+                          Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary btn-sm">Create</button>
+                      </div>
+                    </form>
+                  </div>
+                }
+              </li>
+              <li>
+                <div class="flex items-center justify-between w-full">
+                  <span class="text-lg font-semibold">Memberships</span>
+                  @if (membershipsResource.value(); as memberships) {
+                    @for (membership of memberships; track membership.orgId) {
+                      <span [routerLink]="['/u', userId(), 'orgs', membership.orgId]">{{ membership.name }}</span>
+                    }
+                  }
+                </div>
+              </li>
+              @if (orgsResource.isLoading()) {
+                <li><span class="loading loading-spinner text-accent"></span></li>
+              } @else if (orgsResource.value(); as orgs) {
+                @for (org of orgs; track org.orgId) {
+                  <li class="flex-row justify-between items-center">
+                    <span [routerLink]="['/u', userId(), 'orgs', org.orgId]">{{ org.name }}</span>
+                    <button class="btn btn-ghost btn-xs text-error" (click)="deleteOrg(org.orgId)">
+                      <svg lucideTrash2></svg>
+                    </button>
+                  </li>
+                } @empty {
+                  <li><p class="text-sm opacity-60">No organizations yet.</p></li>
+                }
+              }
+            </ul>
+          </details>
         </div>
         <div class="flex-none">
           <div class="dropdown dropdown-end">
             <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
-              <div class="w-10 rounded-full">
+              <div
+                class="w-10 rounded-full flex justify-center align-middle"
+                [style.background-color]="avatarColorUtil(user.firstName)"
+              >
                 <h1 class="text-xl">{{ user.firstName.charAt(0) }}</h1>
               </div>
             </div>
@@ -58,6 +132,9 @@ import { OrgRequestModel } from '../org/org.model';
           </div>
         </div>
       </div>
+      <main class="m-5">
+        <router-outlet />
+      </main>
     }
   `,
 })
@@ -65,6 +142,7 @@ export class User {
   private authService = inject(AuthService);
   private userService = inject(UserService);
   private orgService = inject(OrgService);
+  private memberService = inject(MemberService);
   private orgState = inject(OrgState);
 
   userId = input.required<string>();
@@ -78,6 +156,13 @@ export class User {
     stream: ({ params }) => this.orgService.getByOwner(params.userId),
   });
 
+  membershipsResource = rxResource({
+    params: () => ({ userId: this.userId().toString() }),
+    stream: ({ params }) => this.memberService.getUserMemberships(params.userId),
+  });
+
+  orgDivOpened = signal(false);
+
   createOrg(boardTitle: string) {
     const req: OrgRequestModel = {
       name: boardTitle,
@@ -87,6 +172,7 @@ export class User {
       next: (data) => {
         this.orgState.setActiveOrg(data);
         this.orgsResource.reload();
+        this.membershipsResource.reload();
       },
     });
   }
@@ -97,5 +183,12 @@ export class User {
 
   logout() {
     this.authService.logout();
+  }
+
+  avatarColorUtil(name: string) {
+    const hex = Array.from(name)
+      .map((c) => c.charCodeAt(0).toString(16))
+      .join('');
+    return `#${hex.slice(0, 6)}`;
   }
 }

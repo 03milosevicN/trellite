@@ -11,5 +11,5 @@ export interface OrgResponseModel {
 
 export interface JoinOrgRequestModel {
   orgId: string;
-  name: string;
+  userId: string;
 }
