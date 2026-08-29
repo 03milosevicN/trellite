@@ -23,7 +23,7 @@ export class AuthService {
     if (!token) return null;
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
-      return payload.id;
+      return payload.userId ?? payload.id ?? null;
     } catch (e) {
       console.error(`Failed to parse JWT: ${e}`);
       return null;
