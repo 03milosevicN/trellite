@@ -25,24 +25,43 @@ export interface BoardListResponseModel {
   title: string;
   createdAt: Date;
 }
+export interface BoardListUpdateModel {
+  id?: string;
+  boardId: string;
+  title?: string;
+  updatedAt: Date;
+}
 
 export interface CardRequestModel {
-  boardListId: string;
+  boardListId?: string;
+  boardId: string;
   title: string;
   desc: string;
   assignees: number[];
   labels?: string[];
-  dueDate: Date;
+  dueDate?: Date;
   checklists?: ChecklistRequestModel[];
 }
 export interface CardResponseModel {
   id: string;
-  boardListId: string;
+  boardListId?: string;
+  boardId: string;
   title: string;
   desc: string;
   assignees: number[];
   labels?: string[];
-  dueDate: Date;
+  dueDate?: Date;
+  checklists?: ChecklistResponseModel[];
+}
+export interface CardUpdateModel {
+  id: string;
+  boardListId?: string;
+  boardId: string;
+  title?: string;
+  desc?: string;
+  assignees?: number[];
+  labels?: string[];
+  dueDate?: Date;
   checklists?: ChecklistResponseModel[];
 }
 
@@ -58,6 +77,13 @@ export interface ChecklistResponseModel {
   isCompleted: boolean;
   items?: ItemResponseModel[];
 }
+export interface ChecklistUpdateModel {
+  id: string;
+  cardId: string;
+  title?: string;
+  isCompleted?: boolean;
+  items?: ItemResponseModel[];
+}
 
 export interface ItemRequestModel {
   task: string;
@@ -65,4 +91,8 @@ export interface ItemRequestModel {
 export interface ItemResponseModel {
   id: string;
   task: string;
+}
+export interface ItemUpdateModel {
+  id: string;
+  task?: string;
 }
