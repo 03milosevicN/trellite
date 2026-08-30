@@ -43,8 +43,6 @@ public class ChatService {
         message.setSentAt( Instant.now() );
 
         var saved = chatMessageRepository.save(message);
-
-        //TODO: Should be treated as an activity.
         log.info("User {} sent message to board {}.", senderEmail, boardId);
 
         return chatMessageMapper.toResponse(saved);
