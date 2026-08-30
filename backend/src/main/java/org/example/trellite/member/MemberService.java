@@ -49,15 +49,12 @@ public class MemberService {
     }
 
     /*
-    * Given Member m with m.user.id of userId,
-    * find list of m's orgs where m.role = RoleType.ADMIN
-    */
+     * Given Member m with m.user.id of userId,
+     * find list of m's orgs where m.role = RoleType.ADMIN
+     */
     public List<OrganizationResponse> getMyAdminships(Long userId) {
-        var admin = memberRepository
-                .findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Member with id of " + userId + " not found."));
         return memberRepository
-                .findAllAdminships(admin.getUser().getId())
+                .findAllAdminships(userId)
                 .stream()
                 .map(organizationMapper::toResponse)
                 .toList();
@@ -68,11 +65,8 @@ public class MemberService {
      * find list of m's orgs where m.role = RoleType.MEMBER
      */
     public List<OrganizationResponse> getMyMemberships(Long userId) {
-        var member = memberRepository
-                .findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Member with id of " + userId + " not found."));
         return memberRepository
-                .findAllMemberships(member.getUser().getId())
+                .findAllMemberships(userId)
                 .stream()
                 .map(organizationMapper::toResponse)
                 .toList();
