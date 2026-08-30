@@ -72,9 +72,13 @@ import { MemberService } from '../member/member.service';
               <li>
                 <div class="flex items-center justify-between w-full">
                   <span class="text-lg font-semibold">Memberships</span>
-                  @if (membershipsResource.value(); as memberships) {
+                  @if (membershipsResource.isLoading()) {
+                    <span class="loading loading-spinner text-accent"></span>
+                  } @else if (membershipsResource.value(); as memberships) {
                     @for (membership of memberships; track membership.orgId) {
-                      <span [routerLink]="['/u', userId(), 'orgs', membership.orgId]">{{ membership.name }}</span>
+                      <span [routerLink]="['/u', userId(), 'orgs', membership.orgId]">{{
+                        membership.name
+                      }}</span>
                     }
                   }
                 </div>

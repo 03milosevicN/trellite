@@ -26,6 +26,7 @@ import {
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
+import { BoardWebSocketService } from './board-ws.service';
 
 @Component({
   selector: 'app-board',
@@ -366,7 +367,9 @@ export class Board {
   memberService = inject(MemberService);
   userState = inject(UserState);
   orgState = inject(OrgState);
+
   chatWebSocketService = inject(ChatWebSocketService);
+  boardWebSocketService = inject(BoardWebSocketService);
   destroyRef = inject(DestroyRef);
 
   chatOpened = signal(false);
@@ -445,10 +448,25 @@ export class Board {
     effect(() => {
       const boardId = this.boardId();
       if (boardId) {
+        //ws
+        this.boardWebSocketService.connect(boardId);
         this.chatWebSocketService.connect(boardId);
       }
     });
+
+    //ws
+    effect(() => {
+      const event = this.boardWebSocketService.latestEvent();
+      if (event) {
+        this.boardResource.reload();
+        this.listResource.reload();
+        this.cardResource.reload();
+      }
+    });
+
     this.destroyRef.onDestroy(() => {
+      //websockets
+      this.boardWebSocketService.disconnect();
       this.chatWebSocketService.disconnect();
     });
   }
@@ -461,13 +479,16 @@ export class Board {
       assignees: [this.userId()!],
       checklists: [],
     };
-    this.cardService.create(req).subscribe({
-      next: () => {
-        this.boardResource.reload();
-        this.listResource.reload();
-        this.cardResource.reload();
-      },
-    });
+    // no websockets
+    // this.cardService.create(req).subscribe({
+    //   next: () => {
+    //     this.boardResource.reload();
+    //     this.listResource.reload();
+    //     this.cardResource.reload();
+    //   },
+    // });
+    // websockets
+    this.cardService.create(req).subscribe({});
   }
 
   updateCard(
@@ -489,23 +510,29 @@ export class Board {
       dueDate: dueDate,
       checklists: checklists,
     };
-    this.cardService.update(cardId, req).subscribe({
-      next: () => {
-        this.boardResource.reload();
-        this.listResource.reload();
-        this.cardResource.reload();
-      },
-    });
+    //no-ws
+    // this.cardService.update(cardId, req).subscribe({
+    //   next: () => {
+    //     this.boardResource.reload();
+    //     this.listResource.reload();
+    //     this.cardResource.reload();
+    //   },
+    // });
+    //ws
+    this.cardService.update(cardId, req).subscribe({});
   }
 
   deleteCard(cardId: string) {
-    this.cardService.delete(cardId).subscribe({
-      next: () => {
-        this.boardResource.reload();
-        this.listResource.reload();
-        this.cardResource.reload();
-      },
-    });
+    //no-ws
+    // this.cardService.delete(cardId).subscribe({
+    //   next: () => {
+    //     this.boardResource.reload();
+    //     this.listResource.reload();
+    //     this.cardResource.reload();
+    //   },
+    // });
+    //ws
+    this.cardService.delete(cardId).subscribe({});
   }
 
   createList(listTitle: string) {
@@ -515,16 +542,19 @@ export class Board {
       createdAt: new Date(),
     };
 
-    this.listService.create(req).subscribe({
-      next: () => {
-        console.info(`Created new board list with title of ${req.title}`);
-        setTimeout(() => {
-          this.listResource.reload();
-          this.boardResource.reload();
-          this.cardResource.reload();
-        }, 100);
-      },
-    });
+    //no-ws
+    // this.listService.create(req).subscribe({
+    //   next: () => {
+    //     console.info(`Created new board list with title of ${req.title}`);
+    //     setTimeout(() => {
+    //       this.listResource.reload();
+    //       this.boardResource.reload();
+    //       this.cardResource.reload();
+    //     }, 100);
+    //   },
+    // });
+    //ws
+    this.listService.create(req).subscribe({});
   }
 
   updateList(boardListId: string, title: string = '') {
@@ -544,12 +574,15 @@ export class Board {
   }
 
   deleteList(boardListId: string) {
-    this.listService.delete(boardListId).subscribe({
-      next: () => {
-        this.listResource.reload();
-        this.boardResource.reload();
-      },
-    });
+    //no-ws
+    // this.listService.delete(boardListId).subscribe({
+    //   next: () => {
+    //     this.listResource.reload();
+    //     this.boardResource.reload();
+    //   },
+    // });
+    //ws
+    this.listService.delete(boardListId).subscribe({});
   }
 
   sendInvite() {

@@ -5,7 +5,6 @@ import { RouterOutlet } from '@angular/router';
   imports: [RouterOutlet],
   selector: 'app-root',
   template: `
-    <h1>test</h1>
     <router-outlet/>
   `,
 })
