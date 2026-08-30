@@ -42,7 +42,7 @@ public class CardController {
 
     @PostMapping
     public ResponseEntity<CardResponse> create(@RequestBody CardRequest req) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(cardService.save(req));
+        return ResponseEntity.status(HttpStatus.CREATED).body(cardService.onSaveEvent(req));
     }
 
     @PutMapping("/{id}")
@@ -50,15 +50,16 @@ public class CardController {
             @PathVariable String id,
             @RequestBody CardRequest req
     ) {
-        return ResponseEntity.ok(cardService.update(id, req));
+        return ResponseEntity.ok(cardService.onUpdateEvent(id, req));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable String id) {
-        cardService.delete(id);
+        cardService.onDeleteEvent(id);
         return ResponseEntity.noContent().build();
     }
 
+    @Deprecated
     @PatchMapping("/{id}")
     public ResponseEntity<CardResponse> patch(
             @PathVariable String id,

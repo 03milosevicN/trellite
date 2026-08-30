@@ -32,7 +32,7 @@ public class BoardListController {
 
     @PostMapping
     public ResponseEntity<BoardListResponse> create(@RequestBody BoardListRequest req) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(boardListService.save(req));
+        return ResponseEntity.status(HttpStatus.CREATED).body(boardListService.onSaveEvent(req));
     }
 
     @PutMapping("/{id}")
@@ -40,15 +40,16 @@ public class BoardListController {
             @PathVariable String id,
             @RequestBody BoardListRequest req
     ) {
-        return ResponseEntity.ok(boardListService.update(id, req));
+        return ResponseEntity.ok(boardListService.onUpdateEvent(id, req));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable String id) {
-        boardListService.delete(id);
+        boardListService.onDeleteEvent(id);
         return ResponseEntity.noContent().build();
     }
 
+    @Deprecated
     @PatchMapping("/{id}")
     public ResponseEntity<BoardListResponse> patch(
             @PathVariable String id,
