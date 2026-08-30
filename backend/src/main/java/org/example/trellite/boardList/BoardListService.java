@@ -9,14 +9,18 @@ import org.example.trellite.boardList.dto.BoardListRequest;
 import org.example.trellite.boardList.dto.BoardListResponse;
 import org.example.trellite.card.CardService;
 import org.example.trellite.card.dto.CardResponse;
+import org.example.trellite.common.Event;
+import org.example.trellite.common.EventType;
 import org.example.trellite.common.ObjectIdMapper;
 import org.example.trellite.common.ResourceNotFoundException;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -38,6 +42,9 @@ public class BoardListService {
     private final CardService cardService;
     private final BoardRepository boardRepository;
 
+    private final SimpMessagingTemplate messagingTemplate;
+    private static final String TOPIC_PATH = "/topic/board/";
+
 
     public BoardListResponse getById(String id) {
         return boardListRepository.findById(id).map(boardListMapper::toResponse).orElseThrow(() -> new ResourceNotFoundException("BoardList with id of " + id + " not found."));
@@ -55,7 +62,25 @@ public class BoardListService {
                 .orElseThrow(() -> new ResourceNotFoundException("BoardList with id of " + boardListId + " not found."));
     }
 
+    // WebSocket upgrade of save() method.
+    public BoardListResponse onSaveEvent(BoardListRequest req) {
+        var model = boardListMapper.toModel(req);
+        var auth = SecurityContextHolder
+                .getContext()
+                .getAuthentication();
+        if (auth == null) throw new UsernameNotFoundException("Failed to extract email from auth payload.");
 
+        var saved = boardListRepository.save(model);
+        var res = boardListMapper.toResponse(saved);
+
+        messagingTemplate.convertAndSend(
+            TOPIC_PATH + req.getBoardId(),
+            new Event(req.getBoardId(), EventType.LIST_CREATED)
+        );
+        log.info("Event sent, {} saved new list {}.", auth.getName(), req.getTitle());
+
+        return res;
+    }
     public BoardListResponse save(BoardListRequest dto) {
         var model = boardListMapper.toModel(dto);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -65,6 +90,33 @@ public class BoardListService {
         return boardListMapper.toResponse(saved);
     }
 
+    // WebSocket upgrade of update() method.
+    public BoardListResponse onUpdateEvent(String id, BoardListRequest req) {
+        var convertedReqId = objectIdMapper.stringToObjectId(req.getBoardId());
+
+        var auth = SecurityContextHolder
+                .getContext()
+                .getAuthentication();
+        if (auth == null) throw new UsernameNotFoundException("Failed to extract email from auth payload.");
+
+        var existing = boardListRepository
+                .findById(id)
+                .orElseThrow( () -> new ResourceNotFoundException("BoardList with id of " + id + " not found."));
+        existing.setBoardId(convertedReqId);
+        existing.setTitle(req.getTitle());
+        existing.setCreatedAt(Instant.now());
+
+        var saved = boardListRepository.save(existing);
+        var res = boardListMapper.toResponse(saved);
+
+        messagingTemplate.convertAndSend(
+                TOPIC_PATH + req.getBoardId(),
+                new Event(req.getBoardId(), EventType.LIST_UPDATED)
+        );
+        log.info("Event sent, {} updated list {}.", auth.getName(), req.getTitle());
+
+        return res;
+    }
     public BoardListResponse update(String id, BoardListRequest dto) {
         var existing = boardListRepository
                 .findById(id)
@@ -83,6 +135,27 @@ public class BoardListService {
         return boardListMapper.toResponse(boardListRepository.save(existing));
     }
 
+    // WebSocket upgrade of delete() method.
+    public void onDeleteEvent(String id) {
+        var removed = boardListRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("BoardList with id of " + id + " not found."));
+
+        var auth = SecurityContextHolder
+                .getContext()
+                .getAuthentication();
+        if (auth == null) throw new UsernameNotFoundException("Failed to extract email from auth payload.");
+
+        cardService.deleteByBoardListId(id);
+
+        messagingTemplate.convertAndSend(
+                TOPIC_PATH + removed.getBoardId(),
+                new Event(objectIdMapper.objectIdToString(removed.getBoardId()), EventType.LIST_UPDATED)
+        );
+        log.info("Event sent, {} deleted list {} along with its cards.", auth.getName(), removed.getTitle());
+
+        boardListRepository.deleteById(id);
+    }
     public void delete(String id) {
         var removedBoardList = boardListRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("BoardList with id of " + id + " not found."));
         cardService.deleteByBoardListId(id);
@@ -97,7 +170,7 @@ public class BoardListService {
      * @param boardId id of board.
      * @return list of {@link BoardListResponse} objects belonging to board.
      */
-    public List<BoardListResponse>findBoardListsByBoardId(String boardId) {
+    public List<BoardListResponse> findBoardListsByBoardId(String boardId) {
         var mappedBoardId = objectIdMapper.stringToObjectId(boardId);
         return boardListRepository
                 .findByBoardId(mappedBoardId)
