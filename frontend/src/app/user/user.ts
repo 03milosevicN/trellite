@@ -1,9 +1,9 @@
-import { Component, computed, inject, input, signal } from '@angular/core';
+import { Component, inject, input, signal } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { UserService } from './user.service';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { LucideMenu, LucideMoon, LucidePlus, LucideSun, LucideTrash2 } from '@lucide/angular';
+import { LucideMenu, LucidePlus, LucideTrash2 } from '@lucide/angular';
 import { OrgService } from '../org/org.service';
 import { OrgState } from '../states/org.state';
 import { OrgRequestModel } from '../org/org.model';
@@ -14,8 +14,6 @@ import { MemberService } from '../member/member.service';
   selector: 'app-user',
   imports: [
     LucideMenu,
-    LucideSun,
-    LucideMoon,
     LucideTrash2,
     FormsModule,
     LucidePlus,
