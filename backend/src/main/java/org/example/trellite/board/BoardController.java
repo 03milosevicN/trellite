@@ -68,7 +68,7 @@ public class BoardController {
         return ResponseEntity.ok(boardService.update(id, req));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}/del")
     public ResponseEntity<Void> delete(@PathVariable String id) {
         boardService.delete(id);
         return ResponseEntity.noContent().build();
