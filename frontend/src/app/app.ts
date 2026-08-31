@@ -1,5 +1,5 @@
 import { Component  } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   imports: [RouterOutlet],
@@ -8,5 +8,4 @@ import { RouterOutlet } from '@angular/router';
     <router-outlet/>
   `,
 })
-export class App {
-}
+export class App {}

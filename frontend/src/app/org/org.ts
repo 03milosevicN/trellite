@@ -19,31 +19,35 @@ import { UserState } from '../states/user.state';
   imports: [DatePipe, LucidePlus, LucideUsers],
   template: `
     @if (orgResource.isLoading()) {
-      <span class="loading loading-spinner text-accent"></span>
+      <span class="loading loading-spinner text-accent loading-lg"></span>
     } @else if (orgResource.value(); as org) {
-      <div>
-        <h1 class="text-2xl">{{ org.name }}</h1>
-        <p>Created: {{ org.createdAt | date: 'mediumDate' }}</p>
-        <p class="flex">
-          <svg lucidePlus class="cursor-pointer" (click)="createBoardModal.showModal()"></svg>
+      <div class="space-y-6">
+        <h1 class="text-3xl font-extrabold tracking-tight">{{ org.name }}</h1>
+        <p class="text-sm text-base-content/70">
+          Created: {{ org.createdAt | date: 'mediumDate' }}
+        </p>
+        <p
+          class="flex items-center gap-2 cursor-pointer text-sm font-medium text-primary hover:underline"
+          (click)="createBoardModal.showModal()"
+        >
+          <svg lucidePlus class="w-4 h-4"></svg>
           Create a board
         </p>
         <dialog #createBoardModal class="modal">
           <div class="modal-box">
             <form method="dialog" (submit)="createBoard(boardTitle.value); boardTitle.value = ''">
-              <input #boardTitle class="input" placeholder="Board name" />
+              <input #boardTitle class="input input-bordered w-full" placeholder="Board name" />
             </form>
           </div>
         </dialog>
       </div>
-      <div>
+      <div class="mt-4">
         @if (usersResource.value()) {
-          <p class="flex">
-            <svg
-              lucideUsers
-              class="cursor-pointer transition-transform hover:scale-105"
-              (click)="inviteToOrgModal.showModal()"
-            ></svg>
+          <p
+            class="flex items-center gap-2 cursor-pointer text-sm font-medium text-primary hover:underline"
+            (click)="inviteToOrgModal.showModal()"
+          >
+            <svg lucideUsers class="w-4 h-4 transition-transform hover:scale-110"></svg>
             Invite to organization
           </p>
           <dialog #inviteToOrgModal class="modal">
@@ -53,7 +57,7 @@ import { UserState } from '../states/user.state';
                 <div class="space-y-2 max-h-60 overflow-y-auto pr-1">
                   @for (user of invitableUsers(); track user.userId) {
                     <label
-                      class="flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors hover:bg-base-200/50 has-checked:border-primary has-:checked:bg-primary/5"
+                      class="flex items-center gap-3 p-3 rounded-lg border border-base-200 cursor-pointer transition-colors hover:bg-base-200/50"
                     >
                       <input
                         type="radio"
@@ -63,13 +67,13 @@ import { UserState } from '../states/user.state';
                         [checked]="selectedUserId() === user.userId"
                         (change)="selectedUserId.set(user.userId)"
                       />
-                      <span class="label-text font-semibold text-base">
+                      <span class="label-text font-semibold text-sm">
                         {{ user.firstName }} {{ user.lastName }} {{ user.userId }}
                       </span>
                     </label>
                   }
                 </div>
-                <div class="modal-action">
+                <div class="modal-action mt-6">
                   <button type="submit" class="btn btn-primary" [disabled]="!selectedUserId()">
                     Invite
                   </button>
@@ -85,25 +89,27 @@ import { UserState } from '../states/user.state';
           </dialog>
         }
       </div>
-      <div>
+      <div class="mt-4">
         @if (membersResource.value(); as members) {
-          <p>{{ members.length }} {{ members.length === 1 ? 'org. member' : 'org. members' }}</p>
+          <p class="text-sm text-base-content/70 font-medium">
+            {{ members.length }} {{ members.length === 1 ? 'org. member' : 'org. members' }}
+          </p>
         }
       </div>
-      <div>
-        <div class="flex justify-baseline align-center">
-          <p class="text-lg">Boards</p>
+      <div class="mt-8 space-y-4">
+        <div class="flex items-center justify-between">
+          <p class="text-xl font-bold tracking-tight">Boards</p>
         </div>
         @if (boardsResource.isLoading()) {
           <span class="loading loading-spinner text-accent"></span>
         } @else if (boardsResource.value(); as boards) {
           @for (board of boards; track board.id) {
             <div
-              class="card bg-base-100 border-base-200 w-full max-w-sm border shadow-sm transition-all hover:shadow-md"
+              class="card bg-base-100 border border-base-200 w-full max-w-sm shadow-sm transition-all hover:shadow-md"
             >
               <div class="card-body p-5 gap-3">
                 <div class="flex items-start justify-between gap-2">
-                  <h2 class="card-title text-lg font-bold tracking-tight leading-snug">
+                  <h2 class="card-title text-base font-bold tracking-tight leading-snug">
                     {{ board.title }}
                   </h2>
                   <span
@@ -114,35 +120,31 @@ import { UserState } from '../states/user.state';
                     {{ board.archived ? 'Archived' : 'Active' }}
                   </span>
                 </div>
-                <div class="text-base-content/70 flex flex-col gap-1 text-xs">
-                  <p class="flex items-center gap-1.5">
-                    <span class="font-medium text-base-content/90">Created:</span>
+                <div class="text-base-content/70 flex flex-col gap-1.5 text-xs">
+                  <p class="flex items-center justify-between">
+                    <span class="font-medium text-base-content/80">Created:</span>
                     <span>{{ board.createdAt | date: 'mediumDate' }}</span>
                   </p>
-                  <p class="flex items-center gap-1.5">
-                    <span class="font-medium text-base-content/90">Members:</span>
+                  <p class="flex items-center justify-between">
+                    <span class="font-medium text-base-content/80">Members:</span>
                     <span class="badge badge-xs badge-neutral">{{ board.members }}</span>
                   </p>
                 </div>
-                <div class="card-actions justify-end mt-1">
-                  <div class="dropdown">
+                <div class="card-actions justify-end mt-2 pt-2 border-t border-base-100">
+                  <div class="dropdown dropdown-end">
                     <button tabindex="0" class="btn btn-primary btn-xs">Actions</button>
                     <ul
                       tabindex="-1"
-                      class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+                      class="dropdown-content menu bg-base-100 rounded-box z-10 w-48 p-2 shadow-lg border border-base-200 text-xs"
                     >
                       <li>
-                        <a class="btn btn-ghost" (click)="goToBoard(board.id)"> Go to board </a>
+                        <a class="py-2" (click)="goToBoard(board.id)"> Go to board </a>
                       </li>
                       <li>
-                        <button class="btn btn-ghost" (click)="deleteBoard(board.id)">
-                          Delete board
-                        </button>
+                        <button class="py-2" (click)="deleteBoard(board.id)">Delete board</button>
                       </li>
                       <li>
-                        <button class="btn btn-ghost" (click)="archiveBoard(board.id)">
-                          Archive board
-                        </button>
+                        <button class="py-2" (click)="archiveBoard(board.id)">Archive board</button>
                       </li>
                     </ul>
                   </div>
@@ -150,7 +152,7 @@ import { UserState } from '../states/user.state';
               </div>
             </div>
           } @empty {
-            <p>No boards yet.</p>
+            <p class="text-sm text-base-content/60 italic">No boards yet.</p>
           }
         }
       </div>
@@ -176,7 +178,7 @@ export class Org {
       return curr.userId;
     }
     return null;
-  })
+  });
 
   protected membersResource = rxResource({
     params: () => ({ orgId: this.orgId() }),
@@ -202,7 +204,7 @@ export class Org {
     const users = this.usersResource.value() ?? [];
     const current: number | null = this.currentUserId();
     if (!current) return users;
-    return users.filter(user => user.userId !== current);
+    return users.filter((user) => user.userId !== current);
   });
 
   createBoard(boardTitle: string) {
@@ -227,7 +229,11 @@ export class Org {
   }
 
   deleteBoard(boardId: string) {
-    this.boardService.delete(boardId).subscribe({});
+    this.boardService.delete(boardId).subscribe({
+      next: () => {
+        alert(`Board deleted.`);
+      },
+    });
   }
 
   archiveBoard(boardId: string) {

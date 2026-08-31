@@ -41,7 +41,7 @@ export class BoardService {
     }
 
     delete(boardId: string) {
-      return this.http.delete<void>(`${this.API}/${boardId}`);
+      return this.http.delete<void>(`${this.API}/${boardId}/del`);
     }
 
     assignToBoard(userId: string, boardId: string) {

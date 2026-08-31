@@ -1,4 +1,14 @@
-import { Component, computed, DestroyRef, effect, inject, input, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  DestroyRef,
+  effect,
+  ElementRef,
+  inject,
+  input,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { BoardService } from './board.service';
 import { BoardListService } from './board-list.service';
 import { CardService } from './card.service';
@@ -6,18 +16,17 @@ import { UserState } from '../states/user.state';
 import { rxResource } from '@angular/core/rxjs-interop';
 import {
   BoardListRequestModel,
-  BoardListUpdateModel,
   CardRequestModel,
   CardResponseModel,
   CardUpdateModel,
+  ChecklistResponseModel,
 } from './board.model';
 import { OrgState } from '../states/org.state';
 import { MemberService } from '../member/member.service';
 import { ChatWebSocketService } from '../chat/chat-ws.service';
 import { ChatPanel } from '../chat/chat-panel';
 import { User } from '../user/user';
-import { UserService } from '../user/user.service';
-import { LucideCross, LucidePlus } from '@lucide/angular';
+import { LucideCross, LucideDelete, LucidePlus } from '@lucide/angular';
 import {
   CdkDrag,
   CdkDragDrop,
@@ -27,15 +36,26 @@ import {
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { BoardWebSocketService } from './board-ws.service';
+import { Card } from '../card/card';
 
 @Component({
   selector: 'app-board',
-  imports: [ChatPanel, User, CdkDropListGroup, CdkDropList, CdkDrag, LucideCross, LucidePlus],
+  imports: [
+    ChatPanel,
+    User,
+    CdkDropListGroup,
+    CdkDropList,
+    CdkDrag,
+    LucideCross,
+    LucidePlus,
+    Card,
+    LucideDelete,
+  ],
   template: `
-    <div class="flex flex-col gap-0">
-      <app-user class="block-16" [userId]="this.userState!.activeUserState()!.userId!.toString()" />
+    <div class="flex flex-col">
+      <app-user class="block" [userId]="this.userState!.activeUserState()!.userId!.toString()" />
       <div
-        class="flex items-center justify-between px-6 py-3 bg-base-100 border-b border-base-200 shadow-sm"
+        class="flex items-center justify-between px-6 py-3 bg-base-100 border-b border-base-200 shadow-xs z-10"
       >
         @if (boardResource.isLoading()) {
           <div class="flex items-center gap-2">
@@ -44,7 +64,9 @@ import { BoardWebSocketService } from './board-ws.service';
           </div>
         } @else if (this.boardResource.value(); as board) {
           <div class="flex items-center gap-3">
-            <h2 class="text-lg font-bold text-base-content">{{ board.title || 'Board' }}</h2>
+            <h2 class="text-xl font-extrabold tracking-tight text-base-content">
+              {{ board.title || 'Board' }}
+            </h2>
           </div>
           <div class="flex items-center gap-2">
             @if (isOrgAdmin()) {
@@ -81,7 +103,7 @@ import { BoardWebSocketService } from './board-ws.service';
                           track member.memberId ?? member.userResponse?.userId
                         ) {
                           <label
-                            class="flex items-center gap-3 p-3 rounded-lg border border-base-200 cursor-pointer hover:bg-base-200/50"
+                            class="flex items-center gap-3 p-3 rounded-lg border border-base-200 cursor-pointer hover:bg-base-200/50 transition-colors has-checked:bg-primary/5"
                           >
                             <input
                               type="radio"
@@ -91,23 +113,22 @@ import { BoardWebSocketService } from './board-ws.service';
                               [checked]="selectedMemberId() === member.userResponse.userId"
                               (change)="selectedMemberId.set(member.userResponse.userId)"
                             />
-                            <span class="label-text font-semibold text-base">
+                            <span class="label-text font-semibold text-sm">
                               {{ member.userResponse.firstName }} {{ member.userResponse.lastName }}
                             </span>
                           </label>
                         } @empty {
-                          <div class="text-center py-6 text-base-content/60">
+                          <div class="text-center py-6 text-sm text-base-content/60 italic">
                             No available members to invite.
                           </div>
                         }
                       </div>
                     } @else {
                       <div class="flex justify-center py-8">
-                        <span class="loading loading-spinner text-primary"></span>
+                        <span class="loading loading-spinner text-primary loading-md"></span>
                       </div>
                     }
-
-                    <div class="modal-action">
+                    <div class="modal-action mt-6">
                       <button
                         type="submit"
                         class="btn btn-primary"
@@ -126,6 +147,67 @@ import { BoardWebSocketService } from './board-ws.service';
                 </form>
               </dialog>
             }
+
+            <button class="btn btn-primary btn-sm" (click)="selectedMemberToKickId.set(null); kickMemberModal.showModal()">
+              <svg lucideDelete></svg>
+              Kick member
+            </button>
+            <dialog #kickMemberModal class="modal">
+              <div class="modal-box max-w-md">
+                <h3 class="text-lg font-bold mb-4 text-error">Kick Member from Board</h3>
+
+                <form
+                  method="dialog"
+                  (submit)="kickMember(selectedMemberToKickId()!); kickMemberModal.close()"
+                >
+                  @if (board.members && board.members.length > 0) {
+                    <div class="space-y-2 max-h-60 overflow-y-auto pr-1">
+                      @for (member of board.members; track member ?? $index) {
+                        <label
+                          class="flex items-center gap-3 p-3 rounded-lg border border-base-200 cursor-pointer hover:bg-error/5 transition-colors has-checked:bg-error/10"
+                        >
+                          <input
+                            type="radio"
+                            name="selectedMemberToKick"
+                            class="radio radio-error radio-sm"
+                            [value]="member"
+                            [checked]="
+                              selectedMemberToKickId() === member
+                            "
+                            (change)="
+                              selectedMemberToKickId.set(member)
+                            "
+                          />
+                          <span class="label-text font-semibold text-sm">
+                            {{ member }}
+                          </span>
+                        </label>
+                      }
+                    </div>
+                  } @else {
+                    <div class="text-center py-6 text-sm text-base-content/60 italic">
+                      No active members on this board.
+                    </div>
+                  }
+
+                  <div class="modal-action mt-6">
+                    <button
+                      type="submit"
+                      class="btn btn-error text-white"
+                      [disabled]="!selectedMemberToKickId()"
+                    >
+                      Kick Member
+                    </button>
+                    <button type="button" class="btn btn-ghost" (click)="kickMemberModal.close()">
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              </div>
+              <form method="dialog" class="modal-backdrop">
+                <button>close</button>
+              </form>
+            </dialog>
 
             <button type="button" class="btn btn-outline btn-sm gap-2" (click)="toggleChat()">
               <svg
@@ -147,7 +229,7 @@ import { BoardWebSocketService } from './board-ws.service';
           </div>
           @if (chatOpened()) {
             <div
-              class="fixed bottom-4 right-4 z-50 h-120 w-80 bg-base-100 border border-base-300 rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+              class="fixed bottom-4 right-4 z-50 h-120 w-80 bg-base-100 border border-base-200 rounded-2xl shadow-2xl overflow-hidden flex flex-col"
             >
               <app-chat-panel [boardId]="this.boardId()" />
             </div>
@@ -156,10 +238,11 @@ import { BoardWebSocketService } from './board-ws.service';
       </div>
     </div>
 
-    <main class="p-4 bg-base-200 min-h-screen">
+    <main class="p-6 bg-base-200/50 min-h-[calc(100vh-65px)]">
       @if (boardResource.value(); as f) {
-        <p class="mb-2 text-sm text-base-content/70">
-          Active board members: <span class="font-bold">{{ f.members?.length ?? 0 }}</span>
+        <p class="mb-4 text-xs font-semibold uppercase tracking-wider text-base-content/60">
+          Active board members:
+          <span class="font-bold text-base-content">{{ f.members?.length ?? 0 }}</span>
         </p>
       }
 
@@ -168,15 +251,15 @@ import { BoardWebSocketService } from './board-ws.service';
           <span class="loading loading-spinner loading-lg text-primary"></span>
         </div>
       } @else if (boardResource.value()) {
-        <div cdkDropListGroup class="flex h-[calc(100vh-140px)] w-full gap-4 overflow-hidden">
+        <div cdkDropListGroup class="flex h-[calc(100vh-160px)] w-full gap-6 overflow-hidden">
           <aside
-            class="flex w-1/3 flex-col rounded-xl border border-base-300 bg-base-100 p-4 shadow-sm"
+            class="flex w-1/3 flex-col rounded-xl border border-base-200 bg-base-100 p-4 shadow-sm"
           >
             <div class="flex justify-between items-center border-b border-base-200 pb-3">
-              <h2 class="font-bold text-lg">Backlog</h2>
+              <h2 class="font-bold text-base tracking-tight">Backlog</h2>
               <svg
                 lucidePlus
-                class="cursor-pointer hover:text-primary transition-colors"
+                class="w-5 h-5 cursor-pointer text-base-content/70 hover:text-primary transition-colors"
                 (click)="createCardModal.showModal()"
               ></svg>
 
@@ -190,61 +273,55 @@ import { BoardWebSocketService } from './board-ws.service';
                       cardTitle.value = '';
                       cardDesc.value = ''
                     "
+                    class="space-y-4"
                   >
                     <input
                       #cardTitle
-                      class="input input-bordered w-full mb-4"
+                      class="input input-bordered w-full"
                       placeholder="Card title"
                       required
                     />
                     <input
                       #cardDesc
-                      class="input input-bordered w-full mb-4"
+                      class="input input-bordered w-full"
                       placeholder="Card description"
                     />
                     <div class="modal-action">
-                      <button type="submit" class="btn btn-success text-white">Create</button>
+                      <button type="submit" class="btn btn-primary">Create</button>
                       <button type="button" class="btn btn-ghost" (click)="createCardModal.close()">
                         Close
                       </button>
                     </div>
                   </form>
                 </div>
+                <form method="dialog" class="modal-backdrop">
+                  <button>close</button>
+                </form>
               </dialog>
             </div>
 
             @if (cardResource.isLoading()) {
               <div class="flex justify-center items-center flex-1">
-                <span class="loading loading-spinner loading-lg"></span>
+                <span class="loading loading-spinner loading-md text-primary"></span>
               </div>
             } @else if (cardResource.value()) {
               <div
                 cdkDropList
                 [cdkDropListData]="backlogCards()"
                 (cdkDropListDropped)="drop($event, null)"
-                class="flex-1 overflow-y-auto mt-4 min-h-[100px]"
+                class="flex-1 overflow-y-auto mt-3 pr-1 min-h-25 space-y-2"
               >
                 @for (card of backlogCards(); track card.id) {
-                  <div
+                  <app-card
                     cdkDrag
                     [cdkDragData]="card"
-                    class="border card bg-base-100 card-sm shadow-sm m-1.5 cursor-grab active:cursor-grabbing hover:border-primary/50 transition-colors"
-                  >
-                    <div class="card-body p-4">
-                      <div class="flex justify-between items-start gap-2">
-                        <h2 class="card-title text-base">{{ card.title }}</h2>
-                        <svg
-                          lucideCross
-                          class="w-4 h-4 cursor-pointer hover:text-error transition-colors shrink-0"
-                          (click)="deleteCard(card.id)"
-                        ></svg>
-                      </div>
-                      <p class="text-sm text-base-content/70">{{ card.desc }}</p>
-                    </div>
-                  </div>
+                    [card]="card"
+                    (openDetails)="openEditCardModal($event)"
+                    (openDelete)="openDeleteCardModal($event)"
+                  />
                 } @empty {
                   <div
-                    class="flex justify-center items-center h-32 border-2 border-dashed border-base-200 rounded-lg text-base-content/50 text-sm"
+                    class="flex justify-center items-center h-32 border-2 border-dashed border-base-200 rounded-lg text-base-content/50 text-xs italic"
                   >
                     No cards in backlog
                   </div>
@@ -254,15 +331,15 @@ import { BoardWebSocketService } from './board-ws.service';
           </aside>
 
           <section
-            class="flex w-2/3 flex-col rounded-xl border border-base-300 bg-base-100 p-4 shadow-sm min-w-0"
+            class="flex w-2/3 flex-col rounded-xl border border-base-200 bg-base-100 p-4 shadow-sm min-w-0"
           >
             <div
               class="flex justify-between items-center border-b border-base-200 pb-3 mb-4 shrink-0"
             >
-              <h2 class="font-bold text-lg">Lists</h2>
+              <h2 class="font-bold text-base tracking-tight">Lists</h2>
               <svg
                 lucidePlus
-                class="cursor-pointer hover:text-primary transition-colors"
+                class="w-5 h-5 cursor-pointer text-base-content/70 hover:text-primary transition-colors"
                 (click)="createListModal.showModal()"
               ></svg>
 
@@ -272,41 +349,46 @@ import { BoardWebSocketService } from './board-ws.service';
                   <form
                     method="dialog"
                     (submit)="createList(listTitle.value); listTitle.value = ''"
+                    class="space-y-4"
                   >
                     <input
                       #listTitle
-                      class="input input-bordered w-full mb-4"
+                      class="input input-bordered w-full"
                       placeholder="List title"
                       required
                     />
                     <div class="modal-action">
-                      <button type="submit" class="btn btn-success text-white">Create</button>
+                      <button type="submit" class="btn btn-primary">Create</button>
                       <button type="button" class="btn btn-ghost" (click)="createListModal.close()">
                         Close
                       </button>
                     </div>
                   </form>
                 </div>
+                <form method="dialog" class="modal-backdrop">
+                  <button>close</button>
+                </form>
               </dialog>
             </div>
 
             <div class="flex-1 flex gap-4 overflow-x-auto overflow-y-hidden items-start pb-2">
               @if (listResource.isLoading()) {
                 <div class="flex justify-center items-center w-full h-full">
-                  <span class="loading loading-spinner loading-lg"></span>
+                  <span class="loading loading-spinner loading-lg text-primary"></span>
                 </div>
               } @else if (listsWithCards().length > 0) {
                 @for (list of listsWithCards(); track list.id || $index) {
                   <div
-                    class="flex w-72 shrink-0 flex-col max-h-full rounded-lg border border-base-200 bg-base-200/50 p-3"
+                    class="flex w-72 shrink-0 flex-col max-h-full rounded-xl border border-base-200 bg-base-200/50 p-3"
                   >
                     <div class="flex justify-between items-center mb-3 px-1">
-                      <span class="font-semibold text-sm truncate max-w-50">{{
-                        list.title
-                      }}</span>
+                      <span
+                        class="font-bold text-sm tracking-tight truncate max-w-50 text-base-content"
+                        >{{ list.title }}</span
+                      >
                       <svg
                         lucideCross
-                        class="w-4 h-4 cursor-pointer hover:text-error transition-colors shrink-0"
+                        class="w-4 h-4 cursor-pointer text-base-content/40 hover:text-error transition-colors shrink-0"
                         (click)="deleteList(list.id)"
                       ></svg>
                     </div>
@@ -318,28 +400,16 @@ import { BoardWebSocketService } from './board-ws.service';
                       class="flex-1 overflow-y-auto min-h-30 space-y-2 pr-1"
                     >
                       @for (card of list.cards; track card.id) {
-                        <div
+                        <app-card
                           cdkDrag
                           [cdkDragData]="card"
-                          class="border card bg-base-100 card-sm shadow-sm active:cursor-grabbing hover:border-primary/50 transition-colors"
-                        >
-                          <div class="card-body p-3">
-                            <div class="flex justify-between items-start gap-2">
-                              <h2 class="card-title text-sm">{{ card.title }}</h2>
-                              <svg
-                                lucideCross
-                                class="w-3.5 h-3.5 cursor-pointer hover:text-error transition-colors shrink-0"
-                                (click)="deleteCard(card.id)"
-                              ></svg>
-                            </div>
-                            @if (card.desc) {
-                              <p class="text-xs text-base-content/70">{{ card.desc }}</p>
-                            }
-                          </div>
-                        </div>
+                          [card]="card"
+                          (openDetails)="openEditCardModal($event)"
+                          (openDelete)="openDeleteCardModal($event)"
+                        />
                       } @empty {
                         <div
-                          class="flex justify-center items-center h-20 border border-dashed border-base-300 rounded-md text-xs text-base-content/40"
+                          class="flex justify-center items-center h-20 border border-dashed border-base-300 rounded-lg text-xs text-base-content/40 italic"
                         >
                           Drop cards here
                         </div>
@@ -348,7 +418,9 @@ import { BoardWebSocketService } from './board-ws.service';
                   </div>
                 }
               } @else {
-                <div class="flex justify-center items-center w-full h-40 text-base-content/60">
+                <div
+                  class="flex justify-center items-center w-full h-40 text-sm text-base-content/60 italic"
+                >
                   No lists yet. Click '+' above to create your first list!
                 </div>
               }
@@ -357,13 +429,93 @@ import { BoardWebSocketService } from './board-ws.service';
         </div>
       }
     </main>
+
+    <dialog #updateCardModal class="modal">
+      @if (selectedCardForEdit(); as activeCard) {
+        <div class="modal-box max-w-lg">
+          <h3 class="text-lg font-bold mb-4">Card Information & Edit</h3>
+          <form
+            method="dialog"
+            (submit)="
+              updateCard(
+                activeCard.id,
+                activeCard.boardListId || '',
+                editTitle.value,
+                editDesc.value,
+                activeCard.assignees || [],
+                activeCard.dueDate,
+                activeCard.checklists || []
+              );
+              updateCardModal.close()
+            "
+            class="space-y-4"
+          >
+            <div class="form-control">
+              <label class="label text-xs font-semibold">Title</label>
+              <input
+                #editTitle
+                class="input input-bordered w-full text-sm"
+                [value]="activeCard.title"
+                required
+              />
+            </div>
+
+            <div class="form-control">
+              <label class="label text-xs font-semibold">Description</label>
+              <textarea
+                #editDesc
+                class="textarea textarea-bordered w-full text-sm h-24"
+                [value]="activeCard.desc"
+              ></textarea>
+            </div>
+
+            <div class="modal-action">
+              <button type="submit" class="btn btn-primary">Save Changes</button>
+              <button type="button" class="btn btn-ghost" (click)="updateCardModal.close()">
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      }
+      <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+      </form>
+    </dialog>
+
+    <dialog #deleteCardModal class="modal">
+      @if (selectedCardForDelete(); as cardToDelete) {
+        <div class="modal-box max-w-sm">
+          <h3 class="text-lg font-bold text-error">Delete Card</h3>
+          <p class="py-4 text-sm">
+            Are you sure you want to delete card "<strong>{{ cardToDelete.title }}</strong
+            >"? This action cannot be undone.
+          </p>
+
+          <div class="modal-action">
+            <button
+              type="button"
+              class="btn btn-error text-white"
+              (click)="deleteCard(cardToDelete.id); deleteCardModal.close()"
+            >
+              Delete
+            </button>
+            <button type="button" class="btn btn-ghost" (click)="deleteCardModal.close()">
+              Cancel
+            </button>
+          </div>
+        </div>
+      }
+      <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+      </form>
+    </dialog>
   `,
 })
 export class Board {
   boardService = inject(BoardService);
   listService = inject(BoardListService);
   cardService = inject(CardService);
-  userService = inject(UserService);
   memberService = inject(MemberService);
   userState = inject(UserState);
   orgState = inject(OrgState);
@@ -371,6 +523,11 @@ export class Board {
   chatWebSocketService = inject(ChatWebSocketService);
   boardWebSocketService = inject(BoardWebSocketService);
   destroyRef = inject(DestroyRef);
+
+  protected selectedCardForEdit = signal<CardResponseModel | null>(null);
+  protected selectedCardForDelete = signal<CardResponseModel | null>(null);
+
+  protected selectedMemberToKickId = signal<string | number | null>(null);
 
   chatOpened = signal(false);
 
@@ -402,11 +559,6 @@ export class Board {
     stream: ({ params }) => this.cardService.getByBoardId(params.boardId),
   });
 
-  userResource = rxResource({
-    params: () => ({ userId: this.userId() }),
-    stream: ({ params }) => this.userService.getById(params.userId!.toString()),
-  });
-
   protected backlogCards = computed(() => {
     const cards = this.cardResource.value() ?? [];
     return cards.filter((card) => !card.boardListId);
@@ -417,7 +569,6 @@ export class Board {
     const cards = this.cardResource.value() ?? [];
 
     return boardLists.map((boardList: any) => {
-      // Coerce IDs to String to prevent type mismatch issues (e.g. 1 vs "1")
       const rawId = boardList.id ?? boardList.boardListId ?? boardList._id;
       const listId = rawId ? String(rawId) : '';
 
@@ -479,15 +630,6 @@ export class Board {
       assignees: [this.userId()!],
       checklists: [],
     };
-    // no websockets
-    // this.cardService.create(req).subscribe({
-    //   next: () => {
-    //     this.boardResource.reload();
-    //     this.listResource.reload();
-    //     this.cardResource.reload();
-    //   },
-    // });
-    // websockets
     this.cardService.create(req).subscribe({});
   }
 
@@ -498,7 +640,7 @@ export class Board {
     cardDesc: string = '',
     assignees: number[] = [],
     dueDate: Date | undefined = undefined,
-    checklists = [],
+    checklists: ChecklistResponseModel[] = [],
   ) {
     const req: CardUpdateModel = {
       id: cardId,
@@ -510,28 +652,10 @@ export class Board {
       dueDate: dueDate,
       checklists: checklists,
     };
-    //no-ws
-    // this.cardService.update(cardId, req).subscribe({
-    //   next: () => {
-    //     this.boardResource.reload();
-    //     this.listResource.reload();
-    //     this.cardResource.reload();
-    //   },
-    // });
-    //ws
     this.cardService.update(cardId, req).subscribe({});
   }
 
   deleteCard(cardId: string) {
-    //no-ws
-    // this.cardService.delete(cardId).subscribe({
-    //   next: () => {
-    //     this.boardResource.reload();
-    //     this.listResource.reload();
-    //     this.cardResource.reload();
-    //   },
-    // });
-    //ws
     this.cardService.delete(cardId).subscribe({});
   }
 
@@ -541,47 +665,10 @@ export class Board {
       title: listTitle,
       createdAt: new Date(),
     };
-
-    //no-ws
-    // this.listService.create(req).subscribe({
-    //   next: () => {
-    //     console.info(`Created new board list with title of ${req.title}`);
-    //     setTimeout(() => {
-    //       this.listResource.reload();
-    //       this.boardResource.reload();
-    //       this.cardResource.reload();
-    //     }, 100);
-    //   },
-    // });
-    //ws
     this.listService.create(req).subscribe({});
   }
 
-  updateList(boardListId: string, title: string = '') {
-    const req: BoardListUpdateModel = {
-      id: boardListId,
-      boardId: this.boardId(),
-      title: title,
-      updatedAt: new Date(),
-    };
-    this.listService.update(boardListId, req).subscribe({
-      next: () => {
-        this.listResource.reload();
-        this.boardResource.reload();
-        this.cardResource.reload();
-      },
-    });
-  }
-
   deleteList(boardListId: string) {
-    //no-ws
-    // this.listService.delete(boardListId).subscribe({
-    //   next: () => {
-    //     this.listResource.reload();
-    //     this.boardResource.reload();
-    //   },
-    // });
-    //ws
     this.listService.delete(boardListId).subscribe({});
   }
 
@@ -598,13 +685,12 @@ export class Board {
     });
   }
 
-  kickMember() {
-    const member: number | null = this.selectedMemberId();
-    if (!member) return;
-
-    this.boardService.leaveBoard(this.boardId(), member.toString()).subscribe({
+  kickMember(memberId: string | number) {
+    if (!memberId) return;
+    this.boardService.leaveBoard(this.boardId(), memberId.toString()).subscribe({
       next: () => {
         this.selectedMemberId.set(null);
+        alert(`Kicked member with ID of ${memberId}`);
         this.membersResource.reload();
         this.boardResource.reload();
       },
@@ -649,5 +735,17 @@ export class Board {
         },
       });
     }
+  }
+
+  protected updateCardModal = viewChild<ElementRef<HTMLDialogElement>>('updateCardModal');
+  openEditCardModal(card: CardResponseModel) {
+    this.selectedCardForEdit.set(card);
+    this.updateCardModal()?.nativeElement.showModal();
+  }
+
+  protected deleteCardModal = viewChild<ElementRef<HTMLDialogElement>>('deleteCardModal');
+  openDeleteCardModal(card: CardResponseModel) {
+    this.selectedCardForDelete.set(card);
+    this.deleteCardModal()?.nativeElement.showModal();
   }
 }

@@ -24,25 +24,38 @@ import { MemberService } from '../member/member.service';
   ],
   template: `
     @if (userResource.isLoading()) {
-      <span class="loading loading-spinner text-accent"></span>
+      <div class="flex items-center justify-center p-4">
+        <span class="loading loading-spinner text-accent loading-md"></span>
+      </div>
     } @else if (userResource.value(); as user) {
-      <div class="navbar bg-base-100 shadow-sm">
+      <div class="navbar bg-base-100 shadow-sm border-b border-base-200 px-4">
         <div class="flex-1">
           <details class="dropdown">
-            <summary class="btn btn-ghost m-1"><svg lucideMenu></svg></summary>
-            <ul class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+            <summary class="btn btn-ghost btn-circle m-1">
+              <svg lucideMenu class="w-5 h-5"></svg>
+            </summary>
+            <ul
+              class="menu dropdown-content bg-base-100 rounded-box z-50 w-64 p-2 shadow-lg border border-base-200 gap-1"
+            >
               <li>
-                <div class="flex items-center justify-between w-full">
-                  <span class="text-lg font-semibold">Organizations</span>
+                <div
+                  class="flex items-center justify-between w-full hover:bg-transparent cursor-default py-1"
+                >
+                  <span class="text-xs font-bold uppercase tracking-wider text-base-content/60"
+                    >Organizations</span
+                  >
                   <button
-                    class="btn btn-ghost btn-sm btn-square"
+                    type="button"
+                    class="btn btn-ghost btn-xs btn-square"
                     (click)="orgDivOpened.set(!orgDivOpened())"
                   >
-                    <svg lucidePlus></svg>
+                    <svg lucidePlus class="w-4 h-4"></svg>
                   </button>
                 </div>
                 @if (orgDivOpened()) {
-                  <div class="mt-2 p-3 bg-base-200 rounded-box flex flex-col gap-3 w-full">
+                  <div
+                    class="mt-2 p-3 bg-base-200/50 border border-base-200 rounded-box flex flex-col gap-3 w-full"
+                  >
                     <form
                       (ngSubmit)="
                         createOrg(orgTitle.value); orgTitle.value = ''; orgDivOpened.set(false)
@@ -51,50 +64,68 @@ import { MemberService } from '../member/member.service';
                     >
                       <input
                         #orgTitle
-                        class="input input-bordered w-full"
+                        class="input input-bordered input-sm w-full"
                         placeholder="Organization name"
                         autofocus
                       />
                       <div class="flex justify-end gap-2">
                         <button
                           type="button"
-                          class="btn btn-ghost btn-sm"
+                          class="btn btn-ghost btn-xs"
                           (click)="orgDivOpened.set(false)"
                         >
                           Cancel
                         </button>
-                        <button type="submit" class="btn btn-primary btn-sm">Create</button>
+                        <button type="submit" class="btn btn-primary btn-xs">Create</button>
                       </div>
                     </form>
                   </div>
                 }
               </li>
               <li>
-                <div class="flex items-center justify-between w-full">
-                  <span class="text-lg font-semibold">Memberships</span>
+                <div
+                  class="flex items-center justify-between w-full hover:bg-transparent cursor-default py-1"
+                >
+                  <span class="text-xs font-bold uppercase tracking-wider text-base-content/60"
+                    >Memberships</span
+                  >
                   @if (membershipsResource.isLoading()) {
-                    <span class="loading loading-spinner text-accent"></span>
+                    <span class="loading loading-spinner text-accent loading-xs"></span>
                   } @else if (membershipsResource.value(); as memberships) {
                     @for (membership of memberships; track membership.orgId) {
-                      <span [routerLink]="['/u', userId(), 'orgs', membership.orgId]">{{
-                        membership.name
-                      }}</span>
+                      <span
+                        class="cursor-pointer hover:underline text-sm font-medium"
+                        [routerLink]="['/u', userId(), 'orgs', membership.orgId]"
+                        >{{ membership.name }}</span
+                      >
                     }
                   }
                 </div>
               </li>
               @if (orgsResource.isLoading()) {
-                <li><span class="loading loading-spinner text-accent"></span></li>
+                <li class="p-2">
+                  <span class="loading loading-spinner text-accent loading-xs"></span>
+                </li>
               } @else if (orgsResource.value(); as orgs) {
                 @for (org of orgs; track org.orgId) {
-                  <li class="flex-row justify-between items-center">
-                    <span [routerLink]="['/u', userId(), 'orgs', org.orgId]">{{ org.name }}</span>
-                    <button class="btn btn-ghost btn-xs text-error" (click)="deleteOrg(org.orgId)">
-                      <svg lucideTrash2></svg>
+                  <li class="flex flex-row justify-between items-center rounded-btn">
+                    <span
+                      class="cursor-pointer text-sm font-medium"
+                      [routerLink]="['/u', userId(), 'orgs', org.orgId]"
+                      >{{ org.name }}</span
+                    >
+                    <button
+                      type="button"
+                      class="btn btn-ghost btn-xs text-error hover:bg-error/10"
+                      (click)="deleteOrg(org.orgId)"
+                    >
+                      <svg lucideTrash2 class="w-4 h-4"></svg>
                     </button>
                   </li>
                 } @empty {
-                  <li><p class="text-sm opacity-60">No organizations yet.</p></li>
+                  <li>
+                    <p class="text-xs text-base-content/50 italic py-2">No organizations yet.</p>
+                  </li>
                 }
               }
             </ul>
@@ -104,39 +135,38 @@ import { MemberService } from '../member/member.service';
           <div class="dropdown dropdown-end">
             <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
               <div
-                class="w-10 rounded-full flex justify-center align-middle"
+                class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white shadow-inner"
                 [style.background-color]="avatarColorUtil(user.firstName)"
               >
-                <h1 class="text-xl">{{ user.firstName.charAt(0) }}</h1>
+                <h1 class="text-lg leading-none">{{ user.firstName.charAt(0) }}</h1>
               </div>
             </div>
             <ul
               tabindex="-1"
-              class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+              class="menu menu-sm dropdown-content bg-base-100 rounded-box z-50 mt-3 w-56 p-2 shadow-lg border border-base-200 gap-1"
             >
-              <li>
-                <p class="text-lg">{{ user.firstName }} {{ user.lastName }}</p>
+              <li class="px-3 py-2 border-b border-base-200 pointer-events-none">
+                <p class="text-sm font-bold text-base-content leading-tight">
+                  {{ user.firstName }} {{ user.lastName }}
+                </p>
+                <p class="text-xs text-base-content/60 leading-tight truncate mt-0.5">
+                  {{ user.email }}
+                </p>
               </li>
               <li>
-                <p class="text-lg">{{ user.email }}</p>
-              </li>
-              <li>
-                <button class="btn btn-ghost justify-start" (click)="logout()">Logout</button>
-              </li>
-              <li>
-                <label class="btn btn-ghost w-full justify-start gap-3">
-                  <div class="swap swap-rotate">
-                    <input type="checkbox" class="theme-controller" value="dark" />
-                    <svg class="swap-off h-5 w-5 fill-current" lucideSun></svg>
-                    <svg class="swap-on h-5 w-5 fill-current" lucideMoon></svg>
-                  </div>
-                </label>
+                <button
+                  type="button"
+                  class="btn btn-ghost btn-sm justify-start w-full text-sm"
+                  (click)="logout()"
+                >
+                  Logout
+                </button>
               </li>
             </ul>
           </div>
         </div>
       </div>
-      <main class="m-5">
+      <main class="max-w-7xl mx-auto p-6">
         <router-outlet />
       </main>
     }
