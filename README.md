@@ -147,7 +147,7 @@ By default, the app will start on `http://localhost:8080`.
 [Angular-url]: https://angular.dev/
 [TypeScript.io]: https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white
 [TypeScript-url]: https://www.typescriptlang.org/
-[Tailwind.io]: https://img.shields.io/badge/tailwindcss-0F172A?&logo=tailwindcss
+[Tailwind.io]: https://img.shields.io/badge/Tailwind_CSS-grey?style=for-the-badge&logo=tailwind-css&logoColor=38B2AC
 [Tailwind-url]: https://tailwindcss.com/
 [Lucide.io]: https://img.shields.io/badge/Lucide-F56565?style=for-the-badge&logo=lucide&logoColor=white
 [Lucide-url]: https://lucide.dev/
