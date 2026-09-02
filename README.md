@@ -22,8 +22,7 @@
     - [Prerequisites](#prerequisites-1)
     - [Installation](#installation-1)
       - [NPM](#npm)
-  - [Roadmap](#roadmap-1)
-
+      
 - [License](#license)
 
 </details>
@@ -83,20 +82,34 @@ Organizations expose an admin dashboard for project owners, offering a periodic 
 git clone https://github.com/03milosevicN/trellite-be.git
 cd trellite-be/
 ```
-2. Configure `application.properties`
+2.1 Immediate prerequisite are running processes of PostgreSQL and MongoDB databases.
+2.2. Configure `application.yml` 
 ```
-spring.datasource.username=your_username
-spring.datasource.password=your_password
-jwt.secret=your_jwt_secret
+datasource:
+  password: postgres_password
+  url: postgres_db_url
+  username: postgres_username
+
+mongodb:
+  database: mongodb_db_name
+  port: mongodb_port
+  uri: mongodb_uri
+
+jwt:
+  secret-key: secret-key
+  expiration-ms: exp-ms
+  refresh-token-expiration-ms: refresh-token-exp-ms
 ```
+Consult the .env.exmample file for more concise examples.
 3. Build and run
 ```
 mvn clean install
 mvnw spring-boot:run
 ```
 By default, the app will start on `http://localhost:8080`.
+
 #### Docker
-- TBD (To Be Dockerized :])
+- TBD
 <!--Getting started-->
 
 ## Project archtecture
@@ -114,7 +127,6 @@ By default, the app will start on `http://localhost:8080`.
 <!--Roadmap-->
 ## Roadmap
 - Dockerization
-- Detailed RBAC
 <!--Roadmap-->
 
 
@@ -126,7 +138,7 @@ By default, the app will start on `http://localhost:8080`.
 
 [![Angular][Angular.io]][Angular-url]
 [![TypeScript][TypeScript.io]][TypeScript-url]
-[![Bootstrap][Bootstrap.io]][Bootstrap-url]
+[![Tailwind][Tailwind.io]][Tailwind-url]
 [![Lucide][Lucide.io]][Lucide-url]
 
 <!--MARKDOWN LINKS & IMAGES-->
@@ -135,8 +147,8 @@ By default, the app will start on `http://localhost:8080`.
 [Angular-url]: https://angular.dev/
 [TypeScript.io]: https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white
 [TypeScript-url]: https://www.typescriptlang.org/
-[Bootstrap.io]: https://img.shields.io/badge/Bootstrap-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white
-[Bootstrap-url]: https://getbootstrap.com/
+[Tailwind.io]: https://img.shields.io/badge/tailwindcss-0F172A?&logo=tailwindcss
+[Tailwind-url]: https://tailwindcss.com/
 [Lucide.io]: https://img.shields.io/badge/Lucide-F56565?style=for-the-badge&logo=lucide&logoColor=white
 [Lucide-url]: https://lucide.dev/
 
@@ -178,13 +190,6 @@ ng serve
 The application will be available at `http://localhost:4200` by default.
 
 <!--Getting Started-->
-
-## Roadmap
-
-* Dockerization
-* Unit tests
-* E2E tests
-
 
 <!--License-->
 ## License
