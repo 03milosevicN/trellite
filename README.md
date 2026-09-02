@@ -82,7 +82,9 @@ Organizations expose an admin dashboard for project owners, offering a periodic 
 git clone https://github.com/03milosevicN/trellite-be.git
 cd trellite-be/
 ```
+
 2.1 Immediate prerequisite are running processes of PostgreSQL and MongoDB databases.
+
 2.2. Configure `application.yml` 
 ```
 datasource:
@@ -100,7 +102,8 @@ jwt:
   expiration-ms: exp-ms
   refresh-token-expiration-ms: refresh-token-exp-ms
 ```
-Consult the .env.exmample file for more concise examples.
+Consult the `backend/.env.exmample` file for more concise examples.
+
 3. Build and run
 ```
 mvn clean install
